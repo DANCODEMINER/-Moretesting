@@ -23,8 +23,20 @@ function showForm(formType) {
     "pin-verify": "pin-verify-form",
     "forgot-password": "forgot-password-form",
     "verify-forgot-otp": "verify-forgot-otp-form",
-    "reset-password": "reset-password-form",
+    "reset-password": "reset-password-form"
   };
+
+  // Hide all forms
+  Object.values(formMap).forEach(id => {
+    document.getElementById(id).style.display = "none";
+  });
+
+  // Show the selected form
+  const selectedFormId = formMap[formType];
+  if (selectedFormId) {
+    document.getElementById(selectedFormId).style.display = "block";
+  }
+}
 
   // Loop and toggle visibility
   for (const key in formMap) {
