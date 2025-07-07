@@ -287,6 +287,34 @@ function submitNewPassword() {
     });
 }
 
+function sendResetPin() {
+  const email = sessionStorage.getItem("resetEmail"); // ✅ using sessionStorage now
+
+  if (!email) {
+    alert("No email found. Please log in again.");
+    return;
+  }
+
+  fetch("https://danoski-backend.onrender.com/user/sendresetpin", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email })
+  })
+    .then(res => res.json().then(data => ({ ok: res.ok, data })))
+    .then(({ ok, data }) => {
+      if (ok) {
+        alert("✅ OTP sent to your email to reset PIN.");
+        showForm("verify-pin-otp");
+      } else {
+        alert("❌ " + (data.error || "Failed to send OTP."));
+      }
+    })
+    .catch(err => {
+      alert("⚠️ Server error.");
+      console.error(err);
+    });
+}
+
 function bindPinInputs() {
   const inputs = ["pin1","pin2","pin3","pin4"];
   inputs.forEach((id, i) => {
