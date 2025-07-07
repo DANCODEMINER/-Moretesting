@@ -204,7 +204,7 @@ function sendForgotOtp() {
     return;
   }
 
-  fetch("https://danoski-backend.onrender.com/user/send-password-otp", {
+  fetch("https://danoski-backend.onrender.com/user/forgot-password", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email })
