@@ -269,7 +269,7 @@ function submitNewPassword() {
   fetch("https://danoski-backend.onrender.com/user/reset-password", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, new_password: newPassword })
+    body: JSON.stringify({ email, password: newPassword })
   })
     .then(res => res.json().then(data => ({ ok: res.ok, data })))
     .then(({ ok, data }) => {
