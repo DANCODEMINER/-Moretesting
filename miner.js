@@ -26,28 +26,16 @@ function showForm(formType) {
     "reset-password": "reset-password-form"
   };
 
-  // Hide all forms
-  Object.values(formMap).forEach(id => {
-    document.getElementById(id).style.display = "none";
-  });
-
-  // Show the selected form
-  const selectedFormId = formMap[formType];
-  if (selectedFormId) {
-    document.getElementById(selectedFormId).style.display = "block";
-  }
-}
-
   // Loop and toggle visibility
   for (const key in formMap) {
     const el = document.getElementById(formMap[key]);
     if (el) el.style.display = formType === key ? "block" : "none";
   }
 
+  // Handle dashboard and login-page toggle
   const dashboard = document.getElementById("dashboard-page");
   const loginPage = document.getElementById("login-page");
 
-  // Toggle between dashboard and login-page view
   if (formType === "dashboard") {
     if (dashboard) dashboard.style.display = "block";
     if (loginPage) loginPage.style.display = "none";
