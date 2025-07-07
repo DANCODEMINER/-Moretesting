@@ -1,0 +1,127 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adchain Miner - Auth</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="miner.css" />
+</head>
+<body>
+  <div id="login-page">
+    <div class="navbar">
+      <div class="menu-btn" onclick="toggleMenu()">☰</div>
+      <div class="logo">Adchain Miner</div>
+    </div>
+    <div id="menu" class="menu">
+      <a href="#" onclick="showForm('login')">🚪 Login</a>
+      <a href="#" onclick="showForm('register')">👤 Register</a>
+      <a href="#" onclick="showForm('forgot')">🔒 Forgot Password</a>
+    </div>
+    <div class="form-container">
+      <!-- LOGIN FORM -->
+      <section id="login-section">
+        <form id="login-form" onsubmit="event.preventDefault(); loginUser();">
+          <h2>Login to Dashboard</h2>
+          <input type="email" id="login-email" placeholder="Email" required />
+          <input type="password" id="login-password" placeholder="Password" required />
+          <button class="btn" type="submit">LOG IN</button>
+          <div class="form-links">
+            <a href="#" onclick="showForm('register')">Create Account</a>
+            <a href="#" onclick="showForm('forgot')">Forgot Password?</a>
+          </div>
+        </form>
+      </section><!-- LOGIN PIN VERIFY FORM -->
+  <section id="login-pin-section">
+    <form id="pin-verify-form" style="display: none;" onsubmit="event.preventDefault(); verifyLoginPin();">
+      <h2>Verify PIN</h2>
+      <p id="pin-message" style="color: green; text-align: center; margin-bottom: 10px;"></p>
+      <div class="pin-row" style="display: flex; justify-content: center; gap: 10px;">
+        <input class="pin-input" id="pinverify1" maxlength="1" required />
+        <input class="pin-input" id="pinverify2" maxlength="1" required />
+        <input class="pin-input" id="pinverify3" maxlength="1" required />
+        <input class="pin-input" id="pinverify4" maxlength="1" required />
+      </div>
+      <div style="text-align: center; margin: 10px 0;">
+        <a href="#" onclick="showForm('forgot')" style="color: #007bff;">Reset PIN</a>
+      </div>
+      <button class="btn" type="submit" style="margin-top: 10px;">VERIFY PIN</button>
+      <div style="text-align: center; margin-top: 15px;">
+        <button type="button" onclick="logout()" style="padding: 8px 20px; background-color: red; color: white; border: none; border-radius: 4px; cursor: pointer;">
+          Logout
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <!-- REGISTER FORM -->
+  <section id="register-section">
+    <form id="register-form" style="display: none;" onsubmit="event.preventDefault(); signupUser();">
+      <h2>Create Account</h2>
+      <p id="signup-message" style="color: green; text-align: center; margin-bottom: 10px;"></p>
+      <input type="text" id="signup-name" placeholder="Full Name" required />
+      <input type="text" id="signup-country" placeholder="Country" required />
+      <input type="email" id="signup-email" placeholder="Email" required />
+      <input type="password" id="signup-password" placeholder="Password" required />
+      <button class="btn" type="submit">SIGN UP</button>
+      <div class="form-links">
+        <a href="#" onclick="showForm('login')">Back to Login</a>
+      </div>
+    </form>
+  </section>
+
+  <!-- OTP FORM -->
+  <section id="otp-section">
+    <form id="otp-form" onsubmit="event.preventDefault(); verifyOtp();" style="display: none;">
+      <h2>Verify OTP</h2>
+      <p id="otp-message" style="color: green; text-align: center;"></p>
+      <input type="email" id="otp-email" style="display:none;" />
+      <input type="text" id="otp-code" placeholder="Enter OTP" required />
+      <button class="btn" type="submit">VERIFY</button>
+      <div class="form-links">
+        <a href="#" onclick="showForm('login')">Back to Login</a>
+      </div>
+    </form>
+  </section>
+
+  <!-- CREATE PIN FORM -->
+  <section id="pin-section" style="max-width: 400px; margin: 0 auto; padding: 20px;">
+    <form id="pin-form" style="display: none;">
+      <h2 style="text-align: center; margin-bottom: 20px;">Create PIN</h2>
+      <div class="pin-row" style="display: flex; justify-content: center; gap: 10px;">
+        <input type="password" id="pin1" maxlength="1" class="pin-input" />
+        <input type="password" id="pin2" maxlength="1" class="pin-input" />
+        <input type="password" id="pin3" maxlength="1" class="pin-input" />
+        <input type="password" id="pin4" maxlength="1" class="pin-input" />
+      </div>
+      <p id="pin-message" style="color: red; text-align: center; margin-top: 15px;"></p>
+      <div style="text-align: center; margin-top: 20px;">
+        <button id="create-account-btn" type="button" onclick="setUserPin()" style="padding: 10px 20px; font-size: 16px; cursor: pointer;">
+          Create Account
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <!-- FORGOT PASSWORD FORM -->
+  <section id="forgot-section">
+    <form id="forgot-form" style="display: none;" onsubmit="event.preventDefault(); resetPin();">
+      <h2>Reset PIN</h2>
+      <input type="email" id="forgot-email" placeholder="Email" required />
+      <input type="text" id="forgot-otp" placeholder="Enter OTP" required />
+      <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 1rem;">
+        <input type="text" maxlength="1" class="pin-input" id="new1" required />
+        <input type="text" maxlength="1" class="pin-input" id="new2" required />
+        <input type="text" maxlength="1" class="pin-input" id="new3" required />
+        <input type="text" maxlength="1" class="pin-input" id="new4" required />
+      </div>
+      <button class="btn" type="submit">RESET</button>
+      <div class="form-links">
+        <a href="#" onclick="showForm('login')">Back to Login</a>
+      </div>
+    </form>
+  </section>
+
+</div>
+
+  </div>  <!-- DASHBOARD PAGE INCLUDED -->  <div id="dashboard-page" style="display: none;"></div>  <script src="miner.js"></script></body>
+</html>
