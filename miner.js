@@ -770,4 +770,15 @@ setInterval(() => {
 document.addEventListener("DOMContentLoaded", () => {
   if (sessionStorage.getItem("isLoggedIn") === "true") showDashboard();
   bindPinInputs();
+
+  // ✅ Show password length while typing
+  const passwordInput = document.getElementById("signup-password");
+  const passwordCount = document.getElementById("password-count");
+
+  if (passwordInput && passwordCount) {
+    passwordInput.addEventListener("input", function () {
+      const len = this.value.length;
+      passwordCount.innerText = `${len}/12 characters`;
+    });
+  }
 });
