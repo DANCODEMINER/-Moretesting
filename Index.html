@@ -115,13 +115,110 @@
         <input type="text" maxlength="1" class="pin-input" id="new4" required />
       </div>
       <button class="btn" type="submit">RESET</button>
-      <div class="form-links">
-        <a href="#" onclick="showForm('login')">Back to Login</a>
+        <div class="form-links">
+          <a href="#" onclick="showForm('login')">Back to Login</a>
+        </div>
+      </form>
+    </section>
+  </div> <!-- End of login-page -->
+
+  <!-- DASHBOARD PAGE INCLUDED -->
+  <div id="dashboard-page" style="display: none;">
+    <div id="overlay" onclick="toggleSidebar()"></div>
+
+    <header>
+      <h1>Adchain Miner Dashboard</h1>
+    </header>
+  <div class="sidebar" id="sidebar">
+    <h3>Menu</h3>
+    <ul>
+      <li onclick="navigateTo('dashboard')">🏠 Dashboard</li>
+      <li onclick="navigateTo('withdraw')">💰 Withdraw</li>
+      <li onclick="navigateTo('watchads')">🎥 Watch Ads</li>
+      <li onclick="navigateTo('transactions')">📄 Transactions</li>
+      <li onclick="navigateTo('leaderboard')">🏆 Leaderboard</li>
+      <li onclick="navigateTo('changepass')">🔐 Change Password</li>
+      <li onclick="navigateTo('resetpin')">🔁 Reset PIN</li>
+      <li onclick="logout()">🚪 Logout</li>
+    </ul>
+  </div>
+
+  <div class="container">
+    <div class="mining-counter">
+      <h2>Live BTC Counter</h2>
+      <p id="btc-counter">0.00000001</p>
+    </div>
+
+    <div class="stats">
+      <div class="card">
+        <h2>Total Hashrate</h2>
+        <p id="total-hashrate">-- H/s</p>
       </div>
-    </form>
-  </section>
+      <div class="card">
+        <h2>My Hashrate</h2>
+        <p id="my-hashrate">-- H/s</p>
+      </div>
+      <div class="card">
+        <h2>Next Withdrawal</h2>
+        <p id="next-withdrawal">--</p>
+      </div>
+      <div class="card">
+        <h2>Balance</h2>
+        <p id="btc-balance">-- BTC</p>
+      </div>
+    </div>
 
-</div>
+    <div class="actions">
+      <button onclick="watchAd()">🎥 Watch Ad</button>
+      <button onclick="withdraw()">💸 Withdraw</button>
+    </div>
 
-  </div>  <!-- DASHBOARD PAGE INCLUDED -->  <div id="dashboard-page" style="display: none;"></div>  <script src="miner.js"></script></body>
-        </html>
+    <div class="logs">
+      <h3>Recent Transactions</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Amount</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="transaction-history">
+          <!-- Populated by JS -->
+        </tbody>
+      </table>
+    </div>
+
+    <div class="logs">
+      <h3>Top Miners</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Country</th>
+            <th>Hashrate</th>
+          </tr>
+        </thead>
+        <tbody id="top-miners">
+          <!-- Populated by JS -->
+        </tbody>
+      </table>
+    </div>
+
+    <div class="logs">
+      <h3>Announcements</h3>
+      <p id="announcement-message">No announcements yet.</p>
+    </div>
+
+    <footer>
+      <p>&copy; 2025 Adchain Miner</p>
+      <div class="logout-footer">
+        <button onclick="logout()">Logout</button>
+      </div>
+    </footer>
+  </div> <!-- End of #dashboard-page -->
+  
+  <script src="miner.js"></script>
+</body>
+    </html>
