@@ -251,6 +251,43 @@ function setUserPin() {
 }
 
 // Step 1: Send OTP
+function sendForgotOtp() {
+  const email = document.getElementById("forgot-pass-email").value.trim();
+
+  if (!email) {
+    alert("⚠️ Please enter your email address.");
+    return;
+  }
+
+  fetch("https://danoski-backend.onrender.com/user/forgot-password", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email })
+  })
+    .then(async res => {
+      let data;
+      try {
+        data = await res.json();
+      } catch (err) {
+        console.error("Invalid JSON response:", err);
+        alert("⚠️ Unexpected server response.");
+        return;
+      }
+
+      if (res.ok) {
+        sessionStorage.setItem("resetEmail", email);
+        alert("✅ OTP has been sent to your email.");
+        showForm("verify-forgot-otp");
+      } else {
+        alert("❌ Unable to send OTP. Please check your email and try again.");
+      }
+    })
+    .catch(err => {
+      console.error("Error sending OTP:", err);
+      alert("⚠️ Network error. Please try again later.");
+    });
+}
+// Step 2: Verify OTP
 function verifyForgotOtp() {
   const otp = document.getElementById("forgot-pass-otp").value.trim();
   const email = sessionStorage.getItem("resetEmail");
@@ -291,35 +328,6 @@ function verifyForgotOtp() {
     .catch(err => {
       console.error("OTP verification error:", err);
       alert("⚠️ Could not connect to server. Try again later.");
-    });
-}
-// Step 2: Verify OTP
-function verifyForgotOtp() {
-  const otp = document.getElementById("forgot-pass-otp").value.trim();
-  const email = sessionStorage.getItem("resetEmail"); // ✅ sessionStorage here
-
-  if (!otp || !email) {
-    alert("Enter the OTP sent to your email.");
-    return;
-  }
-
-  fetch("https://danoski-backend.onrender.com/user/verify-password-otp", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, otp })
-  })
-    .then(res => res.json().then(data => ({ ok: res.ok, data })))
-    .then(({ ok, data }) => {
-      if (ok) {
-        alert("✅ OTP verified. Please enter your new password.");
-        showForm("reset-password");
-      } else {
-        alert("❌ " + (data.error || "Invalid OTP."));
-      }
-    })
-    .catch(err => {
-      alert("⚠️ Could not connect to server.");
-      console.error(err);
     });
 }
 
