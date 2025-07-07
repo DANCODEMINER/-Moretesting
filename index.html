@@ -5,9 +5,91 @@
   <title>Adchain Miner - Auth & Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="miner.css" />
+  <style>
+    /* Responsive Menu & Sidebar Styling */
+    .menu-btn {
+      z-index: 30;
+    }.menu {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  top: 60px;
+  right: 1rem;
+  width: 180px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  z-index: 25;
+}
+
+.menu.show {
+  display: flex;
+}
+
+.menu a {
+  padding: 10px;
+  color: #444;
+  font-weight: bold;
+  border-bottom: 1px solid #eee;
+}
+
+.menu a:last-child {
+  border-bottom: none;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: -260px;
+  width: 250px;
+  height: 100%;
+  background-color: #fff;
+  box-shadow: -2px 0 6px rgba(0, 0, 0, 0.2);
+  transition: right 0.3s ease;
+  z-index: 50;
+  padding: 20px;
+}
+
+.sidebar.active {
+  right: 0;
+}
+
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 40;
+  display: none;
+}
+
+#overlay.show {
+  display: block;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #333;
+  color: #fff;
+  padding: 10px 20px;
+}
+
+header h1 {
+  font-size: 1.4rem;
+}
+
+.container {
+  padding: 1rem;
+}
+
+  </style>
 </head>
 <body>
-  <!-- Login Page -->
   <div id="login-page">
     <div class="navbar">
       <div class="menu-btn" onclick="toggleMenu()">☰</div>
@@ -55,178 +137,179 @@
     </form>
   </section>
 
-  <!-- REGISTER FORM -->
-  <section id="register-section">
-    <form id="register-form" style="display: none;" onsubmit="event.preventDefault(); signupUser();">
-      <h2>Create Account</h2>
-      <p id="signup-message" style="color: green; text-align: center; margin-bottom: 10px;"></p>
-      <input type="text" id="signup-name" placeholder="Full Name" required />
-      <input type="text" id="signup-country" placeholder="Country" required />
-      <input type="email" id="signup-email" placeholder="Email" required />
-      <input type="password" id="signup-password" placeholder="Password" required />
-      <button class="btn" type="submit">SIGN UP</button>
-      <div class="form-links">
-        <a href="#" onclick="showForm('login')">Back to Login</a>
-      </div>
-    </form>
-  </section>
+      <!-- REGISTER FORM -->
+      <section id="register-section">
+        <form id="register-form" style="display: none;" onsubmit="event.preventDefault(); signupUser();">
+          <h2>Create Account</h2>
+          <p id="signup-message" style="color: green; text-align: center; margin-bottom: 10px;"></p>
+          <input type="text" id="signup-name" placeholder="Full Name" required />
+          <input type="text" id="signup-country" placeholder="Country" required />
+          <input type="email" id="signup-email" placeholder="Email" required />
+          <input type="password" id="signup-password" placeholder="Password" required />
+          <button class="btn" type="submit">SIGN UP</button>
+          <div class="form-links">
+            <a href="#" onclick="showForm('login')">Back to Login</a>
+          </div>
+        </form>
+      </section>
 
-  <!-- OTP FORM -->
-  <section id="otp-section">
-    <form id="otp-form" onsubmit="event.preventDefault(); verifyOtp();" style="display: none;">
-      <h2>Verify OTP</h2>
-      <p id="otp-message" style="color: green; text-align: center;"></p>
-      <input type="email" id="otp-email" style="display:none;" />
-      <input type="text" id="otp-code" placeholder="Enter OTP" required />
-      <button class="btn" type="submit">VERIFY</button>
-      <div class="form-links">
-        <a href="#" onclick="showForm('login')">Back to Login</a>
-      </div>
-    </form>
-  </section>
+      <!-- OTP FORM -->
+      <section id="otp-section">
+        <form id="otp-form" onsubmit="event.preventDefault(); verifyOtp();" style="display: none;">
+          <h2>Verify OTP</h2>
+          <p id="otp-message" style="color: green; text-align: center;"></p>
+          <input type="email" id="otp-email" style="display:none;" />
+          <input type="text" id="otp-code" placeholder="Enter OTP" required />
+          <button class="btn" type="submit">VERIFY</button>
+          <div class="form-links">
+            <a href="#" onclick="showForm('login')">Back to Login</a>
+          </div>
+        </form>
+      </section>
 
-  <!-- CREATE PIN FORM -->
-  <section id="pin-section" style="max-width: 400px; margin: 0 auto; padding: 20px;">
-    <form id="pin-form" style="display: none;">
-      <h2 style="text-align: center; margin-bottom: 20px;">Create PIN</h2>
-      <div class="pin-row" style="display: flex; justify-content: center; gap: 10px;">
-        <input type="password" id="pin1" maxlength="1" class="pin-input" />
-        <input type="password" id="pin2" maxlength="1" class="pin-input" />
-        <input type="password" id="pin3" maxlength="1" class="pin-input" />
-        <input type="password" id="pin4" maxlength="1" class="pin-input" />
-      </div>
-      <p id="pin-message" style="color: red; text-align: center; margin-top: 15px;"></p>
-      <div style="text-align: center; margin-top: 20px;">
-        <button id="create-account-btn" type="button" onclick="setUserPin()" style="padding: 10px 20px; font-size: 16px; cursor: pointer;">
-          Create Account
-        </button>
-      </div>
-    </form>
-  </section>
+      <!-- CREATE PIN FORM -->
+      <section id="pin-section">
+        <form id="pin-form" style="display: none;">
+          <h2 style="text-align: center;">Create PIN</h2>
+          <div class="pin-row">
+            <input type="password" id="pin1" maxlength="1" class="pin-input" />
+            <input type="password" id="pin2" maxlength="1" class="pin-input" />
+            <input type="password" id="pin3" maxlength="1" class="pin-input" />
+            <input type="password" id="pin4" maxlength="1" class="pin-input" />
+          </div>
+          <p id="pin-message" style="color: red; text-align: center;"></p>
+          <div style="text-align: center; margin-top: 20px;">
+            <button id="create-account-btn" type="button" onclick="setUserPin()">Create Account</button>
+          </div>
+        </form>
+      </section>
 
-  <!-- FORGOT PASSWORD FORM -->
-  <section id="forgot-section">
-    <form id="forgot-form" style="display: none;" onsubmit="event.preventDefault(); resetPin();">
-      <h2>Reset PIN</h2>
-      <input type="email" id="forgot-email" placeholder="Email" required />
-      <input type="text" id="forgot-otp" placeholder="Enter OTP" required />
-      <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 1rem;">
-        <input type="text" maxlength="1" class="pin-input" id="new1" required />
-        <input type="text" maxlength="1" class="pin-input" id="new2" required />
-        <input type="text" maxlength="1" class="pin-input" id="new3" required />
-        <input type="text" maxlength="1" class="pin-input" id="new4" required />
-      </div>
-      <button class="btn" type="submit">RESET</button>
-      <div class="form-links">
-        <a href="#" onclick="showForm('login')">Back to Login</a>
-      </div>
-    </form>
-  </section>
-</div>
-
-  </div>  <!-- Dashboard Page -->  <div id="dashboard-page" style="display: none;"><div id="overlay" onclick="toggleSidebar()"></div>
-<header>
-  <h1>Adchain Miner</h1>
-  <button class="menu-btn" onclick="toggleSidebar()">☰</button>
-</header>
-
-<div class="sidebar" id="sidebar">
-  <h3>Settings</h3>
-  <ul>
-    <li onclick="alert('👤 View Profile')">👤 View Profile</li>
-    <li onclick="alert('🔒 Change Password')">🔒 Change Password</li>
-    <li onclick="alert('🔁 Reset PIN')">🔁 Reset PIN</li>
-    <li onclick="alert('💳 Withdrawal History')">💳 Withdrawal History</li>
-    <li onclick="alert('📈 Transaction History')">📈 Transaction History</li>
-    <li onclick="logout()">🚪 Logout</li>
-    <li onclick="toggleSidebar()">❌ Close Menu</li>
-  </ul>
-</div>
-
-<div class="container">
-  <!-- Live Mining -->
-  <div class="mining-counter">
-    <h2>Mining in Progress...</h2>
-    <p id="btc-counter">0.00000000 BTC</p>
-  </div>
-
-  <!-- Stats -->
-  <div class="stats">
-    <div class="card"><h2>Total Hashrate</h2><p id="total-hashrate">0.00 Th/s</p></div>
-    <div class="card"><h2>Total Mined</h2><p id="total-mined">0.0000 BTC</p></div>
-    <div class="card"><h2>Total Withdrawn</h2><p id="total-withdrawn">0.0000 BTC</p></div>
-    <div class="card"><h2>Active Sessions</h2><p id="active-sessions">0</p></div>
-  </div>
-
-  <!-- Action Buttons -->
-  <div class="actions">
-    <button onclick="watchAd()">▶️ Watch Ad</button>
-    <button onclick="withdrawNow()">⬇️ Withdraw</button>
-  </div>
-
-  <!-- Next Withdrawal Date -->
-  <div class="logs">
-    <h3>💸 Next Withdrawal Date</h3>
-    <div id="withdrawal-date-message" style="color: #444; font-size: 15px;">
-      <p>Next auto-withdrawal will be processed on <strong id="next-withdrawal-date">July 10, 2025</strong>.</p>
+      <!-- FORGOT PASSWORD FORM -->
+      <section id="forgot-section">
+        <form id="forgot-form" style="display: none;" onsubmit="event.preventDefault(); resetPin();">
+          <h2>Reset PIN</h2>
+          <input type="email" id="forgot-email" placeholder="Email" required />
+          <input type="text" id="forgot-otp" placeholder="Enter OTP" required />
+          <div class="pin-row">
+            <input type="text" maxlength="1" class="pin-input" id="new1" required />
+            <input type="text" maxlength="1" class="pin-input" id="new2" required />
+            <input type="text" maxlength="1" class="pin-input" id="new3" required />
+            <input type="text" maxlength="1" class="pin-input" id="new4" required />
+          </div>
+          <button class="btn" type="submit">RESET</button>
+          <div class="form-links">
+            <a href="#" onclick="showForm('login')">Back to Login</a>
+          </div>
+        </form>
+      </section>
     </div>
   </div>
 
-  <!-- Announcements -->
-  <div class="logs">
-    <h3>📢 Messages & Announcements</h3>
-    <div id="dashboard-messages" style="text-align: left; color: #444; font-size: 15px;">
-      <p>✅ Watch ads daily to boost your hash rate rewards!</p>
-      <p>⚠️ Withdrawals are processed every 24 hours. Make sure your wallet is active.</p>
+  <!-- DASHBOARD PAGE -->
+  <div id="dashboard-page" style="display: none;">
+    <div id="overlay" onclick="toggleSidebar()"></div>
+
+    <header>
+      <h1>Adchain Miner</h1>
+      <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+    </header>
+
+    <div class="sidebar" id="sidebar">
+      <h3>Settings</h3>
+      <ul>
+        <li onclick="alert('👤 View Profile')">👤 View Profile</li>
+        <li onclick="alert('🔒 Change Password')">🔒 Change Password</li>
+        <li onclick="alert('🔁 Reset PIN')">🔁 Reset PIN</li>
+        <li onclick="alert('💳 Withdrawal History')">💳 Withdrawal History</li>
+        <li onclick="alert('📈 Transaction History')">📈 Transaction History</li>
+        <li onclick="logout()">🚪 Logout</li>
+        <li onclick="toggleSidebar()">❌ Close Menu</li>
+      </ul>
     </div>
+
+    <div class="container">
+      <!-- Live Mining -->
+      <div class="mining-counter">
+        <h2>Mining in Progress...</h2>
+        <p id="btc-counter">0.00000000 BTC</p>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats">
+        <div class="card"><h2>Total Hashrate</h2><p id="total-hashrate">0.00 Th/s</p></div>
+        <div class="card"><h2>Total Mined</h2><p id="total-mined">0.0000 BTC</p></div>
+        <div class="card"><h2>Total Withdrawn</h2><p id="total-withdrawn">0.0000 BTC</p></div>
+        <div class="card"><h2>Active Sessions</h2><p id="active-sessions">0</p></div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="actions">
+        <button onclick="watchAd()">▶️ Watch Ad</button>
+        <button onclick="withdrawNow()">⬇️ Withdraw</button>
+      </div>
+
+      <!-- Next Withdrawal Date -->
+      <div class="logs">
+        <h3>💸 Next Withdrawal Date</h3>
+        <div id="withdrawal-date-message" style="color: #444; font-size: 15px;">
+          <p>Next auto-withdrawal will be processed on <strong id="next-withdrawal-date">July 10, 2025</strong>.</p>
+        </div>
+      </div><!-- Announcements -->
+      <div class="logs">
+        <h3>📢 Messages & Announcements</h3>
+        <div id="dashboard-messages" style="text-align: left; color: #444; font-size: 15px;">
+          <p>✅ Watch ads daily to boost your hash rate rewards!</p>
+          <p>⚠️ Withdrawals are processed every 24 hours. Make sure your wallet is active.</p>
+        </div>
+      </div>
+
+      <!-- Hashrate Sessions -->
+      <div class="logs">
+        <h3>Recent Hash Sessions</h3>
+        <table id="hash-sessions-table">
+          <thead>
+            <tr><th>Session ID</th><th>Date</th><th>Power</th><th>Duration</th></tr>
+          </thead>
+          <tbody>
+            <!-- Injected by JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Leaderboard -->
+      <div class="logs">
+        <h3>📈 Leaderboard</h3>
+        <h4 style="color: #f7931a;">🏆 Top Miners</h4>
+        <table id="top-miners-table">
+          <thead>
+            <tr><th>Rank</th><th>User</th><th>BTC (30d)</th><th>Hashrate</th></tr>
+          </thead>
+          <tbody>
+            <!-- Injected by JS -->
+          </tbody>
+        </table>
+
+        <h4 style="margin-top: 30px; color: #f7931a;">📊 My Rank</h4>
+        <table id="my-rank-table">
+          <thead>
+            <tr><th>Rank</th><th>User</th><th>BTC (30d)</th><th>Hashrate</th></tr>
+          </thead>
+          <tbody>
+            <tr><td id="my-rank">--</td><td>You</td><td id="my-btc">--</td><td id="my-hashrate">--</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <footer>
+      <div>&copy; 2025 Adchain Miner. All rights reserved.</div>
+      <div class="logout-footer">
+        <button onclick="logout()">🚪 Logout</button>
+      </div>
+    </footer>
   </div>
 
-  <!-- Hashrate Sessions -->
-  <div class="logs">
-    <h3>Recent Hash Sessions</h3>
-    <table id="hash-sessions-table">
-      <thead>
-        <tr><th>Session ID</th><th>Date</th><th>Power</th><th>Duration</th></tr>
-      </thead>
-      <tbody>
-        <!-- Injected by JS -->
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Leaderboard -->
-  <div class="logs">
-    <h3>📈 Leaderboard</h3>
-    <h4 style="color: #f7931a;">🏆 Top Miners</h4>
-    <table id="top-miners-table">
-      <thead>
-        <tr><th>Rank</th><th>User</th><th>BTC (30d)</th><th>Hashrate</th></tr>
-      </thead>
-      <tbody>
-        <!-- Injected by JS -->
-      </tbody>
-    </table>
-
-    <h4 style="margin-top: 30px; color: #f7931a;">📊 My Rank</h4>
-    <table id="my-rank-table">
-      <thead>
-        <tr><th>Rank</th><th>User</th><th>BTC (30d)</th><th>Hashrate</th></tr>
-      </thead>
-      <tbody>
-        <tr><td id="my-rank">--</td><td>You</td><td id="my-btc">--</td><td id="my-hashrate">--</td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<footer>
-  <div>&copy; 2025 Adchain Miner. All rights reserved.</div>
-  <div class="logout-footer">
-    <button onclick="logout()">🚪 Logout</button>
-  </div>
-</footer>
-</div> <!-- Close dashboard-page -->
-
-<script src="miner.js"></script>
+  <!-- Script to activate JS functionality -->
+  <script src="miner.js"></script>
 </body>
 </html>
