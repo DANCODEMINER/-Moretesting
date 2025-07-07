@@ -96,26 +96,38 @@ function signupUser() {
 function verifyOtp() {
   const email = document.getElementById("otp-email").value.trim();
   const otp = document.getElementById("otp-code").value.trim();
-  if (!email || !otp) return alert("Please enter both email and OTP.");
+
+  if (!email || !otp) {
+    alert("⚠️ Please enter both email and OTP.");
+    return;
+  }
 
   fetch("https://danoski-backend.onrender.com/user/verify-otp", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, otp }),
   })
-    .then(res => res.json().then(data => ({ ok: res.ok, data })))
-    .then(({ ok, data }) => {
-      if (ok) {
-        alert("✅ OTP verified! Please create your PIN.");
-        showForm("pin-form");
+    .then(async res => {
+      let data;
+      try {
+        data = await res.json();
+      } catch (err) {
+        console.error("Invalid JSON response:", err);
+        alert("⚠️ Unexpected server response.");
+        return;
+      }
+
+      if (res.ok) {
+        alert("✅ OTP verified successfully. Please proceed to create your PIN.");
         localStorage.setItem("email", email);
+        showForm("pin-form");
       } else {
-        alert("❌ " + data.error);
+        alert("❌ " + (data.error || "Invalid OTP. Please try again."));
       }
     })
     .catch(err => {
-      alert("⚠️ Could not connect to the server.");
-      console.error(err);
+      console.error("OTP verification error:", err);
+      alert("⚠️ Could not connect to the server. Please check your internet and try again.");
     });
 }
 
