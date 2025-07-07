@@ -335,10 +335,26 @@ function verifyForgotOtp() {
 function submitNewPassword() {
   const newPassword = document.getElementById("new-password").value.trim();
   const confirmPassword = document.getElementById("confirm-password").value.trim();
-  const email = sessionStorage.getItem("resetEmail"); // ✅ sessionStorage here
+  const email = sessionStorage.getItem("resetEmail");
 
-  if (!newPassword || newPassword !== confirmPassword) {
-    alert("Passwords do not match or are empty.");
+  if (!newPassword || !confirmPassword) {
+    alert("⚠️ Please fill in both password fields.");
+    return;
+  }
+
+  if (newPassword !== confirmPassword) {
+    alert("❌ Passwords do not match.");
+    return;
+  }
+
+  if (newPassword.length < 6) {
+    alert("⚠️ Password must be at least 6 characters long.");
+    return;
+  }
+
+  if (!email) {
+    alert("⚠️ Session expired. Please request a new OTP.");
+    showForm("forgot-password");
     return;
   }
 
@@ -347,27 +363,36 @@ function submitNewPassword() {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password: newPassword })
   })
-    .then(res => res.json().then(data => ({ ok: res.ok, data })))
-    .then(({ ok, data }) => {
-      if (ok) {
+    .then(async res => {
+      let data;
+      try {
+        data = await res.json();
+      } catch (err) {
+        console.error("Invalid JSON from server:", err);
+        alert("⚠️ Unexpected response. Try again later.");
+        return;
+      }
+
+      if (res.ok) {
         alert("✅ Password reset successful. You can now log in.");
-        sessionStorage.removeItem("resetEmail"); // ✅ clear from session
+        sessionStorage.removeItem("resetEmail");
         showForm("login");
       } else {
-        alert("❌ " + (data.error || "Failed to reset password."));
+        alert("❌ " + (data.error || "Failed to reset password. Try again."));
       }
     })
     .catch(err => {
-      alert("⚠️ Could not connect to server.");
-      console.error(err);
+      console.error("Password reset error:", err);
+      alert("⚠️ Could not connect to server. Please check your internet connection.");
     });
 }
 
 function sendResetPin() {
-  const email = sessionStorage.getItem("loginEmail"); // ✅ Get from sessionStorage
+  const email = sessionStorage.getItem("loginEmail");
 
   if (!email) {
-    alert("No email found. Please log in again.");
+    alert("⚠️ No email found in session. Please log in again.");
+    showForm("login");
     return;
   }
 
@@ -376,18 +401,26 @@ function sendResetPin() {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email })
   })
-    .then(res => res.json().then(data => ({ ok: res.ok, data })))
-    .then(({ ok, data }) => {
-      if (ok) {
-        alert("✅ OTP sent to your email to reset PIN.");
+    .then(async res => {
+      let data;
+      try {
+        data = await res.json();
+      } catch (err) {
+        console.error("Invalid JSON from server:", err);
+        alert("⚠️ Unexpected response. Please try again.");
+        return;
+      }
+
+      if (res.ok) {
+        alert("✅ An OTP has been sent to your email to reset your PIN.");
         showForm("verify-pin-otp");
       } else {
-        alert("❌ " + (data.error || "Failed to send OTP."));
+        alert("❌ " + (data.error || "Failed to send OTP. Please try again."));
       }
     })
     .catch(err => {
-      alert("⚠️ Server error.");
-      console.error(err);
+      console.error("Error sending PIN OTP:", err);
+      alert("⚠️ Could not connect to the server. Please check your connection.");
     });
 }
 
