@@ -13,13 +13,33 @@ function toggleSidebar() {
 }
 
 function showForm(formType) {
-  const forms = ["login", "register", "forgot", "otp-form", "pin-form", "pin-verify"];
-  forms.forEach((type) => {
-    const el = document.getElementById(type === "otp-form" ? "otp-form" : `${type}-form`);
-    if (el) el.style.display = formType === type ? "block" : "none";
-  });
+  // All possible form sections by ID
+  const formMap = {
+    login: "login-form",
+    register: "register-form",
+    forgot: "forgot-form",
+    "otp-form": "otp-form",
+    "pin-form": "pin-form",
+    "pin-verify": "pin-verify-form"
+  };
+
+  // Loop and toggle visibility
+  for (const key in formMap) {
+    const el = document.getElementById(formMap[key]);
+    if (el) el.style.display = formType === key ? "block" : "none";
+  }
+
   const dashboard = document.getElementById("dashboard-page");
-  if (dashboard) dashboard.style.display = formType === "dashboard" ? "block" : "none";
+  const loginPage = document.getElementById("login-page");
+
+  // Toggle between dashboard and login-page view
+  if (formType === "dashboard") {
+    if (dashboard) dashboard.style.display = "block";
+    if (loginPage) loginPage.style.display = "none";
+  } else {
+    if (dashboard) dashboard.style.display = "none";
+    if (loginPage) loginPage.style.display = "block";
+  }
 }
 
 function signupUser() {
