@@ -195,6 +195,98 @@ function setUserPin() {
     });
 }
 
+// Step 1: Send OTP
+function sendForgotOtp() {
+  const email = document.getElementById("forgot-pass-email").value.trim();
+
+  if (!email) {
+    alert("Please enter your email.");
+    return;
+  }
+
+  fetch("https://danoski-backend.onrender.com/user/send-password-otp", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email })
+  })
+    .then(res => res.json().then(data => ({ ok: res.ok, data })))
+    .then(({ ok, data }) => {
+      if (ok) {
+        alert("✅ OTP sent to your email.");
+        sessionStorage.setItem("resetEmail", email); // ✅ sessionStorage here
+        showForm("verify-forgot-otp");
+      } else {
+        alert("❌ " + (data.error || "Failed to send OTP."));
+      }
+    })
+    .catch(err => {
+      alert("⚠️ Server error.");
+      console.error(err);
+    });
+}
+
+// Step 2: Verify OTP
+function verifyForgotOtp() {
+  const otp = document.getElementById("forgot-pass-otp").value.trim();
+  const email = sessionStorage.getItem("resetEmail"); // ✅ sessionStorage here
+
+  if (!otp || !email) {
+    alert("Enter the OTP sent to your email.");
+    return;
+  }
+
+  fetch("https://danoski-backend.onrender.com/user/verify-password-otp", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, otp })
+  })
+    .then(res => res.json().then(data => ({ ok: res.ok, data })))
+    .then(({ ok, data }) => {
+      if (ok) {
+        alert("✅ OTP verified. Please enter your new password.");
+        showForm("reset-password");
+      } else {
+        alert("❌ " + (data.error || "Invalid OTP."));
+      }
+    })
+    .catch(err => {
+      alert("⚠️ Could not connect to server.");
+      console.error(err);
+    });
+}
+
+// Step 3: Submit new password
+function submitNewPassword() {
+  const newPassword = document.getElementById("new-password").value.trim();
+  const confirmPassword = document.getElementById("confirm-password").value.trim();
+  const email = sessionStorage.getItem("resetEmail"); // ✅ sessionStorage here
+
+  if (!newPassword || newPassword !== confirmPassword) {
+    alert("Passwords do not match or are empty.");
+    return;
+  }
+
+  fetch("https://danoski-backend.onrender.com/user/reset-password", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, new_password: newPassword })
+  })
+    .then(res => res.json().then(data => ({ ok: res.ok, data })))
+    .then(({ ok, data }) => {
+      if (ok) {
+        alert("✅ Password reset successful. You can now log in.");
+        sessionStorage.removeItem("resetEmail"); // ✅ clear from session
+        showForm("login");
+      } else {
+        alert("❌ " + (data.error || "Failed to reset password."));
+      }
+    })
+    .catch(err => {
+      alert("⚠️ Could not connect to server.");
+      console.error(err);
+    });
+}
+
 function bindPinInputs() {
   const inputs = ["pin1","pin2","pin3","pin4"];
   inputs.forEach((id, i) => {
