@@ -666,38 +666,7 @@ function verifyPinOtp() {
     });
 }
 
-function setNewPin() {
-  const email = sessionStorage.getItem("loginEmail");
-  const pin = 
-    document.getElementById("resetpin1").value +
-    document.getElementById("resetpin2").value +
-    document.getElementById("resetpin3").value +
-    document.getElementById("resetpin4").value;
 
-  if (!/^\d{4}$/.test(pin)) {
-    alert("⚠️ Please enter a valid 4-digit numeric PIN.");
-    return;
-  }
-
-  fetch("https://danoski-backend.onrender.com/user/reset-pin", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, pin })
-  })
-    .then(async res => {
-      if (res.ok) {
-        alert("✅ Your PIN has been updated successfully.");
-        showForm("pin-verify");
-      } else {
-        alert("❌ Failed to reset PIN. Please try again.");
-      }
-    })
-    .catch(err => {
-      console.error("Reset PIN error:", err);
-      alert("⚠️ Couldn't connect to server. Please check your network.");
-    });
-}
-    
 function bindPinInputs() {
   const forms = {};
 
@@ -729,6 +698,38 @@ function bindPinInputs() {
     if (inputs[0]) inputs[0].focus();
   });
 }
+
+    function setNewPin() {
+  const email = sessionStorage.getItem("loginEmail");
+  const pin =
+    document.getElementById("resetpin1").value +
+    document.getElementById("resetpin2").value +
+    document.getElementById("resetpin3").value +
+    document.getElementById("resetpin4").value;
+
+  if (!/^\d{4}$/.test(pin)) {
+    alert("⚠️ Please enter a valid 4-digit numeric PIN.");
+    return;
+  }
+
+  fetch("https://danoski-backend.onrender.com/user/reset-pin", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, pin })
+  })
+    .then(async res => {
+      if (res.ok) {
+        alert("✅ Your PIN has been updated successfully.");
+        showForm("pin-verify");
+      } else {
+        alert("❌ Failed to reset PIN. Please try again.");
+      }
+    })
+    .catch(err => {
+      console.error("Reset PIN error:", err);
+      alert("⚠️ Couldn't connect to server. Please check your network.");
+    });
+    }
 
 function checkPinLength() {
   const pin = ["pin1","pin2","pin3","pin4"].map(id => document.getElementById(id).value).join("");
