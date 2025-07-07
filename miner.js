@@ -21,9 +21,9 @@ function showForm(formType) {
     "otp-form": "otp-form",
     "pin-form": "pin-form",
     "pin-verify": "pin-verify-form",
-    "forgot-password": "forgot-password-form",
-    "verify-forgot-otp": "verify-forgot-otp-form",
-    "reset-password": "reset-password-form"
+    "forgot-password": "forgot-password-section",
+    "verify-forgot-otp": "verify-forgot-otp-section",
+    "reset-password": "reset-password-section"
   };
 
   // Loop and toggle visibility
