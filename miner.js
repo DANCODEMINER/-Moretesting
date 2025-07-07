@@ -69,10 +69,10 @@ function signupUser() {
     .then(res => res.json().then(data => ({ ok: res.ok, data })))
     .then(({ ok, data }) => {
       if (ok) {
-        localStorage.setItem("name", fullName);
-        localStorage.setItem("country", country);
-        localStorage.setItem("email", email);
-        localStorage.setItem("password", password);
+        sessionStorage.setItem("name", fullName);
+        sessionStorage.setItem("country", country);
+        sessionStorage.setItem("email", email);
+        sessionStorage.setItem("password", password);
         otpMsg.style.color = "green";
         otpMsg.innerText = "✅ OTP sent to your email.";
         document.getElementById("otp-email").value = email;
@@ -80,14 +80,14 @@ function signupUser() {
         otpMsg.scrollIntoView({ behavior: "smooth", block: "center" });
       } else {
         otpMsg.style.color = "red";
-        otpMsg.innerText = "❌ " + (data.error || "Signup failed.");
+        otpMsg.innerText = "❌ Something went wrong during signup. Please try again.";
         otpMsg.scrollIntoView({ behavior: "smooth", block: "center" });
       }
       setTimeout(() => { otpMsg.innerText = ""; }, 5000);
     })
     .catch(err => {
       otpMsg.style.color = "orange";
-      otpMsg.innerText = "⚠️ Failed to connect to server.";
+      otpMsg.innerText = "⚠️ Failed to connect to server. Please check your network.";
       otpMsg.scrollIntoView({ behavior: "smooth", block: "center" });
       console.error(err);
     });
