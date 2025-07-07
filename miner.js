@@ -303,7 +303,7 @@ function submitNewPassword() {
 }
 
 function sendResetPin() {
-  const email = sessionStorage.getItem("resetEmail"); // ✅ using sessionStorage now
+  const email = sessionStorage.getItem("loginEmail"); // ✅ Get from sessionStorage
 
   if (!email) {
     alert("No email found. Please log in again.");
@@ -331,7 +331,7 @@ function sendResetPin() {
 }
 
 function verifyPinOtp() {
-  const email = sessionStorage.getItem("resetEmail"); // ✅ Use sessionStorage
+  const email = sessionStorage.getItem("loginEmail"); // ✅ from session
   const otp = document.getElementById("pin-otp").value.trim();
 
   if (!otp) {
@@ -360,14 +360,14 @@ function verifyPinOtp() {
 }
 
 function setNewPin() {
-  const email = sessionStorage.getItem("resetEmail"); // ✅ Use session storage
+  const email = sessionStorage.getItem("loginEmail"); // ✅ from session
   const pin = document.getElementById("resetpin1").value +
               document.getElementById("resetpin2").value +
               document.getElementById("resetpin3").value +
               document.getElementById("resetpin4").value;
 
-  if (pin.length !== 4 || !/^\d{4}$/.test(pin)) {
-    alert("PIN must be exactly 4 digits.");
+  if (pin.length !== 4) {
+    alert("PIN must be 4 digits.");
     return;
   }
 
@@ -380,7 +380,6 @@ function setNewPin() {
     .then(({ ok, data }) => {
       if (ok) {
         alert("✅ PIN reset successful.");
-        sessionStorage.removeItem("resetEmail"); // ✅ Clear after success
         showForm("pin-verify");
       } else {
         alert("❌ " + (data.error || "Failed to reset PIN."));
