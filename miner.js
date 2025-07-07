@@ -382,33 +382,34 @@ function setNewPin() {
 }
 
 function bindPinInputs() {
-  const inputs = ["pin1","pin2","pin3","pin4"];
-  inputs.forEach((id, i) => {
-    const input = document.getElementById(id);
-    if (!input) return;
-    input.addEventListener("input", () => {
-      input.value = input.value.replace(/[^0-9]/g, "");
-      if (input.value.length === 1 && i < 3) document.getElementById(inputs[i + 1]).focus();
-      checkPinLength();
-    });
-    input.addEventListener("keydown", (e) => {
-      if (e.key === "Backspace" && !input.value && i > 0) document.getElementById(inputs[i - 1]).focus();
-    });
-  });
-}
+  const forms = {};
 
-function bindVerifyPinInputs() {
-  const inputs = ["pinverify1","pinverify2","pinverify3","pinverify4"];
-  inputs.forEach((id, i) => {
-    const input = document.getElementById(id);
-    if (!input) return;
-    input.addEventListener("input", () => {
-      input.value = input.value.replace(/[^0-9]/g, "");
-      if (input.value.length === 1 && i < 3) document.getElementById(inputs[i + 1]).focus();
+  // Group .pin-inputs by form (e.g. reset PIN, verify PIN, create PIN)
+  document.querySelectorAll(".pin-input").forEach((input) => {
+    const formId = input.closest("form")?.id || "default";
+    if (!forms[formId]) forms[formId] = [];
+    forms[formId].push(input);
+  });
+
+  // Apply input behavior per form group
+  Object.values(forms).forEach(inputs => {
+    inputs.forEach((input, i) => {
+      input.addEventListener("input", () => {
+        input.value = input.value.replace(/[^0-9]/g, ""); // allow only numbers
+        if (input.value.length === 1 && i < inputs.length - 1) {
+          inputs[i + 1].focus();
+        }
+      });
+
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Backspace" && !input.value && i > 0) {
+          inputs[i - 1].focus();
+        }
+      });
     });
-    input.addEventListener("keydown", (e) => {
-      if (e.key === "Backspace" && !input.value && i > 0) document.getElementById(inputs[i - 1]).focus();
-    });
+
+    // Optional: Autofocus first input in the group
+    if (inputs[0]) inputs[0].focus();
   });
 }
 
@@ -448,10 +449,4 @@ setInterval(() => {
 document.addEventListener("DOMContentLoaded", () => {
   if (sessionStorage.getItem("isLoggedIn") === "true") showDashboard();
   bindPinInputs();
-  bindVerifyPinInputs();
 });
-
-function focusFirstPinVerifyInput() {
-  const input = document.getElementById("pinverify1");
-  if (input) input.focus();
-    }
