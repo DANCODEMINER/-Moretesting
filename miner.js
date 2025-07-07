@@ -698,8 +698,8 @@ function bindPinInputs() {
     if (inputs[0]) inputs[0].focus();
   });
 }
-
-    function setNewPin() {
+    
+function setNewPin() {
   const email = sessionStorage.getItem("loginEmail");
   const pin =
     document.getElementById("resetpin1").value +
