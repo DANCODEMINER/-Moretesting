@@ -315,6 +315,68 @@ function sendResetPin() {
     });
 }
 
+function verifyPinOtp() {
+  const email = sessionStorage.getItem("resetEmail"); // ✅ Use sessionStorage
+  const otp = document.getElementById("pin-otp").value.trim();
+
+  if (!otp) {
+    alert("Please enter the OTP.");
+    return;
+  }
+
+  fetch("https://danoski-backend.onrender.com/user/verify-pin-otp", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, otp })
+  })
+    .then(res => res.json().then(data => ({ ok: res.ok, data })))
+    .then(({ ok, data }) => {
+      if (ok) {
+        alert("✅ OTP verified. You can now set a new PIN.");
+        showForm("reset-pin");
+      } else {
+        alert("❌ " + (data.error || "Invalid OTP."));
+      }
+    })
+    .catch(err => {
+      alert("⚠️ Server error.");
+      console.error(err);
+    });
+}
+
+function setNewPin() {
+  const email = sessionStorage.getItem("resetEmail"); // ✅ Use session storage
+  const pin = document.getElementById("resetpin1").value +
+              document.getElementById("resetpin2").value +
+              document.getElementById("resetpin3").value +
+              document.getElementById("resetpin4").value;
+
+  if (pin.length !== 4 || !/^\d{4}$/.test(pin)) {
+    alert("PIN must be exactly 4 digits.");
+    return;
+  }
+
+  fetch("https://danoski-backend.onrender.com/user/reset-pin", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, pin })
+  })
+    .then(res => res.json().then(data => ({ ok: res.ok, data })))
+    .then(({ ok, data }) => {
+      if (ok) {
+        alert("✅ PIN reset successful.");
+        sessionStorage.removeItem("resetEmail"); // ✅ Clear after success
+        showForm("pin-verify");
+      } else {
+        alert("❌ " + (data.error || "Failed to reset PIN."));
+      }
+    })
+    .catch(err => {
+      alert("⚠️ Server error.");
+      console.error(err);
+    });
+}
+
 function bindPinInputs() {
   const inputs = ["pin1","pin2","pin3","pin4"];
   inputs.forEach((id, i) => {
