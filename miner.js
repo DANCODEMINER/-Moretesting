@@ -122,7 +122,11 @@ function verifyOtp() {
 function loginUser() {
   const email = document.getElementById("login-email").value.trim();
   const password = document.getElementById("login-password").value;
-  if (!email || !password) return alert("Please fill in all login fields.");
+
+  if (!email || !password) {
+    alert("⚠️ Please fill in all login fields.");
+    return;
+  }
 
   fetch("https://danoski-backend.onrender.com/user/login", {
     method: "POST",
@@ -134,29 +138,38 @@ function loginUser() {
       try {
         data = await res.json();
       } catch (err) {
-        throw new Error("Invalid JSON response");
+        console.error("❌ Invalid JSON from server.");
+        alert("⚠️ Unexpected server response. Please try again.");
+        return;
       }
-      return { ok: res.ok, data };
-    })
-    .then(({ ok, data }) => {
-      if (ok) {
+
+      if (res.ok) {
         sessionStorage.setItem("loginEmail", email);
+        alert("✅ Login successful! Please enter your PIN to continue.");
         showForm("pin-verify");
         document.getElementById("pin-message").innerText = "Please enter your 4-digit PIN to continue.";
         focusFirstPinVerifyInput();
       } else {
-        alert("❌ " + (data.error || "Login failed."));
+        // Don't show backend message — show a generic frontend message
+        alert("❌ Invalid email or password.");
       }
     })
     .catch(err => {
-      alert("⚠️ Server error during login.");
-      console.error(err);
+      console.error("Login error:", err);
+      alert("⚠️ Network error. Please check your connection and try again.");
     });
 }
 
 function verifyLoginPin() {
-  const pin = ["pinverify1","pinverify2","pinverify3","pinverify4"].map(id => document.getElementById(id).value).join("");
-  if (pin.length !== 4) return alert("Please enter a valid 4-digit PIN.");
+  const pin = ["pinverify1","pinverify2","pinverify3","pinverify4"]
+    .map(id => document.getElementById(id).value)
+    .join("");
+
+  if (pin.length !== 4) {
+    alert("⚠️ Please enter a valid 4-digit PIN.");
+    return;
+  }
+
   const email = sessionStorage.getItem("loginEmail");
 
   fetch("https://danoski-backend.onrender.com/user/verify-login-pin", {
@@ -164,49 +177,76 @@ function verifyLoginPin() {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, pin })
   })
-    .then(res => res.json().then(data => ({ ok: res.ok, data })))
-    .then(({ ok, data }) => {
-      if (ok) {
+    .then(async res => {
+      let data;
+      try {
+        data = await res.json();
+      } catch (err) {
+        console.error("❌ Invalid JSON from server.");
+        alert("⚠️ Unexpected server response.");
+        return;
+      }
+
+      if (res.ok) {
         alert("✅ PIN verified. Welcome back!");
         sessionStorage.setItem("isLoggedIn", "true");
         showDashboard();
       } else {
-        alert("❌ " + data.error);
+        alert("❌ Incorrect PIN. Please try again.");
       }
     })
     .catch(err => {
-      alert("⚠️ Server error during PIN verification.");
-      console.error(err);
+      console.error("PIN verification error:", err);
+      alert("⚠️ Network/server issue during PIN verification.");
     });
 }
 
 function setUserPin() {
-  const pin = ["pin1","pin2","pin3","pin4"].map(id => document.getElementById(id).value.trim()).join("");
-  if (pin.length !== 4 || !/^\d{4}$/.test(pin)) return alert("Please enter a valid 4-digit PIN.");
+  const pin = ["pin1", "pin2", "pin3", "pin4"]
+    .map(id => document.getElementById(id).value.trim())
+    .join("");
+
+  if (pin.length !== 4 || !/^\d{4}$/.test(pin)) {
+    alert("⚠️ Please enter a valid 4-digit PIN.");
+    return;
+  }
+
   const full_name = localStorage.getItem("name");
   const country = localStorage.getItem("country");
   const email = localStorage.getItem("email");
   const password = localStorage.getItem("password");
-  if (!full_name || !country || !email || !password) return alert("User details missing. Please restart registration.");
+
+  if (!full_name || !country || !email || !password) {
+    alert("⚠️ Missing user details. Please start the registration again.");
+    return;
+  }
 
   fetch("https://danoski-backend.onrender.com/user/create-account", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ full_name, country, email, password, pin })
   })
-    .then(res => res.json().then(data => ({ ok: res.ok, data })))
-    .then(({ ok, data }) => {
-      if (ok) {
+    .then(async res => {
+      let data;
+      try {
+        data = await res.json();
+      } catch (err) {
+        console.error("Invalid JSON response:", err);
+        alert("⚠️ Unexpected server response.");
+        return;
+      }
+
+      if (res.ok) {
         alert("✅ Account created successfully!");
         sessionStorage.setItem("isLoggedIn", "true");
         showDashboard();
       } else {
-        alert("❌ " + (data.error || "Failed to create account."));
+        alert("❌ Account creation failed. Please try again.");
       }
     })
     .catch(err => {
-      console.error(err);
-      alert("⚠️ Server connection failed.");
+      console.error("Account creation error:", err);
+      alert("⚠️ Unable to connect to server.");
     });
 }
 
