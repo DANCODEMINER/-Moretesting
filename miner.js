@@ -62,8 +62,8 @@ function signupUser() {
     otpMsg.scrollIntoView({ behavior: "smooth", block: "center" });
     console.error(err);
   });
-  
 }
+
 function verifyOtp() {
   const email = document.getElementById("otp-email").value.trim();
   const otp = document.getElementById("otp-code").value.trim();
@@ -84,8 +84,6 @@ function verifyOtp() {
         alert("✅ OTP verified! Please create your PIN.");
         document.getElementById("otp-form").style.display = "none";
         document.getElementById("pin-form").style.display = "block";
-
-        // Save user info temporarily if not already saved
         localStorage.setItem("email", email);
       } else {
         alert("❌ " + data.error);
@@ -114,10 +112,7 @@ function loginUser() {
     .then(res => res.json().then(data => ({ ok: res.ok, data })))
     .then(({ ok, data }) => {
       if (ok) {
-        // Save user email for PIN check
         sessionStorage.setItem("loginEmail", email);
-
-        // Show PIN verification form
         document.getElementById("login-form").style.display = "none";
         document.getElementById("pin-verify-form").style.display = "block";
         document.getElementById("pin-message").innerText = "Please enter your 4-digit PIN to continue.";
@@ -175,12 +170,6 @@ function setUserPin() {
 
   const pin = pin1 + pin2 + pin3 + pin4;
 
-  console.log("PIN1:", pin1);
-  console.log("PIN2:", pin2);
-  console.log("PIN3:", pin3);
-  console.log("PIN4:", pin4);
-  console.log("Combined PIN:", pin);
-
   if (pin.length !== 4 || !/^\d{4}$/.test(pin)) {
     alert("Please enter a valid 4-digit PIN.");
     return;
@@ -190,11 +179,6 @@ function setUserPin() {
   const country = localStorage.getItem("country");
   const email = localStorage.getItem("email");
   const password = localStorage.getItem("password");
-
-  console.log("Full Name:", full_name);
-  console.log("Country:", country);
-  console.log("Email:", email);
-  console.log("Password:", password);
 
   if (!full_name || !country || !email || !password) {
     alert("User details missing. Please restart registration.");
@@ -243,7 +227,17 @@ function bindPinInputs() {
         checkPinLength();
       });
 
-      function bindVerifyPinInputs() {
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Backspace" && input.value === "" && index > 0) {
+          const prev = document.getElementById(inputs[index - 1]);
+          if (prev) prev.focus();
+        }
+      });
+    }
+  });
+}
+
+function bindVerifyPinInputs() {
   const inputs = ["pinverify1", "pinverify2", "pinverify3", "pinverify4"];
   inputs.forEach((id, index) => {
     const input = document.getElementById(id);
@@ -255,16 +249,6 @@ function bindPinInputs() {
           if (next) next.focus();
         }
       });
-
-      input.addEventListener("keydown", (e) => {
-        if (e.key === "Backspace" && input.value === "" && index > 0) {
-          const prev = document.getElementById(inputs[index - 1]);
-          if (prev) prev.focus();
-        }
-      });
-    }
-  });
-      }
 
       input.addEventListener("keydown", (e) => {
         if (e.key === "Backspace" && input.value === "" && index > 0) {
@@ -299,27 +283,30 @@ function checkPinLength() {
 function logout() {
   sessionStorage.clear();
   localStorage.clear();
-  window.location.href = "login.html"; // or whatever your login page is
+  window.location.href = "login.html";
 }
 
 function showDashboard() {
-  document.getElementById("login-form").style.display = "none";
-  document.getElementById("register-form").style.display = "none";
-  document.getElementById("forgot-form").style.display = "none";
-  document.getElementById("otp-form").style.display = "none";
-  document.getElementById("pin-form").style.display = "none";
-  document.getElementById("pin-verify-form").style.display = "none";
-  document.getElementById("dashboard-page").style.display = "block";
+  showForm("dashboard");
 }
 
-let btcValue = 0.00000000;
-setInterval(() => {
-  const btcCounter = document.getElementById("btc-counter");
-  if (btcCounter) {
-    btcValue += 0.00000001;
-    btcCounter.innerText = btcValue.toFixed(8) + " BTC";
+function toggleSidebar() {
+  const sidebar = document.querySelector(".sidebar");
+  const overlay = document.getElementById("overlay");
+
+  if (sidebar.classList.contains("active")) {
+    sidebar.classList.remove("active");
+    overlay.style.display = "none";
+  } else {
+    sidebar.classList.add("active");
+    overlay.style.display = "block";
   }
-}, 1000);
+}
+
+function focusFirstPinVerifyInput() {
+  const input = document.getElementById("pinverify1");
+  if (input) input.focus();
+}
 
 // === DOMContentLoaded Init ===
 document.addEventListener("DOMContentLoaded", () => {
@@ -343,11 +330,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  bindPinInputs();         // Already present
-  bindVerifyPinInputs();   // ✅ Add this for pinverify1–4
+  bindPinInputs();
+  bindVerifyPinInputs();
 });
-
-function focusFirstPinVerifyInput() {
-  const input = document.getElementById("pinverify1");
-  if (input) input.focus();
-    }
