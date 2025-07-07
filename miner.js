@@ -15,20 +15,20 @@ function toggleSidebar() {
 function showForm(formType) {
   // All possible form sections by ID
   const formMap = {
-  login: "login-form",
-  register: "register-form",
-  forgot: "forgot-form",
-  "otp-form": "otp-form",
-  "pin-form": "pin-form",
-  "pin-verify": "pin-verify-form",
-  "forgot-password": "forgot-password-section",
-  "verify-forgot-otp": "verify-forgot-otp-section",
-  "reset-password": "reset-password-section",
+    login: "login-form",
+    register: "register-form",
+    forgot: "forgot-form",
+    "otp-form": "otp-form",
+    "pin-form": "pin-form",
+    "pin-verify": "pin-verify-form",
+    "forgot-password": "forgot-password-section",
+    "verify-forgot-otp": "verify-forgot-otp-section",
+    "reset-password": "reset-password-section",
 
-  // ✅ Added these for PIN reset flow
-  "verify-pin-otp": "verify-pin-otp-section",
-  "reset-pin": "reset-pin-section"
-};
+    // ✅ Added these for PIN reset flow
+    "verify-pin-otp": "verify-pin-otp-section",
+    "reset-pin": "reset-pin-section"
+  };
 
   // Loop and toggle visibility
   for (const key in formMap) {
@@ -47,6 +47,9 @@ function showForm(formType) {
     if (dashboard) dashboard.style.display = "none";
     if (loginPage) loginPage.style.display = "block";
   }
+
+  // ✅ Re-bind pin inputs after showing new form
+  bindPinInputs();
 }
 
 function signupUser() {
