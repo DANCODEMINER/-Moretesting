@@ -1,7 +1,17 @@
 // Toggle menu in login page
 function toggleMenu() {
   const menu = document.getElementById("menu");
-  menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+  menu.classList.toggle("show");
+}
+
+function toggleSidebar() {
+  const sidebar = document.getElementById("sidebar");
+  const overlay = document.getElementById("overlay");
+
+  if (sidebar && overlay) {
+    sidebar.classList.toggle("active");
+    overlay.classList.toggle("show");
+  }
 }
 
 function showForm(formType) {
@@ -84,6 +94,7 @@ function verifyOtp() {
         alert("✅ OTP verified! Please create your PIN.");
         document.getElementById("otp-form").style.display = "none";
         document.getElementById("pin-form").style.display = "block";
+
         localStorage.setItem("email", email);
       } else {
         alert("❌ " + data.error);
@@ -113,6 +124,7 @@ function loginUser() {
     .then(({ ok, data }) => {
       if (ok) {
         sessionStorage.setItem("loginEmail", email);
+
         document.getElementById("login-form").style.display = "none";
         document.getElementById("pin-verify-form").style.display = "block";
         document.getElementById("pin-message").innerText = "Please enter your 4-digit PIN to continue.";
@@ -128,7 +140,7 @@ function loginUser() {
 }
 
 function verifyLoginPin() {
-  const pin = 
+  const pin =
     document.getElementById("pinverify1").value +
     document.getElementById("pinverify2").value +
     document.getElementById("pinverify3").value +
@@ -167,7 +179,6 @@ function setUserPin() {
   const pin2 = document.getElementById("pin2").value.trim();
   const pin3 = document.getElementById("pin3").value.trim();
   const pin4 = document.getElementById("pin4").value.trim();
-
   const pin = pin1 + pin2 + pin3 + pin4;
 
   if (pin.length !== 4 || !/^\d{4}$/.test(pin)) {
@@ -188,15 +199,9 @@ function setUserPin() {
   fetch("https://danoski-backend.onrender.com/user/create-account", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      full_name,
-      country,
-      email,
-      password,
-      pin,
-    }),
+    body: JSON.stringify({ full_name, country, email, password, pin }),
   })
-    .then((res) => res.json().then((data) => ({ ok: res.ok, data })))
+    .then(res => res.json().then(data => ({ ok: res.ok, data })))
     .then(({ ok, data }) => {
       if (ok) {
         alert("✅ Account created successfully!");
@@ -206,13 +211,12 @@ function setUserPin() {
         alert("❌ " + (data.error || "Failed to create account."));
       }
     })
-    .catch((err) => {
+    .catch(err => {
       console.error(err);
       alert("⚠️ Server connection failed.");
     });
 }
 
-// === PIN Input Activation ===
 function bindPinInputs() {
   const inputs = ["pin1", "pin2", "pin3", "pin4"];
   inputs.forEach((id, index) => {
@@ -268,15 +272,9 @@ function checkPinLength() {
 
   const btn = document.getElementById("create-account-btn");
   if (btn) {
-    if (pin.length === 4) {
-      btn.disabled = false;
-      btn.style.opacity = "1";
-      btn.style.cursor = "pointer";
-    } else {
-      btn.disabled = true;
-      btn.style.opacity = "0.5";
-      btn.style.cursor = "not-allowed";
-    }
+    btn.disabled = pin.length !== 4;
+    btn.style.opacity = pin.length === 4 ? "1" : "0.5";
+    btn.style.cursor = pin.length === 4 ? "pointer" : "not-allowed";
   }
 }
 
@@ -290,23 +288,19 @@ function showDashboard() {
   showForm("dashboard");
 }
 
-function toggleSidebar() {
-  const sidebar = document.querySelector(".sidebar");
-  const overlay = document.getElementById("overlay");
-
-  if (sidebar.classList.contains("active")) {
-    sidebar.classList.remove("active");
-    overlay.style.display = "none";
-  } else {
-    sidebar.classList.add("active");
-    overlay.style.display = "block";
-  }
-}
-
 function focusFirstPinVerifyInput() {
   const input = document.getElementById("pinverify1");
   if (input) input.focus();
 }
+
+let btcValue = 0.00000000;
+setInterval(() => {
+  const btcCounter = document.getElementById("btc-counter");
+  if (btcCounter) {
+    btcValue += 0.00000001;
+    btcCounter.innerText = btcValue.toFixed(8) + " BTC";
+  }
+}, 1000);
 
 // === DOMContentLoaded Init ===
 document.addEventListener("DOMContentLoaded", () => {
