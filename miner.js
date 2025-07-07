@@ -356,16 +356,221 @@ function submitNewPassword() {
 
   if (newPassword !== confirmPassword) {
     alert("❌ Passwords do not match.");
+
+function verifyOtp() {
+  const email = document.getElementById("otp-email").value.trim();
+  const otp = document.getElementById("otp-code").value.trim();
+
+  if (!email || !otp) {
+    alert("⚠️ Please enter both your email and the OTP.");
     return;
   }
 
-  if (newPassword.length < 6) {
-    alert("⚠️ Password must be at least 6 characters long.");
+  fetch("https://danoski-backend.onrender.com/user/verify-otp", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, otp })
+  })
+    .then(async res => {
+      if (res.ok) {
+        alert("✅ OTP verified! Let's set your secure PIN.");
+        sessionStorage.setItem("email", email);
+        showForm("pin-form");
+      } else {
+        alert("❌ Invalid or expired OTP. Please check and try again.");
+      }
+    })
+    .catch(err => {
+      console.error("OTP verification error:", err);
+      alert("⚠️ Network issue. Please check your connection and try again.");
+    });
+}
+    function loginUser() {
+  const email = document.getElementById("login-email").value.trim();
+  const password = document.getElementById("login-password").value;
+
+  if (!email || !password) {
+    alert("⚠️ Please fill in both your email and password.");
+    return;
+  }
+
+  fetch("https://danoski-backend.onrender.com/user/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password })
+  })
+    .then(async res => {
+      if (res.ok) {
+        sessionStorage.setItem("loginEmail", email);
+        alert("✅ Login successful! Please enter your 4-digit PIN to continue.");
+        showForm("pin-verify");
+        document.getElementById("pin-message").innerText = "🔐 Enter your 4-digit PIN to proceed to your dashboard.";
+        focusFirstPinVerifyInput();
+      } else {
+        alert("❌ Invalid email or password. Please try again.");
+      }
+    })
+    .catch(err => {
+      console.error("Login error:", err);
+      alert("⚠️ Couldn't connect to server. Please check your internet connection.");
+    });
+}
+
+function verifyLoginPin() {
+  const pin = ["pinverify1", "pinverify2", "pinverify3", "pinverify4"]
+    .map(id => document.getElementById(id).value.trim())
+    .join("");
+
+  if (pin.length !== 4 || !/^\d{4}$/.test(pin)) {
+    alert("⚠️ Please enter a valid 4-digit numeric PIN.");
+    return;
+  }
+
+  const email = sessionStorage.getItem("loginEmail");
+
+  fetch("https://danoski-backend.onrender.com/user/verify-login-pin", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, pin })
+  })
+    .then(async res => {
+      if (res.ok) {
+        alert("✅ PIN verified. Welcome back to your dashboard!");
+        sessionStorage.setItem("isLoggedIn", "true");
+        showDashboard();
+      } else {
+        alert("❌ Incorrect PIN. Please check and try again.");
+      }
+    })
+    .catch(err => {
+      console.error("PIN verification error:", err);
+      alert("⚠️ Failed to verify PIN. Please try again later.");
+    });
+}
+
+function setUserPin() {
+  const pin = ["pin1", "pin2", "pin3", "pin4"]
+    .map(id => document.getElementById(id).value.trim())
+    .join("");
+
+  if (pin.length !== 4 || !/^\d{4}$/.test(pin)) {
+    alert("⚠️ Please enter a valid 4-digit numeric PIN.");
+    return;
+  }
+
+  const full_name = sessionStorage.getItem("name");
+  const country = sessionStorage.getItem("country");
+  const email = sessionStorage.getItem("email");
+  const password = sessionStorage.getItem("password");
+
+  if (!full_name || !country || !email || !password) {
+    alert("⚠️ Something went wrong. Please restart your registration.");
+    return;
+  }
+
+  fetch("https://danoski-backend.onrender.com/user/create-account", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ full_name, country, email, password, pin })
+  })
+    .then(async res => {
+      if (res.ok) {
+        alert("🎉 Your account has been created successfully! Redirecting to your dashboard...");
+        sessionStorage.setItem("isLoggedIn", "true");
+        showDashboard();
+      } else {
+        alert("❌ Failed to create account. Please try again or contact support.");
+      }
+    })
+    .catch(err => {
+      console.error("Account creation error:", err);
+      alert("⚠️ Unable to connect to the server. Please try again later.");
+    });
+}
+    function sendForgotOtp() {
+  const email = document.getElementById("forgot-pass-email").value.trim();
+
+  if (!email) {
+    alert("⚠️ Please enter your email address.");
+    return;
+  }
+
+  fetch("https://danoski-backend.onrender.com/user/forgot-password", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email })
+  })
+    .then(async res => {
+      if (res.ok) {
+        sessionStorage.setItem("resetEmail", email);
+        alert("📩 An OTP has been sent to your email. Please check your inbox or spam folder.");
+        showForm("verify-forgot-otp");
+      } else {
+        alert("❌ Could not send OTP. Please double-check your email and try again.");
+      }
+    })
+    .catch(err => {
+      console.error("Error sending OTP:", err);
+      alert("⚠️ Unable to contact the server. Please check your connection.");
+    });
+}
+
+function verifyForgotOtp() {
+  const otp = document.getElementById("forgot-pass-otp").value.trim();
+  const email = sessionStorage.getItem("resetEmail");
+
+  if (!otp) {
+    alert("⚠️ Please enter the OTP sent to your email.");
     return;
   }
 
   if (!email) {
-    alert("⚠️ Session expired. Please request a new OTP.");
+    alert("⚠️ OTP session expired. Please request a new OTP.");
+    showForm("forgot-password");
+    return;
+  }
+
+  fetch("https://danoski-backend.onrender.com/user/verify-password-otp", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, otp })
+  })
+    .then(async res => {
+      if (res.ok) {
+        alert("✅ OTP verified! You can now set a new password.");
+        showForm("reset-password");
+      } else {
+        alert("❌ Invalid OTP. Please make sure you entered the correct code.");
+      }
+    })
+    .catch(err => {
+      console.error("OTP verification error:", err);
+      alert("⚠️ Couldn't reach the server. Please try again later.");
+    });
+}
+
+function submitNewPassword() {
+  const newPassword = document.getElementById("new-password").value.trim();
+  const confirmPassword = document.getElementById("confirm-password").value.trim();
+  const email = sessionStorage.getItem("resetEmail");
+
+  if (!newPassword || !confirmPassword) {
+    alert("⚠️ Both password fields are required.");
+    return;
+  }
+
+  if (newPassword !== confirmPassword) {
+    alert("❌ The passwords do not match. Please retype them.");
+    return;
+  }
+
+  if (newPassword.length < 6) {
+    alert("⚠️ Your password must be at least 6 characters long.");
+    return;
+  }
+
+  if (!email) {
+    alert("⚠️ Session expired. Please restart the forgot password process.");
     showForm("forgot-password");
     return;
   }
@@ -376,34 +581,24 @@ function submitNewPassword() {
     body: JSON.stringify({ email, password: newPassword })
   })
     .then(async res => {
-      let data;
-      try {
-        data = await res.json();
-      } catch (err) {
-        console.error("Invalid JSON from server:", err);
-        alert("⚠️ Unexpected response. Try again later.");
-        return;
-      }
-
       if (res.ok) {
-        alert("✅ Password reset successful. You can now log in.");
+        alert("✅ Your password has been updated! You can now log in.");
         sessionStorage.removeItem("resetEmail");
         showForm("login");
       } else {
-        alert("❌ " + (data.error || "Failed to reset password. Try again."));
+        alert("❌ Failed to reset password. Please try again.");
       }
     })
     .catch(err => {
       console.error("Password reset error:", err);
-      alert("⚠️ Could not connect to server. Please check your internet connection.");
+      alert("⚠️ Network error. Please try again later.");
     });
 }
-
-function sendResetPin() {
+    function sendResetPin() {
   const email = sessionStorage.getItem("loginEmail");
 
   if (!email) {
-    alert("⚠️ No email found in session. Please log in again.");
+    alert("⚠️ No session email found. Please log in again.");
     showForm("login");
     return;
   }
@@ -414,30 +609,21 @@ function sendResetPin() {
     body: JSON.stringify({ email })
   })
     .then(async res => {
-      let data;
-      try {
-        data = await res.json();
-      } catch (err) {
-        console.error("Invalid JSON from server:", err);
-        alert("⚠️ Unexpected response. Please try again.");
-        return;
-      }
-
       if (res.ok) {
-        alert("✅ An OTP has been sent to your email to reset your PIN.");
+        alert("📨 OTP has been sent to your email. Please check your inbox.");
         showForm("verify-pin-otp");
       } else {
-        alert("❌ " + (data.error || "Failed to send OTP. Please try again."));
+        alert("❌ Couldn't send OTP. Please try again shortly.");
       }
     })
     .catch(err => {
-      console.error("Error sending PIN OTP:", err);
-      alert("⚠️ Could not connect to the server. Please check your connection.");
+      console.error("Send PIN OTP error:", err);
+      alert("⚠️ Network error. Please check your internet connection.");
     });
 }
 
 function verifyPinOtp() {
-  const email = sessionStorage.getItem("loginEmail"); // ✅ from session
+  const email = sessionStorage.getItem("loginEmail");
   const otp = document.getElementById("pin-otp").value.trim();
 
   if (!otp) {
@@ -451,30 +637,21 @@ function verifyPinOtp() {
     body: JSON.stringify({ email, otp })
   })
     .then(async res => {
-      let data;
-      try {
-        data = await res.json();
-      } catch (err) {
-        console.error("Invalid JSON from server:", err);
-        alert("⚠️ Unexpected response from server.");
-        return;
-      }
-
       if (res.ok) {
-        alert("✅ OTP verified successfully. You can now set a new PIN.");
+        alert("✅ OTP verified! You can now enter your new PIN.");
         showForm("reset-pin");
       } else {
-        alert("❌ " + (data.error || "The OTP you entered is invalid or expired."));
+        alert("❌ Invalid OTP. Please check and try again.");
       }
     })
     .catch(err => {
-      console.error("Error verifying OTP:", err);
-      alert("⚠️ Could not connect to the server. Please try again.");
+      console.error("Verify PIN OTP error:", err);
+      alert("⚠️ Server connection error. Please try again later.");
     });
 }
 
 function setNewPin() {
-  const email = sessionStorage.getItem("loginEmail"); // ✅ from session
+  const email = sessionStorage.getItem("loginEmail");
   const pin = 
     document.getElementById("resetpin1").value +
     document.getElementById("resetpin2").value +
@@ -492,28 +669,19 @@ function setNewPin() {
     body: JSON.stringify({ email, pin })
   })
     .then(async res => {
-      let data;
-      try {
-        data = await res.json();
-      } catch (err) {
-        console.error("Invalid JSON response from server:", err);
-        alert("⚠️ Unexpected response from server.");
-        return;
-      }
-
       if (res.ok) {
-        alert("✅ Your PIN has been reset successfully.");
+        alert("✅ Your PIN has been updated successfully.");
         showForm("pin-verify");
       } else {
-        alert("❌ " + (data.error || "Failed to reset your PIN. Please try again."));
+        alert("❌ Failed to reset PIN. Please try again.");
       }
     })
     .catch(err => {
-      console.error("Error resetting PIN:", err);
-      alert("⚠️ Network/server error. Please try again.");
+      console.error("Reset PIN error:", err);
+      alert("⚠️ Couldn't connect to server. Please check your network.");
     });
 }
-
+    
 function bindPinInputs() {
   const forms = {};
 
