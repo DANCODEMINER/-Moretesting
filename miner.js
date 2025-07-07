@@ -429,7 +429,7 @@ function verifyPinOtp() {
   const otp = document.getElementById("pin-otp").value.trim();
 
   if (!otp) {
-    alert("Please enter the OTP.");
+    alert("⚠️ Please enter the OTP sent to your email.");
     return;
   }
 
@@ -438,30 +438,39 @@ function verifyPinOtp() {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, otp })
   })
-    .then(res => res.json().then(data => ({ ok: res.ok, data })))
-    .then(({ ok, data }) => {
-      if (ok) {
-        alert("✅ OTP verified. You can now set a new PIN.");
+    .then(async res => {
+      let data;
+      try {
+        data = await res.json();
+      } catch (err) {
+        console.error("Invalid JSON from server:", err);
+        alert("⚠️ Unexpected response from server.");
+        return;
+      }
+
+      if (res.ok) {
+        alert("✅ OTP verified successfully. You can now set a new PIN.");
         showForm("reset-pin");
       } else {
-        alert("❌ " + (data.error || "Invalid OTP."));
+        alert("❌ " + (data.error || "The OTP you entered is invalid or expired."));
       }
     })
     .catch(err => {
-      alert("⚠️ Server error.");
-      console.error(err);
+      console.error("Error verifying OTP:", err);
+      alert("⚠️ Could not connect to the server. Please try again.");
     });
 }
 
 function setNewPin() {
   const email = sessionStorage.getItem("loginEmail"); // ✅ from session
-  const pin = document.getElementById("resetpin1").value +
-              document.getElementById("resetpin2").value +
-              document.getElementById("resetpin3").value +
-              document.getElementById("resetpin4").value;
+  const pin = 
+    document.getElementById("resetpin1").value +
+    document.getElementById("resetpin2").value +
+    document.getElementById("resetpin3").value +
+    document.getElementById("resetpin4").value;
 
-  if (pin.length !== 4) {
-    alert("PIN must be 4 digits.");
+  if (!/^\d{4}$/.test(pin)) {
+    alert("⚠️ Please enter a valid 4-digit numeric PIN.");
     return;
   }
 
@@ -470,18 +479,26 @@ function setNewPin() {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, pin })
   })
-    .then(res => res.json().then(data => ({ ok: res.ok, data })))
-    .then(({ ok, data }) => {
-      if (ok) {
-        alert("✅ PIN reset successful.");
+    .then(async res => {
+      let data;
+      try {
+        data = await res.json();
+      } catch (err) {
+        console.error("Invalid JSON response from server:", err);
+        alert("⚠️ Unexpected response from server.");
+        return;
+      }
+
+      if (res.ok) {
+        alert("✅ Your PIN has been reset successfully.");
         showForm("pin-verify");
       } else {
-        alert("❌ " + (data.error || "Failed to reset PIN."));
+        alert("❌ " + (data.error || "Failed to reset your PIN. Please try again."));
       }
     })
     .catch(err => {
-      alert("⚠️ Server error.");
-      console.error(err);
+      console.error("Error resetting PIN:", err);
+      alert("⚠️ Network/server error. Please try again.");
     });
 }
 
