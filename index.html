@@ -184,25 +184,6 @@ header h1 {
         </form>
       </section>
 
-      <!-- FORGOT PASSWORD FORM -->
-      <section id="forgot-section"> style="display: none;">
-        <form id="forgot-form" style="display: none;" onsubmit="event.preventDefault(); resetPin();">
-          <h2>Reset PIN</h2>
-          <input type="email" id="forgot-email" placeholder="Email" required />
-          <input type="text" id="forgot-otp" placeholder="Enter OTP" required />
-          <div class="pin-row">
-            <input type="text" maxlength="1" class="pin-input" id="new1" required />
-            <input type="text" maxlength="1" class="pin-input" id="new2" required />
-            <input type="text" maxlength="1" class="pin-input" id="new3" required />
-            <input type="text" maxlength="1" class="pin-input" id="new4" required />
-          </div>
-          <button class="btn" type="submit">RESET</button>
-          <div class="form-links">
-            <a href="#" onclick="showForm('login')">Back to Login</a>
-          </div>
-        </form>
-      </section>
-
       <!-- 1. Forgot Password - Step 1 -->
 <section id="forgot-password-section" style="display: none;">
   <form id="forgot-password-form" onsubmit="event.preventDefault(); sendForgotOtp();">
