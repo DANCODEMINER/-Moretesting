@@ -1,27 +1,25 @@
-// Toggle menu in login page
+// === Toggle Menu for Login Page ===
 function toggleMenu() {
   const menu = document.getElementById("menu");
   menu.classList.toggle("show");
 }
 
+// === Toggle Sidebar for Dashboard ===
 function toggleSidebar() {
   const sidebar = document.getElementById("sidebar");
   const overlay = document.getElementById("overlay");
-
-  if (sidebar && overlay) {
-    sidebar.classList.toggle("active");
-    overlay.classList.toggle("show");
-  }
+  sidebar.classList.toggle("active");
+  overlay.classList.toggle("show");
 }
 
 function showForm(formType) {
-  document.getElementById("login-form").style.display = formType === "login" ? "block" : "none";
-  document.getElementById("register-form").style.display = formType === "register" ? "block" : "none";
-  document.getElementById("forgot-form").style.display = formType === "forgot" ? "block" : "none";
-  document.getElementById("otp-form").style.display = formType === "otp-form" ? "block" : "none";
-  document.getElementById("pin-form").style.display = formType === "pin-form" ? "block" : "none";
-  document.getElementById("pin-verify-form").style.display = formType === "pin-verify" ? "block" : "none";
-  document.getElementById("dashboard-page").style.display = formType === "dashboard" ? "block" : "none";
+  const forms = ["login", "register", "forgot", "otp-form", "pin-form", "pin-verify"];
+  forms.forEach((type) => {
+    const el = document.getElementById(type === "otp-form" ? "otp-form" : `${type}-form`);
+    if (el) el.style.display = formType === type ? "block" : "none";
+  });
+  const dashboard = document.getElementById("dashboard-page");
+  if (dashboard) dashboard.style.display = formType === "dashboard" ? "block" : "none";
 }
 
 function signupUser() {
@@ -31,57 +29,44 @@ function signupUser() {
   const password = document.getElementById("signup-password").value.trim();
   const otpMsg = document.getElementById("otp-message");
 
-  const signupData = {
-    full_name: fullName,
-    country: country,
-    email: email,
-    password: password
-  };
+  const signupData = { full_name: fullName, country, email, password };
 
   fetch("https://danoski-backend.onrender.com/user/signup", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(signupData)
   })
-  .then(res => res.json().then(data => ({ ok: res.ok, data })))
-  .then(({ ok, data }) => {
-    if (ok) {
-      localStorage.setItem("name", fullName);
-      localStorage.setItem("country", country);
-      localStorage.setItem("email", email);
-      localStorage.setItem("password", password);
-
-      otpMsg.style.color = "green";
-      otpMsg.innerText = "✅ OTP sent to your email.";
-      document.getElementById("otp-email").value = email;
-      showForm("otp-form");
+    .then(res => res.json().then(data => ({ ok: res.ok, data })))
+    .then(({ ok, data }) => {
+      if (ok) {
+        localStorage.setItem("name", fullName);
+        localStorage.setItem("country", country);
+        localStorage.setItem("email", email);
+        localStorage.setItem("password", password);
+        otpMsg.style.color = "green";
+        otpMsg.innerText = "✅ OTP sent to your email.";
+        document.getElementById("otp-email").value = email;
+        showForm("otp-form");
+        otpMsg.scrollIntoView({ behavior: "smooth", block: "center" });
+      } else {
+        otpMsg.style.color = "red";
+        otpMsg.innerText = "❌ " + (data.error || "Signup failed.");
+        otpMsg.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+      setTimeout(() => { otpMsg.innerText = ""; }, 5000);
+    })
+    .catch(err => {
+      otpMsg.style.color = "orange";
+      otpMsg.innerText = "⚠️ Failed to connect to server.";
       otpMsg.scrollIntoView({ behavior: "smooth", block: "center" });
-    } else {
-      otpMsg.style.color = "red";
-      otpMsg.innerText = "❌ " + (data.error || "Signup failed.");
-      otpMsg.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
-
-    setTimeout(() => {
-      otpMsg.innerText = "";
-    }, 5000);
-  })
-  .catch(err => {
-    otpMsg.style.color = "orange";
-    otpMsg.innerText = "⚠️ Failed to connect to server.";
-    otpMsg.scrollIntoView({ behavior: "smooth", block: "center" });
-    console.error(err);
-  });
+      console.error(err);
+    });
 }
 
 function verifyOtp() {
   const email = document.getElementById("otp-email").value.trim();
   const otp = document.getElementById("otp-code").value.trim();
-
-  if (!email || !otp) {
-    alert("Please enter both email and OTP.");
-    return;
-  }
+  if (!email || !otp) return alert("Please enter both email and OTP.");
 
   fetch("https://danoski-backend.onrender.com/user/verify-otp", {
     method: "POST",
@@ -92,9 +77,7 @@ function verifyOtp() {
     .then(({ ok, data }) => {
       if (ok) {
         alert("✅ OTP verified! Please create your PIN.");
-        document.getElementById("otp-form").style.display = "none";
-        document.getElementById("pin-form").style.display = "block";
-
+        showForm("pin-form");
         localStorage.setItem("email", email);
       } else {
         alert("❌ " + data.error);
@@ -109,11 +92,7 @@ function verifyOtp() {
 function loginUser() {
   const email = document.getElementById("login-email").value.trim();
   const password = document.getElementById("login-password").value;
-
-  if (!email || !password) {
-    alert("Please fill in all login fields.");
-    return;
-  }
+  if (!email || !password) return alert("Please fill in all login fields.");
 
   fetch("https://danoski-backend.onrender.com/user/login", {
     method: "POST",
@@ -124,33 +103,22 @@ function loginUser() {
     .then(({ ok, data }) => {
       if (ok) {
         sessionStorage.setItem("loginEmail", email);
-
-        document.getElementById("login-form").style.display = "none";
-        document.getElementById("pin-verify-form").style.display = "block";
+        showForm("pin-verify");
         document.getElementById("pin-message").innerText = "Please enter your 4-digit PIN to continue.";
         focusFirstPinVerifyInput();
       } else {
         alert("❌ " + data.error);
       }
     })
-    .catch((err) => {
+    .catch(err => {
       alert("⚠️ Server error during login.");
       console.error(err);
     });
 }
 
 function verifyLoginPin() {
-  const pin =
-    document.getElementById("pinverify1").value +
-    document.getElementById("pinverify2").value +
-    document.getElementById("pinverify3").value +
-    document.getElementById("pinverify4").value;
-
-  if (pin.length !== 4) {
-    alert("Please enter a valid 4-digit PIN.");
-    return;
-  }
-
+  const pin = ["pinverify1","pinverify2","pinverify3","pinverify4"].map(id => document.getElementById(id).value).join("");
+  if (pin.length !== 4) return alert("Please enter a valid 4-digit PIN.");
   const email = sessionStorage.getItem("loginEmail");
 
   fetch("https://danoski-backend.onrender.com/user/verify-login-pin", {
@@ -168,38 +136,25 @@ function verifyLoginPin() {
         alert("❌ " + data.error);
       }
     })
-    .catch((err) => {
+    .catch(err => {
       alert("⚠️ Server error during PIN verification.");
       console.error(err);
     });
 }
 
 function setUserPin() {
-  const pin1 = document.getElementById("pin1").value.trim();
-  const pin2 = document.getElementById("pin2").value.trim();
-  const pin3 = document.getElementById("pin3").value.trim();
-  const pin4 = document.getElementById("pin4").value.trim();
-  const pin = pin1 + pin2 + pin3 + pin4;
-
-  if (pin.length !== 4 || !/^\d{4}$/.test(pin)) {
-    alert("Please enter a valid 4-digit PIN.");
-    return;
-  }
-
+  const pin = ["pin1","pin2","pin3","pin4"].map(id => document.getElementById(id).value.trim()).join("");
+  if (pin.length !== 4 || !/^\d{4}$/.test(pin)) return alert("Please enter a valid 4-digit PIN.");
   const full_name = localStorage.getItem("name");
   const country = localStorage.getItem("country");
   const email = localStorage.getItem("email");
   const password = localStorage.getItem("password");
-
-  if (!full_name || !country || !email || !password) {
-    alert("User details missing. Please restart registration.");
-    return;
-  }
+  if (!full_name || !country || !email || !password) return alert("User details missing. Please restart registration.");
 
   fetch("https://danoski-backend.onrender.com/user/create-account", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ full_name, country, email, password, pin }),
+    body: JSON.stringify({ full_name, country, email, password, pin })
   })
     .then(res => res.json().then(data => ({ ok: res.ok, data })))
     .then(({ ok, data }) => {
@@ -218,58 +173,38 @@ function setUserPin() {
 }
 
 function bindPinInputs() {
-  const inputs = ["pin1", "pin2", "pin3", "pin4"];
-  inputs.forEach((id, index) => {
+  const inputs = ["pin1","pin2","pin3","pin4"];
+  inputs.forEach((id, i) => {
     const input = document.getElementById(id);
-    if (input) {
-      input.addEventListener("input", () => {
-        input.value = input.value.replace(/[^0-9]/g, "");
-        if (input.value.length === 1 && index < inputs.length - 1) {
-          const next = document.getElementById(inputs[index + 1]);
-          if (next) next.focus();
-        }
-        checkPinLength();
-      });
-
-      input.addEventListener("keydown", (e) => {
-        if (e.key === "Backspace" && input.value === "" && index > 0) {
-          const prev = document.getElementById(inputs[index - 1]);
-          if (prev) prev.focus();
-        }
-      });
-    }
+    if (!input) return;
+    input.addEventListener("input", () => {
+      input.value = input.value.replace(/[^0-9]/g, "");
+      if (input.value.length === 1 && i < 3) document.getElementById(inputs[i + 1]).focus();
+      checkPinLength();
+    });
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Backspace" && !input.value && i > 0) document.getElementById(inputs[i - 1]).focus();
+    });
   });
 }
 
 function bindVerifyPinInputs() {
-  const inputs = ["pinverify1", "pinverify2", "pinverify3", "pinverify4"];
-  inputs.forEach((id, index) => {
+  const inputs = ["pinverify1","pinverify2","pinverify3","pinverify4"];
+  inputs.forEach((id, i) => {
     const input = document.getElementById(id);
-    if (input) {
-      input.addEventListener("input", () => {
-        input.value = input.value.replace(/[^0-9]/g, "");
-        if (input.value.length === 1 && index < inputs.length - 1) {
-          const next = document.getElementById(inputs[index + 1]);
-          if (next) next.focus();
-        }
-      });
-
-      input.addEventListener("keydown", (e) => {
-        if (e.key === "Backspace" && input.value === "" && index > 0) {
-          const prev = document.getElementById(inputs[index - 1]);
-          if (prev) prev.focus();
-        }
-      });
-    }
+    if (!input) return;
+    input.addEventListener("input", () => {
+      input.value = input.value.replace(/[^0-9]/g, "");
+      if (input.value.length === 1 && i < 3) document.getElementById(inputs[i + 1]).focus();
+    });
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Backspace" && !input.value && i > 0) document.getElementById(inputs[i - 1]).focus();
+    });
   });
 }
 
 function checkPinLength() {
-  const pin = document.getElementById("pin1").value +
-              document.getElementById("pin2").value +
-              document.getElementById("pin3").value +
-              document.getElementById("pin4").value;
-
+  const pin = ["pin1","pin2","pin3","pin4"].map(id => document.getElementById(id).value).join("");
   const btn = document.getElementById("create-account-btn");
   if (btn) {
     btn.disabled = pin.length !== 4;
@@ -288,9 +223,8 @@ function showDashboard() {
   showForm("dashboard");
 }
 
-function focusFirstPinVerifyInput() {
-  const input = document.getElementById("pinverify1");
-  if (input) input.focus();
+function withdrawNow() {
+  alert("🔄 Withdrawal logic to be added soon!");
 }
 
 let btcValue = 0.00000000;
@@ -302,28 +236,13 @@ setInterval(() => {
   }
 }, 1000);
 
-// === DOMContentLoaded Init ===
 document.addEventListener("DOMContentLoaded", () => {
-  if (sessionStorage.getItem("isLoggedIn") === "true") {
-    showDashboard();
-  }
-
-  const loginForm = document.getElementById("login-form");
-  if (loginForm) {
-    loginForm.addEventListener("submit", function (e) {
-      e.preventDefault();
-      loginUser();
-    });
-  }
-
-  const forgotForm = document.getElementById("forgot-form");
-  if (forgotForm) {
-    forgotForm.addEventListener("submit", function (e) {
-      e.preventDefault();
-      alert("Forgot password functionality to be implemented");
-    });
-  }
-
+  if (sessionStorage.getItem("isLoggedIn") === "true") showDashboard();
   bindPinInputs();
   bindVerifyPinInputs();
 });
+
+function focusFirstPinVerifyInput() {
+  const input = document.getElementById("pinverify1");
+  if (input) input.focus();
+    }
