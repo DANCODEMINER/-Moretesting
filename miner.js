@@ -59,6 +59,19 @@ function signupUser() {
   const password = document.getElementById("signup-password").value.trim();
   const otpMsg = document.getElementById("otp-message");
 
+  // === Frontend validation ===
+  if (!fullName || !country || !email || !password) {
+    otpMsg.style.color = "red";
+    otpMsg.innerText = "⚠️ All fields are required.";
+    return;
+  }
+
+  if (password.length < 6) {
+    otpMsg.style.color = "red";
+    otpMsg.innerText = "⚠️ Password must be at least 6 characters long.";
+    return;
+  }
+
   const signupData = { full_name: fullName, country, email, password };
 
   fetch("https://danoski-backend.onrender.com/user/signup", {
@@ -67,29 +80,32 @@ function signupUser() {
     body: JSON.stringify(signupData)
   })
     .then(res => res.json().then(data => ({ ok: res.ok, data })))
-    .then(({ ok, data }) => {
+    .then(({ ok }) => {
       if (ok) {
-        localStorage.setItem("name", fullName);
-        localStorage.setItem("country", country);
-        localStorage.setItem("email", email);
-        localStorage.setItem("password", password);
+        // ✅ Use sessionStorage
+        sessionStorage.setItem("name", fullName);
+        sessionStorage.setItem("country", country);
+        sessionStorage.setItem("email", email);
+        sessionStorage.setItem("password", password);
+
         otpMsg.style.color = "green";
-        otpMsg.innerText = "✅ OTP sent to your email.";
+        otpMsg.innerText = "✅ An OTP has been sent to your email.";
         document.getElementById("otp-email").value = email;
         showForm("otp-form");
         otpMsg.scrollIntoView({ behavior: "smooth", block: "center" });
       } else {
         otpMsg.style.color = "red";
-        otpMsg.innerText = "❌ " + (data.error || "Signup failed.");
+        otpMsg.innerText = "❌ Signup failed. Please try again.";
         otpMsg.scrollIntoView({ behavior: "smooth", block: "center" });
       }
+
       setTimeout(() => { otpMsg.innerText = ""; }, 5000);
     })
     .catch(err => {
+      console.error("Signup error:", err);
       otpMsg.style.color = "orange";
-      otpMsg.innerText = "⚠️ Failed to connect to server.";
+      otpMsg.innerText = "⚠️ Could not connect to server. Please check your internet.";
       otpMsg.scrollIntoView({ behavior: "smooth", block: "center" });
-      console.error(err);
     });
 }
 
