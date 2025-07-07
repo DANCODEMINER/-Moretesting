@@ -129,7 +129,15 @@ function loginUser() {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password })
   })
-    .then(res => res.json().then(data => ({ ok: res.ok, data })))
+    .then(async res => {
+      let data;
+      try {
+        data = await res.json();
+      } catch (err) {
+        throw new Error("Invalid JSON response");
+      }
+      return { ok: res.ok, data };
+    })
     .then(({ ok, data }) => {
       if (ok) {
         sessionStorage.setItem("loginEmail", email);
@@ -137,7 +145,7 @@ function loginUser() {
         document.getElementById("pin-message").innerText = "Please enter your 4-digit PIN to continue.";
         focusFirstPinVerifyInput();
       } else {
-        alert("❌ " + data.error);
+        alert("❌ " + (data.error || "Login failed."));
       }
     })
     .catch(err => {
