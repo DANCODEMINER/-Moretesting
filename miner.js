@@ -665,8 +665,7 @@ function verifyPinOtp() {
       alert("⚠️ Server connection error. Please try again later.");
     });
 }
-
-
+    
 function bindPinInputs() {
   const forms = {};
 
@@ -698,7 +697,7 @@ function bindPinInputs() {
     if (inputs[0]) inputs[0].focus();
   });
 }
-    
+
 function setNewPin() {
   const email = sessionStorage.getItem("loginEmail");
   const pin =
@@ -729,7 +728,7 @@ function setNewPin() {
       console.error("Reset PIN error:", err);
       alert("⚠️ Couldn't connect to server. Please check your network.");
     });
-    }
+}
 
 function checkPinLength() {
   const pin = ["pin1","pin2","pin3","pin4"].map(id => document.getElementById(id).value).join("");
