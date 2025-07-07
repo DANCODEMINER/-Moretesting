@@ -1,0 +1,101 @@
+<div id="overlay" onclick="toggleSidebar()"></div>
+<header>
+  <h1>Adchain Miner</h1>
+  <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+</header>
+
+<div class="sidebar" id="sidebar">
+  <h3>Settings</h3>
+  <ul>
+    <li onclick="alert('👤 View Profile')">👤 View Profile</li>
+    <li onclick="alert('🔒 Change Password')">🔒 Change Password</li>
+    <li onclick="alert('🔁 Reset PIN')">🔁 Reset PIN</li>
+    <li onclick="alert('💳 Withdrawal History')">💳 Withdrawal History</li>
+    <li onclick="alert('📈 Transaction History')">📈 Transaction History</li>
+    <li onclick="logout()">🚪 Logout</li>
+    <li onclick="toggleSidebar()">❌ Close Menu</li>
+  </ul>
+</div>
+
+<div class="container">
+  <!-- Live Mining -->
+  <div class="mining-counter">
+    <h2>Mining in Progress...</h2>
+    <p id="btc-counter">0.00000000 BTC</p>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="card"><h2>Total Hashrate</h2><p id="total-hashrate">0.00 Th/s</p></div>
+    <div class="card"><h2>Total Mined</h2><p id="total-mined">0.0000 BTC</p></div>
+    <div class="card"><h2>Total Withdrawn</h2><p id="total-withdrawn">0.0000 BTC</p></div>
+    <div class="card"><h2>Active Sessions</h2><p id="active-sessions">0</p></div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="actions">
+    <button onclick="watchAd()">▶️ Watch Ad</button>
+    <button onclick="withdrawNow()">⬇️ Withdraw</button>
+  </div>
+
+  <!-- Next Withdrawal Date -->
+  <div class="logs">
+    <h3>💸 Next Withdrawal Date</h3>
+    <div id="withdrawal-date-message" style="color: #444; font-size: 15px;">
+      <p>Next auto-withdrawal will be processed on <strong id="next-withdrawal-date">July 10, 2025</strong>.</p>
+    </div>
+  </div>
+
+  <!-- Announcements -->
+  <div class="logs">
+    <h3>📢 Messages & Announcements</h3>
+    <div id="dashboard-messages" style="text-align: left; color: #444; font-size: 15px;">
+      <p>✅ Watch ads daily to boost your hash rate rewards!</p>
+      <p>⚠️ Withdrawals are processed every 24 hours. Make sure your wallet is active.</p>
+    </div>
+  </div>
+
+  <!-- Hashrate Sessions -->
+  <div class="logs">
+    <h3>Recent Hash Sessions</h3>
+    <table id="hash-sessions-table">
+      <thead>
+        <tr><th>Session ID</th><th>Date</th><th>Power</th><th>Duration</th></tr>
+      </thead>
+      <tbody>
+        <!-- Injected by JS -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Leaderboard -->
+  <div class="logs">
+    <h3>📈 Leaderboard</h3>
+    <h4 style="color: #f7931a;">🏆 Top Miners</h4>
+    <table id="top-miners-table">
+      <thead>
+        <tr><th>Rank</th><th>User</th><th>BTC (30d)</th><th>Hashrate</th></tr>
+      </thead>
+      <tbody>
+        <!-- Injected by JS -->
+      </tbody>
+    </table>
+
+    <h4 style="margin-top: 30px; color: #f7931a;">📊 My Rank</h4>
+    <table id="my-rank-table">
+      <thead>
+        <tr><th>Rank</th><th>User</th><th>BTC (30d)</th><th>Hashrate</th></tr>
+      </thead>
+      <tbody>
+        <tr><td id="my-rank">--</td><td>You</td><td id="my-btc">--</td><td id="my-hashrate">--</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<footer>
+  <div>&copy; 2025 Adchain Miner. All rights reserved.</div>
+  <div class="logout-footer">
+    <button onclick="logout()">🚪 Logout</button>
+  </div>
+</footer>
