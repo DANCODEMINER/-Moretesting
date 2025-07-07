@@ -734,6 +734,22 @@ function logout() {
   window.location.href = "login.html";
 }
 
+function showForm(formId) {
+  document.querySelectorAll("section").forEach(section => {
+    section.style.display = "none";
+  });
+  const target = document.getElementById(formId);
+  if (target) {
+    target.style.display = "block";
+  }
+}
+
+function logout() {
+  sessionStorage.clear();
+  localStorage.clear();
+  window.location.href = "login.html";
+}
+
 function showDashboard() {
   showForm("dashboard");
 }
