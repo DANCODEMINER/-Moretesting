@@ -582,4 +582,8 @@ setInterval(() => {
 document.addEventListener("DOMContentLoaded", () => {
   if (sessionStorage.getItem("isLoggedIn") === "true") showDashboard();
   bindPinInputs();
+
+  // ✅ Bind logout buttons
+  const logoutButtons = document.querySelectorAll(".logout-btn");
+  logoutButtons.forEach(button => button.addEventListener("click", logout));
 });
