@@ -19,8 +19,8 @@ function showForm(formType) {
     register: "register-form",
     forgot: "forgot-form",
     "otp-form": "otp-form",
-    "pin-form": "pin-form"
-    "pin-verify": "pin-verify-form"
+    "pin-form": "pin-form",
+    "pin-verify": "pin-verify-form",
     "forgot-password": "forgot-password-form",
     "verify-forgot-otp": "verify-forgot-otp-form",
     "reset-password": "reset-password-form",
