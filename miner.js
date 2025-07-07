@@ -173,7 +173,7 @@ function loginUser() {
 }
 
 function verifyLoginPin() {
-  const pin = ["pinverify1","pinverify2","pinverify3","pinverify4"]
+  const pin = ["pinverify1", "pinverify2", "pinverify3", "pinverify4"]
     .map(id => document.getElementById(id).value)
     .join("");
 
@@ -201,7 +201,7 @@ function verifyLoginPin() {
 
       if (res.ok) {
         alert("✅ PIN verified. Welcome back!");
-        sessionStorage.setItem("isLoggedIn", "true");
+        sessionStorage.setItem("pinVerified", "true"); // ✅ Set here after PIN verified
         showDashboard();
       } else {
         alert("❌ Incorrect PIN. Please try again.");
