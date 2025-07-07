@@ -251,35 +251,48 @@ function setUserPin() {
 }
 
 // Step 1: Send OTP
-function sendForgotOtp() {
-  const email = document.getElementById("forgot-pass-email").value.trim();
+function verifyForgotOtp() {
+  const otp = document.getElementById("forgot-pass-otp").value.trim();
+  const email = sessionStorage.getItem("resetEmail");
 
-  if (!email) {
-    alert("Please enter your email.");
+  if (!otp) {
+    alert("⚠️ Please enter the OTP sent to your email.");
     return;
   }
 
-  fetch("https://danoski-backend.onrender.com/user/forgot-password", {
+  if (!email) {
+    alert("⚠️ Session expired. Please request a new OTP.");
+    showForm("forgot-password");
+    return;
+  }
+
+  fetch("https://danoski-backend.onrender.com/user/verify-password-otp", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email })
+    body: JSON.stringify({ email, otp })
   })
-    .then(res => res.json().then(data => ({ ok: res.ok, data })))
-    .then(({ ok, data }) => {
-      if (ok) {
-        alert("✅ OTP sent to your email.");
-        sessionStorage.setItem("resetEmail", email); // ✅ sessionStorage here
-        showForm("verify-forgot-otp");
+    .then(async res => {
+      let data;
+      try {
+        data = await res.json();
+      } catch (err) {
+        console.error("Invalid JSON response:", err);
+        alert("⚠️ Unexpected response from server.");
+        return;
+      }
+
+      if (res.ok) {
+        alert("✅ OTP verified. You can now set your new password.");
+        showForm("reset-password");
       } else {
-        alert("❌ " + (data.error || "Failed to send OTP."));
+        alert("❌ Incorrect OTP. Please try again.");
       }
     })
     .catch(err => {
-      alert("⚠️ Server error.");
-      console.error(err);
+      console.error("OTP verification error:", err);
+      alert("⚠️ Could not connect to server. Try again later.");
     });
 }
-
 // Step 2: Verify OTP
 function verifyForgotOtp() {
   const otp = document.getElementById("forgot-pass-otp").value.trim();
