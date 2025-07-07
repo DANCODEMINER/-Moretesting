@@ -156,13 +156,13 @@ function loginUser() {
       }
 
       if (res.ok) {
+        sessionStorage.setItem("isLoggedIn", "true"); // ✅ Set after successful login
         sessionStorage.setItem("loginEmail", email);
         alert("✅ Login successful! Please enter your PIN to continue.");
         showForm("pin-verify");
         document.getElementById("pin-message").innerText = "Please enter your 4-digit PIN to continue.";
         focusFirstPinVerifyInput();
       } else {
-        // Don't show backend message — show a generic frontend message
         alert("❌ Invalid email or password.");
       }
     })
