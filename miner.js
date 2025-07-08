@@ -244,10 +244,10 @@ function setUserPin() {
     return;
   }
 
-  const full_name = localStorage.getItem("name");
-  const country = localStorage.getItem("country");
-  const email = localStorage.getItem("email");
-  const password = localStorage.getItem("password");
+  const full_name = sessionStorage.getItem("name");
+  const country = sessionStorage.getItem("country");
+  const email = sessionStorage.getItem("email");
+  const password = sessionStorage.getItem("password");
 
   if (!full_name || !country || !email || !password) {
     showToast("⚠️ Missing user details. Please start the registration again.", "#e74c3c");
