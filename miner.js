@@ -681,6 +681,54 @@ function watchAd() {
     });
 }
 
+function withdrawNow() {
+  const email = sessionStorage.getItem("email");
+
+  if (!email) {
+    showToast("Email not found. Please log in again.");
+    return;
+  }
+
+  fetch("/user/withdraw-now", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.message) {
+        showToast(data.message);
+        fetchDashboardSummary(); // Refresh totals
+      } else if (data.error) {
+        showToast("❌ " + data.error);
+      }
+    })
+    .catch(err => {
+      console.error("Withdraw error:", err);
+      showToast("An error occurred while withdrawing.");
+    });
+}
+
+function withdrawNow() {
+  const email = sessionStorage.getItem("email");
+
+  fetch("/user/withdraw-now", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        showToast("Withdrawal successful.");
+        fetchDashboardSummary(); // Refresh dashboard after withdrawal
+      } else {
+        showToast(data.error || "Withdrawal failed.");
+      }
+    })
+    .catch(() => showToast("Server error during withdrawal."));
+}
+
 // 8. Logout
 function logout() {
   fetch("/user/logout", {
