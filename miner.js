@@ -75,7 +75,7 @@ function signupUser() {
   const fullName = `${firstName} ${lastName}`;
   const signupData = { full_name: fullName, country, email, password };
 
-  fetch("https://danoski-backend.onrender.com/user-create-account", {
+  fetch("https://danoski-backend.onrender.com/user/create-account", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(signupData)
