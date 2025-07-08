@@ -718,6 +718,15 @@ function watchAd() {
     });
 }
 
+function initDashboard() {
+  fetchDashboardSummary();        // Total Hashrate, Mined, Withdrawn, Sessions
+  loadRecentHashSessions();       // Recent mining sessions
+  fetchTopMiners();               // Leaderboard
+  fetchMyRank();                  // My Rank table
+  fetchNextWithdrawalDate();      // Next withdrawal date
+  loadDashboardMessages();        // Admin messages or system notices
+}
+
 let btcValue = 0.00000000;
 setInterval(() => {
   const btcCounter = document.getElementById("btc-counter");
@@ -734,6 +743,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (isLoggedIn && pinVerified) {
     showDashboard();
+    initDashboard();
   } else if (isLoggedIn && !pinVerified) {
     showForm("pin-verify");
   }
