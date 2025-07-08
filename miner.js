@@ -74,13 +74,13 @@ function signupUser() {
 
   const fullName = `${firstName} ${lastName}`;
 
-  // Save signup details temporarily
+  // Save signup details temporarily in sessionStorage
   sessionStorage.setItem("name", fullName);
   sessionStorage.setItem("country", country);
   sessionStorage.setItem("email", email);
   sessionStorage.setItem("password", password);
 
-  // 🔹 Send OTP
+  // Send OTP to email
   fetch("https://danoski-backend.onrender.com/user/send-otp", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -119,36 +119,26 @@ function verifyOtp() {
   const otp = document.getElementById("otp-code").value.trim();
 
   if (!email || !otp) {
-    showToast("⚠️ Please enter both email and OTP.", "#e67e22");
+    showToast("⚠️ Please enter your email and OTP.", "#e74c3c");
     return;
   }
 
   fetch("https://danoski-backend.onrender.com/user/verify-otp", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, otp }),
+    body: JSON.stringify({ email, otp })
   })
-    .then(async res => {
-      let data;
-      try {
-        data = await res.json();
-      } catch (err) {
-        console.error("Invalid JSON response:", err);
-        showToast("⚠️ Unexpected server response.", "#e67e22");
-        return;
-      }
-
-      if (res.ok) {
-        showToast("✅ OTP verified successfully. Please create your PIN.", "#4caf50");
-        sessionStorage.setItem("email", email);
+    .then(res => res.json().then(data => ({ ok: res.ok, data })))
+    .then(({ ok, data }) => {
+      if (ok) {
+        showToast("✅ OTP verified. Please set your 4-digit PIN.", "#4caf50");
         showForm("pin-form");
       } else {
-        showToast("❌ Invalid OTP. Please try again.", "#e74c3c");
+        showToast("❌ " + (data.error || "OTP verification failed."), "#e74c3c");
       }
     })
-    .catch(err => {
-      console.error("OTP verification error:", err);
-      showToast("⚠️ Could not connect to the server.", "#f39c12");
+    .catch(() => {
+      showToast("⚠️ Unable to connect to server.", "#f39c12");
     });
 }
 
@@ -249,7 +239,7 @@ function setUserPin() {
   const email = sessionStorage.getItem("email");
   const password = sessionStorage.getItem("password");
 
-  if (!full_name || !country || !email || !password) {
+  if (![full_name, country, email, password].every(v => v && v.trim())) {
     showToast("⚠️ Missing user details. Please start the registration again.", "#e74c3c");
     return;
   }
@@ -274,7 +264,8 @@ function setUserPin() {
         sessionStorage.setItem("isLoggedIn", "true");
         showDashboard();
       } else {
-        showToast("❌ Account creation failed. Please try again.", "#e74c3c");
+        const errorMessage = data?.error || "❌ Account creation failed.";
+        showToast(errorMessage, "#e74c3c");
       }
     })
     .catch(err => {
