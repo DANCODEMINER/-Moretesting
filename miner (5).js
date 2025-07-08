@@ -60,6 +60,479 @@ function showForm(formType) {
   bindPinInputs();
 }
 
+function signupUser() {
+  const firstName = document.getElementById("signup-firstname").value.trim();
+  const lastName = document.getElementById("signup-lastname").value.trim();
+  const country = document.getElementById("signup-country").value;
+  const email = document.getElementById("signup-email").value.trim();
+  const password = document.getElementById("signup-password").value.trim();
+
+  if (!firstName || !lastName || !country || !email || !password) {
+    showToast("⚠️ Please fill in all fields.", "#e74c3c");
+    return;
+  }
+
+  const fullName = `${firstName} ${lastName}`;
+  const signupData = { full_name: fullName, country, email, password };
+
+  fetch("https://danoski-backend.onrender.com/user/signup", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(signupData)
+  })
+    .then(res => res.json().then(data => ({ ok: res.ok, data })))
+    .then(({ ok }) => {
+      if (ok) {
+        sessionStorage.setItem("name", fullName);
+        sessionStorage.setItem("country", country);
+        sessionStorage.setItem("email", email);
+        sessionStorage.setItem("password", password);
+
+        showToast(`✅ Welcome ${firstName}, your signup was successful! OTP sent to your email.`, "#4caf50");
+
+        document.getElementById("otp-email").value = email;
+        showForm("otp-form");
+      } else {
+        showToast("❌ Signup failed. Please try again.", "#e74c3c");
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      showToast("⚠️ Failed to connect to server.", "#f39c12");
+    });
+}
+
+function showToast(message, background = "#4caf50") {
+  const toast = document.getElementById("toast");
+  toast.innerText = message;
+  toast.style.backgroundColor = background;
+  toast.style.display = "block";
+  toast.classList.add("show");
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+    toast.style.display = "none";
+  }, 4000);
+}
+
+function verifyOtp() {
+  const email = document.getElementById("otp-email").value.trim();
+  const otp = document.getElementById("otp-code").value.trim();
+
+  if (!email || !otp) {
+    showToast("⚠️ Please enter both email and OTP.", "#e67e22");
+    return;
+  }
+
+  fetch("https://danoski-backend.onrender.com/user/verify-otp", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, otp }),
+  })
+    .then(async res => {
+      let data;
+      try {
+        data = await res.json();
+      } catch (err) {
+        console.error("Invalid JSON response:", err);
+        showToast("⚠️ Unexpected server response.", "#e67e22");
+        return;
+      }
+
+      if (res.ok) {
+        showToast("✅ OTP verified successfully. Please create your PIN.", "#4caf50");
+        sessionStorage.setItem("email", email);
+        showForm("pin-form");
+      } else {
+        showToast("❌ Invalid OTP. Please try again.", "#e74c3c");
+      }
+    })
+    .catch(err => {
+      console.error("OTP verification error:", err);
+      showToast("⚠️ Could not connect to the server.", "#f39c12");
+    });
+}
+
+function loginUser() {
+  const email = document.getElementById("login-email").value.trim();
+  const password = document.getElementById("login-password").value;
+
+  if (!email || !password) {
+    showToast("⚠️ Please fill in all login fields.", "#e74c3c");
+    return;
+  }
+
+  fetch("https://danoski-backend.onrender.com/user/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password })
+  })
+    .then(async res => {
+      let data;
+      try {
+        data = await res.json();
+      } catch (err) {
+        console.error("❌ Invalid JSON from server.");
+        showToast("⚠️ Unexpected server response. Please try again.", "#e67e22");
+        return;
+      }
+
+      if (res.ok) {
+        sessionStorage.setItem("isLoggedIn", "true");
+        sessionStorage.setItem("loginEmail", email);
+        showToast("✅ Login successful! Please enter your PIN to continue.", "#4caf50");
+        showForm("pin-verify");
+        document.getElementById("pin-message").innerText = "Please enter your 4-digit PIN to continue.";
+        focusFirstPinVerifyInput();
+      } else {
+        showToast("❌ Invalid email or password.", "#e74c3c");
+      }
+    })
+    .catch(err => {
+      console.error("Login error:", err);
+      showToast("⚠️ Network error. Please check your connection and try again.", "#f39c12");
+    });
+}
+
+function verifyLoginPin() {
+  const pin = ["pinverify1", "pinverify2", "pinverify3", "pinverify4"]
+    .map(id => document.getElementById(id).value)
+    .join("");
+
+  if (pin.length !== 4) {
+    showToast("⚠️ Please enter a valid 4-digit PIN.", "#e74c3c");
+    return;
+  }
+
+  const email = sessionStorage.getItem("loginEmail");
+
+  fetch("https://danoski-backend.onrender.com/user/verify-login-pin", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, pin })
+  })
+    .then(async res => {
+      let data;
+      try {
+        data = await res.json();
+      } catch (err) {
+        console.error("❌ Invalid JSON from server.");
+        showToast("⚠️ Unexpected server response.", "#e67e22");
+        return;
+      }
+
+      if (res.ok) {
+        showToast("✅ PIN verified. Welcome back!", "#4caf50");
+        sessionStorage.setItem("pinVerified", "true");
+        showDashboard();
+      } else {
+        showToast("❌ Incorrect PIN. Please try again.", "#e74c3c");
+      }
+    })
+    .catch(err => {
+      console.error("PIN verification error:", err);
+      showToast("⚠️ Network/server issue during PIN verification.", "#f39c12");
+    });
+}
+
+function setUserPin() {
+  const pin = ["pin1", "pin2", "pin3", "pin4"]
+    .map(id => document.getElementById(id).value.trim())
+    .join("");
+
+  if (pin.length !== 4 || !/^\d{4}$/.test(pin)) {
+    showToast("⚠️ Please enter a valid 4-digit PIN.", "#e74c3c");
+    return;
+  }
+
+  const full_name = localStorage.getItem("name");
+  const country = localStorage.getItem("country");
+  const email = localStorage.getItem("email");
+  const password = localStorage.getItem("password");
+
+  if (!full_name || !country || !email || !password) {
+    showToast("⚠️ Missing user details. Please start the registration again.", "#e74c3c");
+    return;
+  }
+
+  fetch("https://danoski-backend.onrender.com/user/create-account", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ full_name, country, email, password, pin })
+  })
+    .then(async res => {
+      let data;
+      try {
+        data = await res.json();
+      } catch (err) {
+        console.error("Invalid JSON response:", err);
+        showToast("⚠️ Unexpected server response.", "#e67e22");
+        return;
+      }
+
+      if (res.ok) {
+        showToast("✅ Account created successfully!", "#4caf50");
+        sessionStorage.setItem("isLoggedIn", "true");
+        showDashboard();
+      } else {
+        showToast("❌ Account creation failed. Please try again.", "#e74c3c");
+      }
+    })
+    .catch(err => {
+      console.error("Account creation error:", err);
+      showToast("⚠️ Unable to connect to server.", "#f39c12");
+    });
+}
+
+function sendForgotOtp() {
+  const email = document.getElementById("forgot-pass-email").value.trim();
+
+  if (!email) {
+    showToast("⚠️ Please enter your email address.", "#e74c3c");
+    return;
+  }
+
+  fetch("https://danoski-backend.onrender.com/user/forgot-password", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email })
+  })
+    .then(async res => {
+      let data;
+      try {
+        data = await res.json();
+      } catch (err) {
+        console.error("Invalid JSON response:", err);
+        showToast("⚠️ Unexpected server response.", "#e67e22");
+        return;
+      }
+
+      if (res.ok) {
+        sessionStorage.setItem("resetEmail", email);
+        showToast("✅ OTP has been sent to your email.", "#4caf50");
+        showForm("verify-forgot-otp");
+      } else {
+        showToast("❌ Unable to send OTP. Please check your email and try again.", "#e74c3c");
+      }
+    })
+    .catch(err => {
+      console.error("Error sending OTP:", err);
+      showToast("⚠️ Network error. Please try again later.", "#f39c12");
+    });
+}
+
+function verifyForgotOtp() {
+  const otp = document.getElementById("forgot-pass-otp").value.trim();
+  const email = sessionStorage.getItem("resetEmail");
+
+  if (!otp) {
+    showToast("⚠️ Please enter the OTP sent to your email.", "#e74c3c");
+    return;
+  }
+
+  if (!email) {
+    showToast("⚠️ Session expired. Please request a new OTP.", "#e74c3c");
+    showForm("forgot-password");
+    return;
+  }
+
+  fetch("https://danoski-backend.onrender.com/user/verify-password-otp", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, otp })
+  })
+    .then(async res => {
+      let data;
+      try {
+        data = await res.json();
+      } catch (err) {
+        console.error("Invalid JSON response:", err);
+        showToast("⚠️ Unexpected response from server.", "#e67e22");
+        return;
+      }
+
+      if (res.ok) {
+        showToast("✅ OTP verified. You can now set your new password.", "#4caf50");
+        showForm("reset-password");
+      } else {
+        showToast("❌ Incorrect OTP. Please try again.", "#e74c3c");
+      }
+    })
+    .catch(err => {
+      console.error("OTP verification error:", err);
+      showToast("⚠️ Could not connect to server. Try again later.", "#f39c12");
+    });
+}
+
+function submitNewPassword() {
+  const newPassword = document.getElementById("new-password").value.trim();
+  const confirmPassword = document.getElementById("confirm-password").value.trim();
+  const email = sessionStorage.getItem("resetEmail");
+
+  if (!newPassword || !confirmPassword) {
+    showToast("⚠️ Please fill in both password fields.", "#e74c3c");
+    return;
+  }
+
+  if (newPassword !== confirmPassword) {
+    showToast("❌ Passwords do not match.", "#e74c3c");
+    return;
+  }
+
+  if (newPassword.length < 6) {
+    showToast("⚠️ Password must be at least 6 characters long.", "#e74c3c");
+    return;
+  }
+
+  if (!email) {
+    showToast("⚠️ Session expired. Please request a new OTP.", "#e74c3c");
+    showForm("forgot-password");
+    return;
+  }
+
+  fetch("https://danoski-backend.onrender.com/user/reset-password", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password: newPassword })
+  })
+    .then(async res => {
+      let data;
+      try {
+        data = await res.json();
+      } catch (err) {
+        console.error("Invalid JSON from server:", err);
+        showToast("⚠️ Unexpected response. Try again later.", "#e67e22");
+        return;
+      }
+
+      if (res.ok) {
+        showToast("✅ Password reset successful. You can now log in.", "#4caf50");
+        sessionStorage.removeItem("resetEmail");
+        showForm("login");
+      } else {
+        showToast("❌ Failed to reset password. Try again.", "#e74c3c");
+      }
+    })
+    .catch(err => {
+      console.error("Password reset error:", err);
+      showToast("⚠️ Could not connect to server. Please check your internet connection.", "#f39c12");
+    });
+}
+
+function sendResetPin() {
+  const email = sessionStorage.getItem("loginEmail");
+
+  if (!email) {
+    showToast("⚠️ No email found in session. Please log in again.", "#e74c3c");
+    showForm("login");
+    return;
+  }
+
+  fetch("https://danoski-backend.onrender.com/user/sendresetpin", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email })
+  })
+    .then(async res => {
+      let data;
+      try {
+        data = await res.json();
+      } catch (err) {
+        console.error("Invalid JSON from server:", err);
+        showToast("⚠️ Unexpected response. Please try again.", "#e67e22");
+        return;
+      }
+
+      if (res.ok) {
+        showToast("✅ An OTP has been sent to your email to reset your PIN.", "#4caf50");
+        showForm("verify-pin-otp");
+      } else {
+        showToast("❌ Failed to send OTP. Please try again.", "#e74c3c");
+      }
+    })
+    .catch(err => {
+      console.error("Error sending PIN OTP:", err);
+      showToast("⚠️ Could not connect to the server. Please check your connection.", "#f39c12");
+    });
+}
+
+function verifyPinOtp() {
+  const email = sessionStorage.getItem("loginEmail");
+  const otp = document.getElementById("pin-otp").value.trim();
+
+  if (!otp) {
+    showToast("⚠️ Please enter the OTP sent to your email.", "#e74c3c");
+    return;
+  }
+
+  fetch("https://danoski-backend.onrender.com/user/verify-pin-otp", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, otp })
+  })
+    .then(async res => {
+      let data;
+      try {
+        data = await res.json();
+      } catch (err) {
+        console.error("Invalid JSON from server:", err);
+        showToast("⚠️ Unexpected response from server.", "#e67e22");
+        return;
+      }
+
+      if (res.ok) {
+        showToast("✅ OTP verified successfully. You can now set a new PIN.", "#4caf50");
+        showForm("reset-pin");
+      } else {
+        showToast("❌ The OTP you entered is invalid or expired.", "#e74c3c");
+      }
+    })
+    .catch(err => {
+      console.error("Error verifying OTP:", err);
+      showToast("⚠️ Could not connect to the server. Please try again.", "#f39c12");
+    });
+}
+
+function setNewPin() {
+  const email = sessionStorage.getItem("loginEmail");
+  const pin =
+    document.getElementById("resetpin1").value +
+    document.getElementById("resetpin2").value +
+    document.getElementById("resetpin3").value +
+    document.getElementById("resetpin4").value;
+
+  if (!/^\d{4}$/.test(pin)) {
+    showToast("⚠️ Please enter a valid 4-digit numeric PIN.", "#e74c3c");
+    return;
+  }
+
+  fetch("https://danoski-backend.onrender.com/user/reset-pin", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, pin })
+  })
+    .then(async res => {
+      let data;
+      try {
+        data = await res.json();
+      } catch (err) {
+        console.error("Invalid JSON response from server:", err);
+        showToast("⚠️ Unexpected response from server.", "#e67e22");
+        return;
+      }
+
+      if (res.ok) {
+        showToast("✅ Your PIN has been reset successfully.", "#4caf50");
+        showForm("pin-verify");
+      } else {
+        showToast("❌ Failed to reset your PIN. Please try again.", "#e74c3c");
+      }
+    })
+    .catch(err => {
+      console.error("Error resetting PIN:", err);
+      showToast("⚠️ Network/server error. Please try again.", "#f39c12");
+    });
+}
 
 function bindPinInputs() {
   const forms = {};
