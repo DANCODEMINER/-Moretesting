@@ -116,19 +116,11 @@ function showToast(message, background = "#4caf50") {
   toast.innerText = message;
   toast.style.backgroundColor = background;
   toast.style.display = "block";
+  toast.classList.add("show");
 
-  // Trigger slide-in animation
-  setTimeout(() => {
-    toast.classList.add("show");
-  }, 10);
-
-  // Hide after 4 seconds
   setTimeout(() => {
     toast.classList.remove("show");
-    // Fully hide after animation ends
-    setTimeout(() => {
-      toast.style.display = "none";
-    }, 500);
+    toast.style.display = "none";
   }, 4000);
 }
 
