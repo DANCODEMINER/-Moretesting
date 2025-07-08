@@ -617,6 +617,37 @@ function withdrawNow() {
   alert("🔄 Withdrawal logic to be added soon!");
 }
 
+function watchAd() {
+  const email = sessionStorage.getItem("email");
+
+  if (!email) {
+    showToast("❌ Email not found. Please log in again.");
+    return;
+  }
+
+  fetch("/user/watch-ad", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.message) {
+        showToast("✅ " + data.message);
+        fetchDashboardSummary();     // Update totals
+        loadRecentHashSessions();    // Update session list
+        fetchTopMiners();            // Refresh leaderboard
+        fetchMyRank();               // Update my rank
+      } else if (data.error) {
+        showToast("❌ " + data.error);
+      }
+    })
+    .catch(err => {
+      console.error("Watch ad error:", err);
+      showToast("❌ Failed to record ad session.");
+    });
+}
+
 let btcValue = 0.00000000;
 setInterval(() => {
   const btcCounter = document.getElementById("btc-counter");
