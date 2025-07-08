@@ -81,23 +81,37 @@ function signupUser() {
     body: JSON.stringify(signupData)
   })
     .then(res => res.json().then(data => ({ ok: res.ok, data })))
-    .then(({ ok }) => {
+    .then(({ ok, data }) => {
       if (ok) {
         sessionStorage.setItem("name", fullName);
         sessionStorage.setItem("country", country);
         sessionStorage.setItem("email", email);
         sessionStorage.setItem("password", password);
 
-        showToast(`✅ Welcome ${firstName}, your signup was successful! OTP sent to your email.`, "#4caf50");
-
-        document.getElementById("otp-email").value = email;
-        showForm("otp-form");
+        // ✅ Trigger OTP sending
+        fetch("https://danoski-backend.onrender.com/user/send-otp", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email })
+        })
+          .then(otpRes => otpRes.json())
+          .then(otpData => {
+            if (otpRes.ok) {
+              showToast(`✅ Signup successful! OTP sent to your email.`, "#4caf50");
+              document.getElementById("otp-email").value = email;
+              showForm("otp-form");
+            } else {
+              showToast("⚠️ Signup succeeded but OTP failed to send.", "#f39c12");
+            }
+          })
+          .catch(() => {
+            showToast("⚠️ Signup succeeded but could not send OTP.", "#f39c12");
+          });
       } else {
-        showToast("❌ Signup failed. Please try again.", "#e74c3c");
+        showToast("❌ " + (data.error || "Signup failed."), "#e74c3c");
       }
     })
-    .catch(err => {
-      console.error(err);
+    .catch(() => {
       showToast("⚠️ Failed to connect to server.", "#f39c12");
     });
 }
