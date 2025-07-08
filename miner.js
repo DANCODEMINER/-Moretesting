@@ -419,7 +419,7 @@ function submitNewPassword() {
 }
 
 function sendResetPin() {
-  const email = sessionStorage.getItem("email");
+  const email = sessionStorage.getItem("loginEmail");
 
   if (!email) {
     showToast("⚠️ No email found in session. Please log in again.", "#e74c3c");
@@ -456,7 +456,7 @@ function sendResetPin() {
 }
 
 function verifyPinOtp() {
-  const email = sessionStorage.getItem("email");
+  const email = sessionStorage.getItem("loginEmail");
   const otp = document.getElementById("pin-otp").value.trim();
 
   if (!otp) {
