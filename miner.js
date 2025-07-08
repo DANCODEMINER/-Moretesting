@@ -568,6 +568,34 @@ function fetchTopMiners() {
     });
 }
 
+function loadRecentHashSessions() {
+  const email = sessionStorage.getItem("email");
+
+  fetch("/user/recent-hash-sessions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  })
+    .then(res => res.json())
+    .then(data => {
+      const table = document.getElementById("hash-sessions-table").querySelector("tbody");
+      table.innerHTML = "";
+
+      data.sessions.forEach(session => {
+        const row = `<tr>
+          <td>${session.id}</td>
+          <td>${session.date}</td>
+          <td>${session.power}</td>
+          <td>${session.duration}</td>
+        </tr>`;
+        table.innerHTML += row;
+      });
+    })
+    .catch(() => {
+      console.error("Failed to load recent hash sessions.");
+    });
+}
+
 function fetchMyRank() {
   const email = sessionStorage.getItem("email");
 
