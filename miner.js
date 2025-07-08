@@ -12,6 +12,18 @@ function toggleSidebar() {
   overlay.classList.toggle("show");
 }
 
+let inactivityTimeout;
+
+function resetInactivityTimer() {
+  clearTimeout(inactivityTimeout);
+  inactivityTimeout = setTimeout(() => {
+    // 🔒 What happens when user is inactive for too long
+    sessionStorage.clear(); // or remove specific keys
+    showToast("⏳ You were logged out due to inactivity.", "#e67e22");
+    showForm("login"); // redirect to login
+  }, 2 * 60 * 1000); // 2 minutes (adjust as needed)
+}
+
 function showForm(formType) {
   // All possible form sections by ID
   const formMap = {
@@ -619,17 +631,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const isLoggedIn = sessionStorage.getItem("isLoggedIn") === "true";
   const pinVerified = sessionStorage.getItem("pinVerified") === "true";
 
-  // Only show dashboard if both logged in AND PIN verified
   if (isLoggedIn && pinVerified) {
     showDashboard();
   } else if (isLoggedIn && !pinVerified) {
     showForm("pin-verify");
   }
 
-  // Bind pin input fields
   bindPinInputs();
 
-  // Show password length on signup
   const passwordInput = document.getElementById("signup-password");
   const passwordCount = document.getElementById("password-count");
   if (passwordInput && passwordCount) {
@@ -639,10 +648,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Bind all logout buttons with class
   const logoutButtons = document.querySelectorAll(".logout-btn");
   logoutButtons.forEach(button => button.addEventListener("click", logout));
 
-  // Start inactivity timer
+  // ✅ Inactivity timer logic here
   resetInactivityTimer();
+  document.addEventListener("mousemove", resetInactivityTimer);
+  document.addEventListener("keydown", resetInactivityTimer);
+  document.addEventListener("click", resetInactivityTimer);
 });
