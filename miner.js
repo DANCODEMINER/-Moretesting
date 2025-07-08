@@ -545,6 +545,29 @@ function setNewPin() {
     });
 }
 
+function fetchTopMiners() {
+  fetch("/user/top-miners")
+    .then(res => res.json())
+    .then(data => {
+      const tbody = document.querySelector("#top-miners-table tbody");
+      tbody.innerHTML = "";
+
+      data.miners.forEach((miner, index) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${miner.user}</td>
+          <td>${miner.btc} BTC</td>
+          <td>${miner.hashrate}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    })
+    .catch(() => {
+      console.error("Failed to fetch top miners.");
+    });
+}
+
 function bindPinInputs() {
   const forms = {};
 
