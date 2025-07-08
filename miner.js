@@ -505,7 +505,7 @@ function verifyPinOtp() {
 }
 
 function setNewPin() {
-  const email = sessionStorage.getItem("email");
+  const email = sessionStorage.getItem("loginEmail");
   const pin =
     document.getElementById("resetpin1").value +
     document.getElementById("resetpin2").value +
