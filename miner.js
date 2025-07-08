@@ -48,6 +48,14 @@ function showForm(formType) {
     if (loginPage) loginPage.style.display = "block";
   }
 
+  // ✅ Clear pin-verify inputs when showing pin-verify form
+  if (formType === "pin-verify") {
+    ["pinverify1", "pinverify2", "pinverify3", "pinverify4"].forEach(id => {
+      const input = document.getElementById(id);
+      if (input) input.value = "";
+    });
+  }
+
   // ✅ Re-bind pin inputs after showing new form
   bindPinInputs();
 }
