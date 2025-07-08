@@ -244,6 +244,15 @@ function setUserPin() {
     return;
   }
 
+  // ✅ Console log the data being sent
+  console.log("Creating account with:", {
+    full_name,
+    country,
+    email,
+    password,
+    pin
+  });
+
   fetch("https://danoski-backend.onrender.com/user/create-account", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
