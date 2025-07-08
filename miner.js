@@ -579,11 +579,54 @@ setInterval(() => {
   }
 }, 1000);
 
+// ========== DOMContentLoaded Setup ==========
 document.addEventListener("DOMContentLoaded", () => {
-  if (sessionStorage.getItem("isLoggedIn") === "true") showDashboard();
+  // Show dashboard if already logged in
+  if (sessionStorage.getItem("isLoggedIn") === "true") {
+    showDashboard();
+  }
+
+  // Bind pin input fields
   bindPinInputs();
 
-  // ✅ Bind logout buttons
+  // Show password length on signup
+  const passwordInput = document.getElementById("signup-password");
+  const passwordCount = document.getElementById("password-count");
+  if (passwordInput && passwordCount) {
+    passwordInput.addEventListener("input", function () {
+      const len = this.value.length;
+      passwordCount.innerText = `${len}/12 characters`;
+    });
+  }
+
+  // Bind all logout buttons with class
   const logoutButtons = document.querySelectorAll(".logout-btn");
   logoutButtons.forEach(button => button.addEventListener("click", logout));
+
+  // Start inactivity timer
+  resetInactivityTimer();
+});
+
+// ========== Inactivity Timeout Setup ==========
+let inactivityTimer;
+
+function resetInactivityTimer() {
+  clearTimeout(inactivityTimer);
+
+  // Only apply timer if user is logged in and PIN is verified
+  if (
+    sessionStorage.getItem("isLoggedIn") === "true" &&
+    sessionStorage.getItem("pinVerified") === "true"
+  ) {
+    inactivityTimer = setTimeout(() => {
+      alert("⚠️ Session timeout due to inactivity. Please re-enter your PIN.");
+      sessionStorage.removeItem("pinVerified"); // clear PIN session only
+      showForm("pin-verify");
+    }, 5 * 60 * 1000); // 5 minutes
+  }
+}
+
+// Reset timer on any user activity
+["mousemove", "keydown", "touchstart"].forEach(evt => {
+  document.addEventListener(evt, resetInactivityTimer);
 });
