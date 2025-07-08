@@ -545,6 +545,178 @@ function setNewPin() {
     });
 }
 
+// === DASHBOARD ROUTES LOGIC (using sessionStorage) ===
+
+// 1. Fetch Dashboard Summary
+function fetchDashboardSummary() {
+  const email = sessionStorage.getItem("email");
+
+  fetch("/user/dashboard-summary", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  })
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("total-hashrate").innerText = data.hashrate;
+      document.getElementById("total-mined").innerText = (parseFloat(data.hashrate) * 0.00005).toFixed(4) + " BTC";
+      document.getElementById("total-withdrawn").innerText = data.withdrawn;
+      document.getElementById("active-sessions").innerText = data.sessions;
+    })
+    .catch(console.error);
+}
+
+// 2. Load Recent Hash Sessions
+function loadRecentHashSessions() {
+  const email = sessionStorage.getItem("email");
+
+  fetch("/user/recent-hash-sessions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  })
+    .then(res => res.json())
+    .then(data => {
+      const table = document.getElementById("hash-sessions-table").querySelector("tbody");
+      table.innerHTML = "";
+      data.sessions.forEach(s => {
+        const row = `<tr>
+          <td>${s.id}</td>
+          <td>${s.date}</td>
+          <td>${s.power}</td>
+          <td>${s.duration}</td>
+        </tr>`;
+        table.innerHTML += row;
+      });
+    })
+    .catch(console.error);
+}
+
+// 3. Load Top Miners Leaderboard
+function loadTopMiners() {
+  fetch("/user/top-miners")
+    .then(res => res.json())
+    .then(data => {
+      const table = document.getElementById("top-miners-table").querySelector("tbody");
+      table.innerHTML = "";
+      data.miners.forEach((m, i) => {
+        const row = `<tr>
+          <td>${i + 1}</td>
+          <td>${m.user}</td>
+          <td>${m.btc} BTC</td>
+          <td>${m.hashrate}</td>
+        </tr>`;
+        table.innerHTML += row;
+      });
+    })
+    .catch(console.error);
+}
+
+// 4. Load My Rank
+function loadMyRank() {
+  const email = sessionStorage.getItem("email");
+
+  fetch("/user/my-rank", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  })
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("my-rank").innerText = data.rank;
+      document.getElementById("my-btc").innerText = data.btc + " BTC";
+      document.getElementById("my-hashrate").innerText = data.hashrate;
+    })
+    .catch(console.error);
+}
+
+// 5. Fetch Next Withdrawal Date
+function fetchNextWithdrawalDate() {
+  fetch("/user/next-withdrawal-date")
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("next-withdrawal-date").innerText = data.next_date;
+    })
+    .catch(console.error);
+}
+
+// 6. Load Dashboard Messages
+function loadDashboardMessages() {
+  fetch("/user/dashboard-messages")
+    .then(res => res.json())
+    .then(data => {
+      const container = document.getElementById("dashboard-messages");
+      container.innerHTML = "";
+      data.messages.forEach(msg => {
+        container.innerHTML += `<p>${msg}</p>`;
+      });
+    })
+    .catch(console.error);
+}
+
+// 7. Watch Ad Function (adds hashrate)
+function watchAd() {
+  const email = sessionStorage.getItem("email");
+
+  fetch("/user/watch-ad", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  })
+    .then(res => res.json())
+    .then(data => {
+      showToast("✅ " + data.message);
+      fetchDashboardSummary();
+      loadRecentHashSessions();
+      loadTopMiners();
+      loadMyRank();
+    })
+    .catch(err => {
+      console.error(err);
+      showToast("❌ Failed to log ad watch.");
+    });
+}
+
+// 8. Logout
+function logout() {
+  fetch("/user/logout", {
+    method: "POST"
+  })
+    .then(() => {
+      sessionStorage.clear();
+      window.location.href = "login.html"; // or your login route
+    });
+}
+
+// Toast Notification
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  toast.innerText = message;
+  toast.style.display = "block";
+  setTimeout(() => {
+    toast.style.display = "none";
+  }, 3000);
+}
+
+// Call these when dashboard loads
+function initDashboard() {
+  fetchDashboardSummary();
+  loadRecentHashSessions();
+  loadTopMiners();
+  loadMyRank();
+  fetchNextWithdrawalDate();
+  loadDashboardMessages();
+
+  const name = sessionStorage.getItem("name");
+  const flag = sessionStorage.getItem("flag");
+  if (name) document.getElementById("welcome-name").innerText = "Welcome, " + name + "!";
+  if (flag) {
+    const img = document.getElementById("country-flag");
+    img.src = flag;
+    img.style.display = "inline-block";
+  }
+}
+
 function bindPinInputs() {
   const forms = {};
 
