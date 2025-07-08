@@ -593,27 +593,31 @@ function loadRecentHashSessions() {
 }
 
 // 3. Load Top Miners Leaderboard
-function loadTopMiners() {
+function fetchTopMiners() {
   fetch("/user/top-miners")
     .then(res => res.json())
     .then(data => {
-      const table = document.getElementById("top-miners-table").querySelector("tbody");
-      table.innerHTML = "";
-      data.miners.forEach((m, i) => {
-        const row = `<tr>
-          <td>${i + 1}</td>
-          <td>${m.user}</td>
-          <td>${m.btc} BTC</td>
-          <td>${m.hashrate}</td>
-        </tr>`;
-        table.innerHTML += row;
+      const tbody = document.querySelector("#top-miners-table tbody");
+      tbody.innerHTML = "";
+
+      data.miners.forEach((miner, index) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${miner.user}</td>
+          <td>${miner.btc} BTC</td>
+          <td>${miner.hashrate}</td>
+        `;
+        tbody.appendChild(row);
       });
     })
-    .catch(console.error);
+    .catch(() => {
+      console.error("Failed to fetch top miners.");
+    });
 }
 
 // 4. Load My Rank
-function loadMyRank() {
+function fetchMyRank() {
   const email = sessionStorage.getItem("email");
 
   fetch("/user/my-rank", {
@@ -624,14 +628,12 @@ function loadMyRank() {
     .then(res => res.json())
     .then(data => {
       document.getElementById("my-rank").innerText = data.rank;
-      document.getElementById("my-btc").innerText = data.btc + " BTC";
+      document.getElementById("my-btc").innerText = `${data.btc} BTC`;
       document.getElementById("my-hashrate").innerText = data.hashrate;
     })
-    .catch(console.error);
-}
-
-function withdrawNow() {
-  showToast("⚠️ Withdrawal system not yet activated.");
+    .catch(() => {
+      console.error("Failed to fetch my rank.");
+    });
 }
 
 // 5. Fetch Next Withdrawal Date
