@@ -630,6 +630,10 @@ function loadMyRank() {
     .catch(console.error);
 }
 
+function withdrawNow() {
+  showToast("⚠️ Withdrawal system not yet activated.");
+}
+
 // 5. Fetch Next Withdrawal Date
 function fetchNextWithdrawalDate() {
   fetch("/user/next-withdrawal-date")
