@@ -771,6 +771,8 @@ function logout() {
 
 function showDashboard() {
   showForm("dashboard");
+  initDashboard(); // <-- add this line
+}
 
   const name = sessionStorage.getItem("name");
   const countryCode = sessionStorage.getItem("country"); // ISO 2-letter code
