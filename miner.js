@@ -73,46 +73,31 @@ function signupUser() {
   }
 
   const fullName = `${firstName} ${lastName}`;
-  const signupData = { full_name: fullName, country, email, password };
 
-  fetch("https://danoski-backend.onrender.com/user/create-account", {
+  // Save signup details temporarily
+  sessionStorage.setItem("name", fullName);
+  sessionStorage.setItem("country", country);
+  sessionStorage.setItem("email", email);
+  sessionStorage.setItem("password", password);
+
+  // 🔹 Send OTP
+  fetch("https://danoski-backend.onrender.com/user/send-otp", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(signupData)
+    body: JSON.stringify({ email })
   })
     .then(res => res.json().then(data => ({ ok: res.ok, data })))
     .then(({ ok, data }) => {
       if (ok) {
-        sessionStorage.setItem("name", fullName);
-        sessionStorage.setItem("country", country);
-        sessionStorage.setItem("email", email);
-        sessionStorage.setItem("password", password);
-
-        // ✅ Trigger OTP sending
-        fetch("https://danoski-backend.onrender.com/user/send-otp", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email })
-        })
-          .then(otpRes => otpRes.json())
-          .then(otpData => {
-            if (otpRes.ok) {
-              showToast(`✅ Signup successful! OTP sent to your email.`, "#4caf50");
-              document.getElementById("otp-email").value = email;
-              showForm("otp-form");
-            } else {
-              showToast("⚠️ Signup succeeded but OTP failed to send.", "#f39c12");
-            }
-          })
-          .catch(() => {
-            showToast("⚠️ Signup succeeded but could not send OTP.", "#f39c12");
-          });
+        showToast("✅ OTP sent to your email. Please verify.", "#4caf50");
+        document.getElementById("otp-email").value = email;
+        showForm("otp-form");
       } else {
-        showToast("❌ " + (data.error || "Signup failed."), "#e74c3c");
+        showToast("❌ " + (data.error || "Failed to send OTP."), "#e74c3c");
       }
     })
     .catch(() => {
-      showToast("⚠️ Failed to connect to server.", "#f39c12");
+      showToast("⚠️ Could not connect to server.", "#f39c12");
     });
 }
 
