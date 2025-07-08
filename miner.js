@@ -695,6 +695,19 @@ function watchAd() {
     return;
   }
 
+  function loadDashboardMessages() {
+  fetch("/user/dashboard-messages")
+    .then(res => res.json())
+    .then(data => {
+      const container = document.getElementById("dashboard-messages");
+      container.innerHTML = "";
+      data.messages.forEach(msg => {
+        container.innerHTML += `<p>${msg}</p>`;
+      });
+    })
+    .catch(console.error);
+  }
+
   fetch("/user/watch-ad", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
