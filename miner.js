@@ -69,8 +69,7 @@ function signupUser() {
   const otpMsg = document.getElementById("otp-message");
 
   if (!firstName || !lastName || !country || !email || !password) {
-    otpMsg.style.color = "red";
-    otpMsg.innerText = "⚠️ Please fill in all fields.";
+    showToast("⚠️ Please fill in all fields.", "#e74c3c");
     return;
   }
 
@@ -90,24 +89,17 @@ function signupUser() {
         sessionStorage.setItem("email", email);
         sessionStorage.setItem("password", password);
 
-        showToast(`✅ Welcome ${firstName}, your signup was successful! OTP sent to your email.`);
+        showToast(`✅ Welcome ${firstName}, your signup was successful! OTP sent to your email.`, "#4caf50");
 
         document.getElementById("otp-email").value = email;
         showForm("otp-form");
-        otpMsg.innerText = ""; // clear message if any
       } else {
-        otpMsg.style.color = "red";
-        otpMsg.innerText = "❌ " + (data.error || "Signup failed.");
+        showToast("❌ " + (data.error || "Signup failed."), "#e74c3c");
       }
-
-      setTimeout(() => {
-        otpMsg.innerText = "";
-      }, 5000);
     })
     .catch(err => {
-      otpMsg.style.color = "orange";
-      otpMsg.innerText = "⚠️ Failed to connect to server.";
       console.error(err);
+      showToast("⚠️ Failed to connect to server.", "#f39c12");
     });
 }
 
@@ -129,7 +121,7 @@ function verifyOtp() {
   const otp = document.getElementById("otp-code").value.trim();
 
   if (!email || !otp) {
-    alert("⚠️ Please enter both email and OTP.");
+    showToast("⚠️ Please enter both email and OTP.", "#e67e22");
     return;
   }
 
@@ -144,21 +136,21 @@ function verifyOtp() {
         data = await res.json();
       } catch (err) {
         console.error("Invalid JSON response:", err);
-        alert("⚠️ Unexpected server response.");
+        showToast("⚠️ Unexpected server response.", "#e67e22");
         return;
       }
 
       if (res.ok) {
-        alert("✅ OTP verified successfully. Please proceed to create your PIN.");
-        localStorage.setItem("email", email);
+        showToast("✅ OTP verified successfully. Please create your PIN.", "#4caf50");
+        sessionStorage.setItem("email", email);
         showForm("pin-form");
       } else {
-        alert("❌ " + (data.error || "Invalid OTP. Please try again."));
+        showToast("❌ " + (data.error || "Invalid OTP. Please try again."), "#e74c3c");
       }
     })
     .catch(err => {
       console.error("OTP verification error:", err);
-      alert("⚠️ Could not connect to the server. Please check your internet and try again.");
+      showToast("⚠️ Could not connect to the server.", "#f39c12");
     });
 }
 
@@ -167,7 +159,7 @@ function loginUser() {
   const password = document.getElementById("login-password").value;
 
   if (!email || !password) {
-    alert("⚠️ Please fill in all login fields.");
+    showToast("⚠️ Please fill in all login fields.", "#e67e22");
     return;
   }
 
@@ -182,24 +174,24 @@ function loginUser() {
         data = await res.json();
       } catch (err) {
         console.error("❌ Invalid JSON from server.");
-        alert("⚠️ Unexpected server response. Please try again.");
+        showToast("⚠️ Unexpected server response. Please try again.", "#e67e22");
         return;
       }
 
       if (res.ok) {
-        sessionStorage.setItem("isLoggedIn", "true"); // ✅ Set after successful login
+        sessionStorage.setItem("isLoggedIn", "true");
         sessionStorage.setItem("loginEmail", email);
-        alert("✅ Login successful! Please enter your PIN to continue.");
+        showToast("✅ Login successful! Please enter your PIN to continue.", "#4caf50");
         showForm("pin-verify");
         document.getElementById("pin-message").innerText = "Please enter your 4-digit PIN to continue.";
         focusFirstPinVerifyInput();
       } else {
-        alert("❌ Invalid email or password.");
+        showToast("❌ Invalid email or password.", "#e74c3c");
       }
     })
     .catch(err => {
       console.error("Login error:", err);
-      alert("⚠️ Network error. Please check your connection and try again.");
+      showToast("⚠️ Network error. Please check your connection and try again.", "#f39c12");
     });
 }
 
@@ -209,7 +201,7 @@ function verifyLoginPin() {
     .join("");
 
   if (pin.length !== 4) {
-    alert("⚠️ Please enter a valid 4-digit PIN.");
+    showToast("⚠️ Please enter a valid 4-digit PIN.", "#e67e22");
     return;
   }
 
@@ -226,21 +218,21 @@ function verifyLoginPin() {
         data = await res.json();
       } catch (err) {
         console.error("❌ Invalid JSON from server.");
-        alert("⚠️ Unexpected server response.");
+        showToast("⚠️ Unexpected server response.", "#e67e22");
         return;
       }
 
       if (res.ok) {
-        alert("✅ PIN verified. Welcome back!");
-        sessionStorage.setItem("pinVerified", "true"); // ✅ Set here after PIN verified
+        showToast("✅ PIN verified. Welcome back!", "#4caf50");
+        sessionStorage.setItem("pinVerified", "true");
         showDashboard();
       } else {
-        alert("❌ Incorrect PIN. Please try again.");
+        showToast("❌ Incorrect PIN. Please try again.", "#e74c3c");
       }
     })
     .catch(err => {
       console.error("PIN verification error:", err);
-      alert("⚠️ Network/server issue during PIN verification.");
+      showToast("⚠️ Network/server issue during PIN verification.", "#f39c12");
     });
 }
 
@@ -250,7 +242,7 @@ function setUserPin() {
     .join("");
 
   if (pin.length !== 4 || !/^\d{4}$/.test(pin)) {
-    alert("⚠️ Please enter a valid 4-digit PIN.");
+    showToast("⚠️ Please enter a valid 4-digit PIN.", "#e67e22");
     return;
   }
 
@@ -260,7 +252,7 @@ function setUserPin() {
   const password = localStorage.getItem("password");
 
   if (!full_name || !country || !email || !password) {
-    alert("⚠️ Missing user details. Please start the registration again.");
+    showToast("⚠️ Missing user details. Please start the registration again.", "#f39c12");
     return;
   }
 
@@ -275,21 +267,21 @@ function setUserPin() {
         data = await res.json();
       } catch (err) {
         console.error("Invalid JSON response:", err);
-        alert("⚠️ Unexpected server response.");
+        showToast("⚠️ Unexpected server response.", "#e67e22");
         return;
       }
 
       if (res.ok) {
-        alert("✅ Account created successfully!");
+        showToast("✅ Account created successfully!", "#4caf50");
         sessionStorage.setItem("isLoggedIn", "true");
         showDashboard();
       } else {
-        alert("❌ Account creation failed. Please try again.");
+        showToast("❌ Account creation failed. Please try again.", "#e74c3c");
       }
     })
     .catch(err => {
       console.error("Account creation error:", err);
-      alert("⚠️ Unable to connect to server.");
+      showToast("⚠️ Unable to connect to server.", "#f39c12");
     });
 }
 
@@ -298,7 +290,7 @@ function sendForgotOtp() {
   const email = document.getElementById("forgot-pass-email").value.trim();
 
   if (!email) {
-    alert("⚠️ Please enter your email address.");
+    showToast("⚠️ Please enter your email address.", "#e67e22");
     return;
   }
 
@@ -313,21 +305,21 @@ function sendForgotOtp() {
         data = await res.json();
       } catch (err) {
         console.error("Invalid JSON response:", err);
-        alert("⚠️ Unexpected server response.");
+        showToast("⚠️ Unexpected server response.", "#e67e22");
         return;
       }
 
       if (res.ok) {
         sessionStorage.setItem("resetEmail", email);
-        alert("✅ OTP has been sent to your email.");
+        showToast("✅ OTP has been sent to your email.", "#4caf50");
         showForm("verify-forgot-otp");
       } else {
-        alert("❌ Unable to send OTP. Please check your email and try again.");
+        showToast("❌ Unable to send OTP. Please check your email and try again.", "#e74c3c");
       }
     })
     .catch(err => {
       console.error("Error sending OTP:", err);
-      alert("⚠️ Network error. Please try again later.");
+      showToast("⚠️ Network error. Please try again later.", "#f39c12");
     });
 }
 // Step 2: Verify OTP
@@ -336,12 +328,12 @@ function verifyForgotOtp() {
   const email = sessionStorage.getItem("resetEmail");
 
   if (!otp) {
-    alert("⚠️ Please enter the OTP sent to your email.");
+    showToast("⚠️ Please enter the OTP sent to your email.", "#e67e22");
     return;
   }
 
   if (!email) {
-    alert("⚠️ Session expired. Please request a new OTP.");
+    showToast("⚠️ Session expired. Please request a new OTP.", "#e67e22");
     showForm("forgot-password");
     return;
   }
@@ -357,20 +349,20 @@ function verifyForgotOtp() {
         data = await res.json();
       } catch (err) {
         console.error("Invalid JSON response:", err);
-        alert("⚠️ Unexpected response from server.");
+        showToast("⚠️ Unexpected response from server.", "#e67e22");
         return;
       }
 
       if (res.ok) {
-        alert("✅ OTP verified. You can now set your new password.");
+        showToast("✅ OTP verified. You can now set your new password.", "#4caf50");
         showForm("reset-password");
       } else {
-        alert("❌ Incorrect OTP. Please try again.");
+        showToast("❌ Incorrect OTP. Please try again.", "#e74c3c");
       }
     })
     .catch(err => {
       console.error("OTP verification error:", err);
-      alert("⚠️ Could not connect to server. Try again later.");
+      showToast("⚠️ Could not connect to server. Try again later.", "#f39c12");
     });
 }
 
@@ -381,22 +373,22 @@ function submitNewPassword() {
   const email = sessionStorage.getItem("resetEmail");
 
   if (!newPassword || !confirmPassword) {
-    alert("⚠️ Please fill in both password fields.");
+    showToast("⚠️ Please fill in both password fields.", "#e67e22");
     return;
   }
 
   if (newPassword !== confirmPassword) {
-    alert("❌ Passwords do not match.");
+    showToast("❌ Passwords do not match.", "#e74c3c");
     return;
   }
 
   if (newPassword.length < 6) {
-    alert("⚠️ Password must be at least 6 characters long.");
+    showToast("⚠️ Password must be at least 6 characters long.", "#e67e22");
     return;
   }
 
   if (!email) {
-    alert("⚠️ Session expired. Please request a new OTP.");
+    showToast("⚠️ Session expired. Please request a new OTP.", "#e67e22");
     showForm("forgot-password");
     return;
   }
@@ -412,21 +404,21 @@ function submitNewPassword() {
         data = await res.json();
       } catch (err) {
         console.error("Invalid JSON from server:", err);
-        alert("⚠️ Unexpected response. Try again later.");
+        showToast("⚠️ Unexpected response. Try again later.", "#e67e22");
         return;
       }
 
       if (res.ok) {
-        alert("✅ Password reset successful. You can now log in.");
+        showToast("✅ Password reset successful. You can now log in.", "#4caf50");
         sessionStorage.removeItem("resetEmail");
         showForm("login");
       } else {
-        alert("❌ " + (data.error || "Failed to reset password. Try again."));
+        showToast("❌ " + (data.error || "Failed to reset password. Try again."), "#e74c3c");
       }
     })
     .catch(err => {
       console.error("Password reset error:", err);
-      alert("⚠️ Could not connect to server. Please check your internet connection.");
+      showToast("⚠️ Could not connect to server. Please check your internet connection.", "#f39c12");
     });
 }
 
@@ -434,7 +426,7 @@ function sendResetPin() {
   const email = sessionStorage.getItem("loginEmail");
 
   if (!email) {
-    alert("⚠️ No email found in session. Please log in again.");
+    showToast("⚠️ No email found in session. Please log in again.", "#e67e22");
     showForm("login");
     return;
   }
@@ -450,29 +442,29 @@ function sendResetPin() {
         data = await res.json();
       } catch (err) {
         console.error("Invalid JSON from server:", err);
-        alert("⚠️ Unexpected response. Please try again.");
+        showToast("⚠️ Unexpected response. Please try again.", "#e67e22");
         return;
       }
 
       if (res.ok) {
-        alert("✅ An OTP has been sent to your email to reset your PIN.");
+        showToast("✅ An OTP has been sent to your email to reset your PIN.", "#4caf50");
         showForm("verify-pin-otp");
       } else {
-        alert("❌ " + (data.error || "Failed to send OTP. Please try again."));
+        showToast("❌ " + (data.error || "Failed to send OTP. Please try again."), "#e74c3c");
       }
     })
     .catch(err => {
       console.error("Error sending PIN OTP:", err);
-      alert("⚠️ Could not connect to the server. Please check your connection.");
+      showToast("⚠️ Could not connect to the server. Please check your connection.", "#f39c12");
     });
 }
 
 function verifyPinOtp() {
-  const email = sessionStorage.getItem("loginEmail"); // ✅ from session
+  const email = sessionStorage.getItem("loginEmail");
   const otp = document.getElementById("pin-otp").value.trim();
 
   if (!otp) {
-    alert("⚠️ Please enter the OTP sent to your email.");
+    showToast("⚠️ Please enter the OTP sent to your email.", "#f39c12");
     return;
   }
 
@@ -487,33 +479,33 @@ function verifyPinOtp() {
         data = await res.json();
       } catch (err) {
         console.error("Invalid JSON from server:", err);
-        alert("⚠️ Unexpected response from server.");
+        showToast("⚠️ Unexpected response from server.", "#f39c12");
         return;
       }
 
       if (res.ok) {
-        alert("✅ OTP verified successfully. You can now set a new PIN.");
+        showToast("✅ OTP verified successfully. You can now set a new PIN.", "#4caf50");
         showForm("reset-pin");
       } else {
-        alert("❌ " + (data.error || "The OTP you entered is invalid or expired."));
+        showToast("❌ " + (data.error || "The OTP you entered is invalid or expired."), "#e74c3c");
       }
     })
     .catch(err => {
       console.error("Error verifying OTP:", err);
-      alert("⚠️ Could not connect to the server. Please try again.");
+      showToast("⚠️ Could not connect to the server. Please try again.", "#f39c12");
     });
 }
 
 function setNewPin() {
-  const email = sessionStorage.getItem("loginEmail"); // ✅ from session
-  const pin = 
+  const email = sessionStorage.getItem("loginEmail");
+  const pin =
     document.getElementById("resetpin1").value +
     document.getElementById("resetpin2").value +
     document.getElementById("resetpin3").value +
     document.getElementById("resetpin4").value;
 
   if (!/^\d{4}$/.test(pin)) {
-    alert("⚠️ Please enter a valid 4-digit numeric PIN.");
+    showToast("⚠️ Please enter a valid 4-digit numeric PIN.", "#f39c12");
     return;
   }
 
@@ -528,20 +520,20 @@ function setNewPin() {
         data = await res.json();
       } catch (err) {
         console.error("Invalid JSON response from server:", err);
-        alert("⚠️ Unexpected response from server.");
+        showToast("⚠️ Unexpected response from server.", "#f39c12");
         return;
       }
 
       if (res.ok) {
-        alert("✅ Your PIN has been reset successfully.");
+        showToast("✅ Your PIN has been reset successfully.", "#4caf50");
         showForm("pin-verify");
       } else {
-        alert("❌ " + (data.error || "Failed to reset your PIN. Please try again."));
+        showToast("❌ " + (data.error || "Failed to reset your PIN. Please try again."), "#e74c3c");
       }
     })
     .catch(err => {
       console.error("Error resetting PIN:", err);
-      alert("⚠️ Network/server error. Please try again.");
+      showToast("⚠️ Network/server error. Please try again.", "#f39c12");
     });
 }
 
