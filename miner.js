@@ -712,6 +712,34 @@ function withdrawNow() {
 function withdrawNow() {
   const email = sessionStorage.getItem("email");
 
+  function withdrawNow() {
+  const email = sessionStorage.getItem("email");
+
+  if (!email) {
+    showToast("❌ Email not found in session.");
+    return;
+  }
+
+  fetch("/user/withdraw-now", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.message) {
+        showToast("✅ " + data.message);
+        fetchDashboardSummary(); // refresh dashboard data
+      } else if (data.error) {
+        showToast("❌ " + data.error);
+      }
+    })
+    .catch(err => {
+      console.error("Withdraw failed:", err);
+      showToast("❌ Failed to process withdrawal.");
+    });
+  }
+
   fetch("/user/withdraw-now", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
