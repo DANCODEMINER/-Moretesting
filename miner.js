@@ -545,8 +545,7 @@ function setNewPin() {
     });
 }
 
-// === DASHBOARD ROUTES LOGIC (using sessionStorage) ===
-
+// === DASHBOARD ROUTES LOGIC (using sessionStorage) =
 // 1. Fetch Dashboard Summary
 function fetchDashboardSummary() {
   const email = sessionStorage.getItem("email");
@@ -559,7 +558,8 @@ function fetchDashboardSummary() {
     .then(res => res.json())
     .then(data => {
       document.getElementById("total-hashrate").innerText = data.hashrate;
-      document.getElementById("total-mined").innerText = (parseFloat(data.hashrate) * 0.00005).toFixed(4) + " BTC";
+      document.getElementById("total-mined").innerText =
+        (parseFloat(data.hashrate) * 0.00005).toFixed(4) + " BTC";
       document.getElementById("total-withdrawn").innerText = data.withdrawn;
       document.getElementById("active-sessions").innerText = data.sessions;
     })
@@ -577,7 +577,9 @@ function loadRecentHashSessions() {
   })
     .then(res => res.json())
     .then(data => {
-      const table = document.getElementById("hash-sessions-table").querySelector("tbody");
+      const table = document
+        .getElementById("hash-sessions-table")
+        .querySelector("tbody");
       table.innerHTML = "";
       data.sessions.forEach(s => {
         const row = `<tr>
@@ -674,8 +676,8 @@ function watchAd() {
       showToast("✅ " + data.message);
       fetchDashboardSummary();
       loadRecentHashSessions();
-      loadTopMiners();
-      loadMyRank();
+      fetchTopMiners();
+      fetchMyRank();
     })
     .catch(err => {
       console.error(err);
@@ -683,38 +685,8 @@ function watchAd() {
     });
 }
 
+// 8. Withdraw Now
 function withdrawNow() {
-  const email = sessionStorage.getItem("email");
-
-  if (!email) {
-    showToast("Email not found. Please log in again.");
-    return;
-  }
-
-  fetch("/user/withdraw-now", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email }),
-  })
-    .then(res => res.json())
-    .then(data => {
-      if (data.message) {
-        showToast(data.message);
-        fetchDashboardSummary(); // Refresh totals
-      } else if (data.error) {
-        showToast("❌ " + data.error);
-      }
-    })
-    .catch(err => {
-      console.error("Withdraw error:", err);
-      showToast("An error occurred while withdrawing.");
-    });
-}
-
-function withdrawNow() {
-  const email = sessionStorage.getItem("email");
-
-  function withdrawNow() {
   const email = sessionStorage.getItem("email");
 
   if (!email) {
@@ -731,48 +703,14 @@ function withdrawNow() {
     .then(data => {
       if (data.message) {
         showToast("✅ " + data.message);
-        fetchDashboardSummary(); // refresh dashboard data
+        fetchDashboardSummary(); // Refresh dashboard
       } else if (data.error) {
         showToast("❌ " + data.error);
       }
     })
     .catch(err => {
-      console.error("Withdraw failed:", err);
-      showToast("❌ Failed to process withdrawal.");
-    });
-  }
-
-  function withdrawNow() {
-  const email = sessionStorage.getItem("email");
-
-  fetch("/user/withdraw-now", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email }),
-  })
-    .then(res => res.json())
-    .then(data => {
-      if (data.message) {
-        showToast(data.message);  // ✅ success toast
-        initDashboard(); // 🔄 Refresh dashboard data
-      } else {
-        showToast("Withdrawal failed. Try again later.");  // ⚠️ fallback message
-      }
-    })
-    .catch(err => {
       console.error("Withdraw error:", err);
-      showToast("Server error while processing withdrawal.");
-    });
-  }
-
-// 8. Logout
-function logout() {
-  fetch("/user/logout", {
-    method: "POST"
-  })
-    .then(() => {
-      sessionStorage.clear();
-      window.location.href = "login.html"; // or your login route
+      showToast("❌ Failed to process withdrawal.");
     });
 }
 
