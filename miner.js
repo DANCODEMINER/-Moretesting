@@ -61,12 +61,20 @@ function showForm(formType) {
 }
 
 function signupUser() {
-  const fullName = document.getElementById("signup-name").value.trim();
-  const country = document.getElementById("signup-country").value.trim();
+  const firstName = document.getElementById("signup-firstname").value.trim();
+  const lastName = document.getElementById("signup-lastname").value.trim();
+  const country = document.getElementById("signup-country").value;
   const email = document.getElementById("signup-email").value.trim();
   const password = document.getElementById("signup-password").value.trim();
   const otpMsg = document.getElementById("otp-message");
 
+  if (!firstName || !lastName || !country || !email || !password) {
+    otpMsg.style.color = "red";
+    otpMsg.innerText = "⚠️ Please fill in all fields.";
+    return;
+  }
+
+  const fullName = `${firstName} ${lastName}`;
   const signupData = { full_name: fullName, country, email, password };
 
   fetch("https://danoski-backend.onrender.com/user/signup", {
@@ -77,28 +85,41 @@ function signupUser() {
     .then(res => res.json().then(data => ({ ok: res.ok, data })))
     .then(({ ok, data }) => {
       if (ok) {
-        localStorage.setItem("name", fullName);
-        localStorage.setItem("country", country);
-        localStorage.setItem("email", email);
-        localStorage.setItem("password", password);
-        otpMsg.style.color = "green";
-        otpMsg.innerText = "✅ OTP sent to your email.";
+        sessionStorage.setItem("name", fullName);
+        sessionStorage.setItem("country", country);
+        sessionStorage.setItem("email", email);
+        sessionStorage.setItem("password", password);
+
+        showToast(`✅ Welcome ${firstName}, your signup was successful! OTP sent to your email.`);
+
         document.getElementById("otp-email").value = email;
         showForm("otp-form");
-        otpMsg.scrollIntoView({ behavior: "smooth", block: "center" });
+        otpMsg.innerText = ""; // clear message if any
       } else {
         otpMsg.style.color = "red";
         otpMsg.innerText = "❌ " + (data.error || "Signup failed.");
-        otpMsg.scrollIntoView({ behavior: "smooth", block: "center" });
       }
-      setTimeout(() => { otpMsg.innerText = ""; }, 5000);
+
+      setTimeout(() => {
+        otpMsg.innerText = "";
+      }, 5000);
     })
     .catch(err => {
       otpMsg.style.color = "orange";
       otpMsg.innerText = "⚠️ Failed to connect to server.";
-      otpMsg.scrollIntoView({ behavior: "smooth", block: "center" });
       console.error(err);
     });
+}
+
+function showToast(message, background = "#4caf50") {
+  const toast = document.getElementById("toast");
+  toast.innerText = message;
+  toast.style.backgroundColor = background;
+  toast.style.display = "block";
+
+  setTimeout(() => {
+    toast.style.display = "none";
+  }, 4000);
 }
 
 function verifyOtp() {
