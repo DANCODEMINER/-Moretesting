@@ -572,6 +572,22 @@ function logout() {
 
 function showDashboard() {
   showForm("dashboard");
+
+  const name = sessionStorage.getItem("name");
+  const countryCode = sessionStorage.getItem("country"); // ISO 2-letter code
+
+  const welcomeEl = document.getElementById("welcome-name");
+  const flagEl = document.getElementById("country-flag");
+
+  if (name && welcomeEl) {
+    welcomeEl.innerText = `Welcome, ${name}!`;
+  }
+
+  if (countryCode && flagEl) {
+    flagEl.src = `https://flagcdn.com/48x36/${countryCode.toLowerCase()}.png`;
+    flagEl.alt = countryCode.toUpperCase();
+    flagEl.style.display = "inline-block";
+  }
 }
 
 function withdrawNow() {
