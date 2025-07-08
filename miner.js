@@ -568,6 +568,25 @@ function fetchTopMiners() {
     });
 }
 
+function fetchMyRank() {
+  const email = sessionStorage.getItem("email");
+
+  fetch("/user/my-rank", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  })
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("my-rank").innerText = data.rank;
+      document.getElementById("my-btc").innerText = `${data.btc} BTC`;
+      document.getElementById("my-hashrate").innerText = data.hashrate;
+    })
+    .catch(() => {
+      console.error("Failed to fetch my rank.");
+    });
+}
+
 function bindPinInputs() {
   const forms = {};
 
