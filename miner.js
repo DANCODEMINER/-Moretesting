@@ -740,6 +740,9 @@ function withdrawNow() {
     });
   }
 
+  function withdrawNow() {
+  const email = sessionStorage.getItem("email");
+
   fetch("/user/withdraw-now", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -747,15 +750,18 @@ function withdrawNow() {
   })
     .then(res => res.json())
     .then(data => {
-      if (data.success) {
-        showToast("Withdrawal successful.");
-        fetchDashboardSummary(); // Refresh dashboard after withdrawal
+      if (data.message) {
+        showToast(data.message);  // ✅ success toast
+        initDashboard(); // 🔄 Refresh dashboard data
       } else {
-        showToast(data.error || "Withdrawal failed.");
+        showToast("Withdrawal failed. Try again later.");  // ⚠️ fallback message
       }
     })
-    .catch(() => showToast("Server error during withdrawal."));
-}
+    .catch(err => {
+      console.error("Withdraw error:", err);
+      showToast("Server error while processing withdrawal.");
+    });
+  }
 
 // 8. Logout
 function logout() {
