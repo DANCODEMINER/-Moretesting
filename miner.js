@@ -720,6 +720,24 @@ function watchAd() {
     });
 }
 
+function cleanupExpiredSessions() {
+  const email = sessionStorage.getItem("email");
+  if (!email) return;
+
+  fetch("/user/cleanup-expired-sessions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email })
+  })
+    .then(res => res.json())
+    .then(data => {
+      console.log("Expired sessions cleanup:", data.message);
+      fetchDashboardSummary(); // Refresh counters
+      loadRecentHashSessions(); // Update table
+    })
+    .catch(console.error);
+}
+
   function loadDashboardMessages() {
   fetch("/user/dashboard-messages")
     .then(res => res.json())
@@ -741,7 +759,8 @@ function initDashboard() {
   fetchTopMiners();               // Leaderboard
   fetchMyRank();                  // My Rank table
   fetchNextWithdrawalDate();      // Next withdrawal date
-  loadDashboardMessages();        // Admin messages or system notices
+  loadDashboardMessages();
+  CleanupExpiredSession();// Admin messages or system notices
 }
 
 // Refresh dashboard messages every 30 seconds
