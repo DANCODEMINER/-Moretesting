@@ -80,7 +80,6 @@ const formMap = {
 
   // ✅ Re-bind pin inputs after showing new form
   bindPinInputs();
-}
 
 function signupUser() {
   const firstName = document.getElementById("signup-firstname").value.trim();
