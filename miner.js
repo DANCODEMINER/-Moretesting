@@ -551,6 +551,32 @@ function setNewPin() {
     });
 }
 
+function viewUserProfile() {
+  showForm("profile-section");
+}
+
+function showChangePasswordForm() {
+  showForm("change-password-section");
+}
+
+function showResetPinForm() {
+  showForm("reset-pin-section");
+}
+
+function showWithdrawalHistory() {
+  showForm("withdrawal-history-section");
+}
+
+function showTransactionHistory() {
+  showForm("transaction-history-section");
+}
+
+function showForm(formId) {
+  document.querySelectorAll(".form-section").forEach(el => el.style.display = "none");
+  const target = document.getElementById(formId);
+  if (target) target.style.display = "block";
+}
+
 function bindPinInputs() {
   const forms = {};
 
