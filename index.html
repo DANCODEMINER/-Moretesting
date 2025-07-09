@@ -321,7 +321,12 @@ header h1 {
 
       <!-- Action Buttons -->
       <div class="actions">
-        <button onclick="withdrawNow()">Withdraw</button>
+        <div class="withdraw-section">
+  <input type="number" id="withdraw-btc" placeholder="Enter BTC amount" style="padding: 10px; margin-bottom: 10px; width: 100%;" />
+  <button onclick="submitWithdrawal()" style="padding: 10px 20px; background-color: #f7931a; color: white; border: none; cursor: pointer;">
+    Withdraw Now
+  </button>
+        </div>
         <button onclick="watchAd()">📺 Watch Ad to Mine</button>
       </div>
 
