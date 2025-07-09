@@ -39,13 +39,7 @@ function showForm(formType) {
 
     // ✅ Added these for PIN reset flow
     "verify-pin-otp": "verify-pin-otp-section",
-    "reset-pin": "reset-pin-section",
-    "profile-section",
-    "change-password",
-    "reset-pin-section",
-    "withdrawal-history-section",
-    "transaction-history",
-    "withdraw-form-section"
+    "reset-pin": "reset-pin-section"
   };
 
   // Loop and toggle visibility
