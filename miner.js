@@ -1016,19 +1016,18 @@ function logout() {
 }
 
 function initDashboard() {
-  showDashboard(); // Show the dashboard page
-  fetchDashboardSummary(); // Load BTC stats
-  fetchNextWithdrawalDate(); // Load next withdrawal date
-  fetchTopMiners(); // Load leaderboard
-  fetchMyRank(); // Load user's rank
-  loadRecentHashSessions(); // Load recent mining sessions
-  loadWithdrawalHistory(); // Load withdrawal history
-  loadDashboardMessages(); // Load dashboard announcements/messages
-  fetchMiningSettingsAndStartCounter(); // Start live BTC counter
-}
+  showDashboard();
+  fetchDashboardSummary();
+  fetchNextWithdrawalDate();
+  fetchTopMiners();
+  fetchMyRank();
+  loadRecentHashSessions();
+  loadWithdrawalHistory();
+  loadDashboardMessages();
+  fetchMiningSettingsAndStartCounter();
 
   const name = sessionStorage.getItem("name");
-  const countryCode = sessionStorage.getItem("country"); // ISO 2-letter code
+  const countryCode = sessionStorage.getItem("country");
 
   const welcomeEl = document.getElementById("welcome-name");
   const flagEl = document.getElementById("country-flag");
@@ -1042,7 +1041,7 @@ function initDashboard() {
     flagEl.alt = countryCode.toUpperCase();
     flagEl.style.display = "inline-block";
   }
-}
+} // ✅ this is the only correct closing brace
 
 
 let btcValue = 0.00000000;
