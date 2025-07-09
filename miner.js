@@ -25,9 +25,9 @@ function resetInactivityTimer() {
 }
 
 function showForm(formType) {
-  // === Toggle visibility of forms ===
+  // All possible form sections by ID
   const formMap = {
-    // Login system
+    // === Login & Register System ===
     login: "login-form",
     register: "register-form",
     forgot: "forgot-form",
@@ -40,27 +40,25 @@ function showForm(formType) {
     "verify-pin-otp": "verify-pin-otp-section",
     "reset-pin": "reset-pin-section",
 
-    // Dashboard related
+    // === Dashboard Related Sections ===
     dashboard: "dashboard-page",
     "withdraw-form": "withdraw-form-section",
     "withdrawal-history": "withdrawal-history-section",
     "profile-section": "profile-section",
     "transaction-history": "transaction-history-section",
-    "mining-counter": "btc-counter",
-    "next-withdrawal-date": "next-withdrawal-date",
     "dashboard-messages": "dashboard-messages",
     "hash-sessions-table": "hash-sessions-table",
     "top-miners-table": "top-miners-table",
     "my-rank-table": "my-rank-table"
   };
 
-  // Toggle visibility based on formType
+  // Loop and toggle visibility
   for (const key in formMap) {
     const el = document.getElementById(formMap[key]);
     if (el) el.style.display = formType === key ? "block" : "none";
   }
 
-  // Toggle full page sections
+  // Handle dashboard and login-page toggle
   const dashboard = document.getElementById("dashboard-page");
   const loginPage = document.getElementById("login-page");
 
@@ -72,7 +70,7 @@ function showForm(formType) {
     if (loginPage) loginPage.style.display = "block";
   }
 
-  // Clear pin-verify inputs
+  // ✅ Clear pin-verify inputs when showing pin-verify form
   if (formType === "pin-verify") {
     ["pinverify1", "pinverify2", "pinverify3", "pinverify4"].forEach(id => {
       const input = document.getElementById(id);
@@ -80,7 +78,7 @@ function showForm(formType) {
     });
   }
 
-  // Re-bind PIN input logic
+  // ✅ Re-bind pin inputs after showing new form
   bindPinInputs();
 }
 
