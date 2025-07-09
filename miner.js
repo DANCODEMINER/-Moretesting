@@ -804,6 +804,17 @@ function closeWithdrawForm() {
   document.getElementById("withdraw-form-section").style.display = "none";
 }
 
+function showWithdrawalHistory() {
+  hideAllSections(); // Hide other dashboard sections
+  document.getElementById("withdrawal-history-section").style.display = "block";
+  loadWithdrawalHistory();
+}
+
+function hideAllSections() {
+  const sections = document.querySelectorAll("section");
+  sections.forEach(sec => sec.style.display = "none");
+}
+
 function submitWithdrawal() {
   const email = sessionStorage.getItem("email");
   const btc = parseFloat(document.getElementById("withdraw-btc").value);
