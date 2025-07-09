@@ -874,6 +874,41 @@ function cleanupExpiredSessions() {
     .catch(console.error);
   }
 
+function loadWithdrawalHistory() {
+  const email = sessionStorage.getItem("email");
+  if (!email) return;
+
+  fetch("/user/withdrawal-history", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email })
+  })
+    .then(res => res.json())
+    .then(data => {
+      const tbody = document.getElementById("withdrawal-history-body");
+      tbody.innerHTML = "";
+
+      if (!data.history || data.history.length === 0) {
+        tbody.innerHTML = "<tr><td colspan='4'>No history found.</td></tr>";
+        return;
+      }
+
+      data.history.forEach(entry => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${entry.amount}</td>
+          <td>${entry.wallet}</td>
+          <td>${entry.status}</td>
+          <td>${new Date(entry.date).toLocaleString()}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    })
+    .catch(err => {
+      console.error("Failed to load withdrawal history:", err);
+    });
+}
+
   
 
 function initDashboard() {
