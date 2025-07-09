@@ -877,6 +877,12 @@ function fetchDashboardSummary() {
   fetchMyHashrate();
 }
 
+function viewUserProfile() { ... }
+function showChangePasswordForm() { ... }
+function showResetPinForm() { ... }
+function showWithdrawalHistory() { ... }
+function showTransactionHistory() { ... }
+
 function watchAd() {
   const email = sessionStorage.getItem("email");
 
