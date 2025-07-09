@@ -336,6 +336,23 @@ header h1 {
   <button onclick="closeWithdrawForm()" style="margin-left: 10px;">Cancel</button>
 </div>
 
+    <section id="withdrawal-history-section" style="display: none; margin-top: 20px;">
+  <h4 style="color: #f7931a;">📤 Withdrawal History</h4>
+  <table id="withdrawal-history-table">
+    <thead>
+      <tr>
+        <th>Amount (BTC)</th>
+        <th>Wallet</th>
+        <th>Status</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody id="withdrawal-history-body">
+      <tr><td colspan="4">Loading...</td></tr>
+    </tbody>
+  </table>
+    </section>
+
       <!-- Next Withdrawal Date -->
       <div class="logs">
         <h4 style="margin-top: 30px; color: #f7931a;">💸 Next Withdrawal Date</h4>
