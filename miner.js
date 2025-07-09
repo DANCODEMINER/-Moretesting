@@ -42,7 +42,7 @@ function showForm(formType) {
     "reset-pin": "reset-pin-section",
     "dashboard": "dashboard-page",
     "withdrawal-history": "withdrawal-history-section",
-    "profile-section": "profile-section",
+    "profile-section": "profile-section"
   };
 
   // Loop and toggle visibility
