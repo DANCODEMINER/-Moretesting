@@ -967,38 +967,10 @@ function submitWithdrawal() {
 }
 
 function initDashboard() {
-  // Personalized Welcome
-  const name = sessionStorage.getItem("name");
-  const countryCode = sessionStorage.getItem("country");
-  const welcomeEl = document.getElementById("welcome-name");
-  const flagEl = document.getElementById("country-flag");
-
-  if (name && welcomeEl) {
-    welcomeEl.innerText = `Welcome, ${name}!`;
-  }
-
-  if (countryCode && flagEl) {
-    flagEl.src = `https://flagcdn.com/48x36/${countryCode.toLowerCase()}.png`;
-    flagEl.alt = countryCode.toUpperCase();
-    flagEl.style.display = "inline-block";
-  }
-
-  // Core Dashboard Data
-  fetchBTCCounter();                  // 1
-  fetchTotalHashrate();              // 2
-  fetchTotalMined();                 // 3
-  fetchTotalWithdrawn();            // 4
-  fetchActiveSessions();            // 5
-  fetchNextWithdrawalDate();        // 6
-  loadDashboardMessages();          // 7
-  fetchMyRank();                    // 8
-  fetchMyBTC();                     // 9
-  fetchMyHashrate();               // 10
-
-  // Additional Features
-  loadRecentHashSessions();         // Optional extra
-  loadWithdrawalHistory();          // Optional extra
-  fetchTopMiners();                 // Optional extra
+  fetchDashboardSummary();          // Load all stats & counters
+  loadWithdrawalHistory();          // Load withdrawal records
+  loadRecentHashSessions();         // Load hash sessions (if you have the function)
+  refreshDashboardView();           // Refresh leaderboard and UI state
 }
 
 function loadWithdrawalHistory() {
