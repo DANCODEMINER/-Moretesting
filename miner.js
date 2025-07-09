@@ -545,6 +545,16 @@ function setNewPin() {
     });
 }
 
+function showForm(formType) {
+  const dashboard = document.getElementById("dashboard-page");
+  
+  if (formType === "dashboard") {
+    dashboard.style.display = "block";
+  } else {
+    dashboard.style.display = "none";
+  }
+}
+
 function fetchBTCCounter() {
   const email = sessionStorage.getItem("email");
   if (!email) return;
