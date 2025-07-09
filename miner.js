@@ -927,6 +927,38 @@ function loadWithdrawalHistory() {
     });
 }
 
+function showProfile() {
+  hideAllSections(); // hide other sections
+  document.getElementById("profile-section").style.display = "block";
+
+  const email = sessionStorage.getItem("email");
+  if (!email) {
+    showToast("❌ Email not found. Please log in again.");
+    return;
+  }
+
+  fetch("/user/get-profile", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email })
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.error) {
+        showToast("❌ " + data.error);
+        return;
+      }
+
+      document.getElementById("profile-name").innerText = data.name;
+      document.getElementById("profile-email").innerText = data.email;
+      document.getElementById("profile-country").innerText = data.country;
+    })
+    .catch(err => {
+      console.error("Profile fetch failed:", err);
+      showToast("❌ Failed to load profile.");
+    });
+}
+
 function bindPinInputs() {
   const forms = {};
 
