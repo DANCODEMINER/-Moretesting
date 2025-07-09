@@ -875,11 +875,34 @@ function fetchDashboardSummary() {
   fetchMyHashrate();
 }
 
-function viewUserProfile() { ... }
-function showChangePasswordForm() { ... }
-function showResetPinForm() { ... }
-function showWithdrawalHistory() { ... }
-function showTransactionHistory() { ... }
+function showDashboardForm(id) {
+  document.querySelectorAll('.form-section').forEach(div => div.style.display = 'none');
+  document.getElementById(id).style.display = 'block';
+}
+window.showDashboardForm = showDashboardForm;
+
+function viewUserProfile() {
+  showDashboardForm("profile-section");
+  // You can add AJAX call here to load data if needed
+}
+
+function showChangePasswordForm() {
+  showDashboardForm("change-password-section");
+}
+
+function showResetPinForm() {
+  showDashboardForm("reset-pin-section");
+}
+
+function showWithdrawalHistory() {
+  showDashboardForm("withdrawal-history-dashboard");
+  loadWithdrawalHistory(); // if function exists
+}
+
+function showTransactionHistory() {
+  showDashboardForm("transaction-history-section");
+  // Call transaction loading function here if any
+}
 
 function watchAd() {
   const email = sessionStorage.getItem("email");
