@@ -695,7 +695,31 @@ function showDashboard() {
 }
 
 function withdrawNow() {
-  alert("🔄 Withdrawal logic to be added soon!");
+  const email = sessionStorage.getItem("email");
+
+  if (!email) {
+    showToast("❌ Email not found. Please log in again.");
+    return;
+  }
+
+  fetch("/user/withdraw-now", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email })
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.message) {
+        showToast("✅ " + data.message);
+        fetchDashboardSummary(); // Refresh dashboard summary
+      } else if (data.error) {
+        showToast("❌ " + data.error);
+      }
+    })
+    .catch(err => {
+      console.error("Withdraw error:", err);
+      showToast("❌ Server error while processing withdrawal.");
+    });
 }
 
 function watchAd() {
