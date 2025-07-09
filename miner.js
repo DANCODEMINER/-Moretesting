@@ -1001,6 +1001,12 @@ function loadWithdrawalHistory() {
     });
         }
 
+function initDashboard() {
+  fetchDashboardSummary();  // Loads BTC stats, messages, etc.
+  fetchMyRank();            // Loads your personal rank
+  fetchTopMiners();         // Loads leaderboard/top miners
+}
+
 let btcValue = 0.00000000;
 setInterval(() => {
   const btcCounter = document.getElementById("btc-counter");
@@ -1017,6 +1023,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (isLoggedIn && pinVerified) {
     showDashboard();
+    iniDashboard();
   } else if (isLoggedIn && !pinVerified) {
     showForm("pin-verify");
   }
