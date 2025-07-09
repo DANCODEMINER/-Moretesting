@@ -24,41 +24,43 @@ function resetInactivityTimer() {
   }, 2 * 60 * 1000); // 2 minutes (adjust as needed)
 }
 
-const formMap = {
-  // Login system
-  login: "login-form",
-  register: "register-form",
-  forgot: "forgot-form",
-  "otp-form": "otp-form",
-  "pin-form": "pin-form",
-  "pin-verify": "pin-verify-form",
-  "forgot-password": "forgot-password-section",
-  "verify-forgot-otp": "verify-forgot-otp-section",
-  "reset-password": "reset-password-section",
-  "verify-pin-otp": "verify-pin-otp-section",
-  "reset-pin": "reset-pin-section",
+function showForm(formType) {
+  // === Toggle visibility of forms ===
+  const formMap = {
+    // Login system
+    login: "login-form",
+    register: "register-form",
+    forgot: "forgot-form",
+    "otp-form": "otp-form",
+    "pin-form": "pin-form",
+    "pin-verify": "pin-verify-form",
+    "forgot-password": "forgot-password-section",
+    "verify-forgot-otp": "verify-forgot-otp-section",
+    "reset-password": "reset-password-section",
+    "verify-pin-otp": "verify-pin-otp-section",
+    "reset-pin": "reset-pin-section",
 
-  // ✅ Dashboard related
-  dashboard: "dashboard-page",
-  "withdraw-form": "withdraw-form-section",
-  "withdrawal-history": "withdrawal-history-section",
-  "profile-section": "profile-section", // (if you later create a profile section)
-  "transaction-history": "transaction-history-section", // (for future)
-  "mining-counter": "btc-counter", // optional, usually handled separately
-  "next-withdrawal-date": "next-withdrawal-date", // optional, text-only
-  "dashboard-messages": "dashboard-messages",
-  "hash-sessions-table": "hash-sessions-table",
-  "top-miners-table": "top-miners-table",
-  "my-rank-table": "my-rank-table"
-};
+    // Dashboard related
+    dashboard: "dashboard-page",
+    "withdraw-form": "withdraw-form-section",
+    "withdrawal-history": "withdrawal-history-section",
+    "profile-section": "profile-section",
+    "transaction-history": "transaction-history-section",
+    "mining-counter": "btc-counter",
+    "next-withdrawal-date": "next-withdrawal-date",
+    "dashboard-messages": "dashboard-messages",
+    "hash-sessions-table": "hash-sessions-table",
+    "top-miners-table": "top-miners-table",
+    "my-rank-table": "my-rank-table"
+  };
 
-  // Loop and toggle visibility
+  // Toggle visibility based on formType
   for (const key in formMap) {
     const el = document.getElementById(formMap[key]);
     if (el) el.style.display = formType === key ? "block" : "none";
   }
 
-  // Handle dashboard and login-page toggle
+  // Toggle full page sections
   const dashboard = document.getElementById("dashboard-page");
   const loginPage = document.getElementById("login-page");
 
@@ -70,7 +72,7 @@ const formMap = {
     if (loginPage) loginPage.style.display = "block";
   }
 
-  // ✅ Clear pin-verify inputs when showing pin-verify form
+  // Clear pin-verify inputs
   if (formType === "pin-verify") {
     ["pinverify1", "pinverify2", "pinverify3", "pinverify4"].forEach(id => {
       const input = document.getElementById(id);
@@ -78,7 +80,7 @@ const formMap = {
     });
   }
 
-  // ✅ Re-bind pin inputs after showing new form
+  // Re-bind PIN input logic
   bindPinInputs();
 }
 
