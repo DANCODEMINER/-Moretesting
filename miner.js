@@ -992,6 +992,7 @@ function loadWithdrawalHistory() {
     .catch((err) => {
       console.error("❌ Failed to load withdrawal history:", err);
     });
+}
 
 let btcValue = 0.00000000;
 setInterval(() => {
