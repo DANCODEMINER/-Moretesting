@@ -27,7 +27,6 @@ function resetInactivityTimer() {
 function showForm(formType) {
   // All possible form sections by ID
   const formMap = {
-    // === Login & Register System ===
     login: "login-form",
     register: "register-form",
     forgot: "forgot-form",
@@ -37,19 +36,10 @@ function showForm(formType) {
     "forgot-password": "forgot-password-section",
     "verify-forgot-otp": "verify-forgot-otp-section",
     "reset-password": "reset-password-section",
-    "verify-pin-otp": "verify-pin-otp-section",
-    "reset-pin": "reset-pin-section",
 
-    // === Dashboard Related Sections ===
-    dashboard: "dashboard-page",
-    "withdraw-form": "withdraw-form-section",
-    "withdrawal-history": "withdrawal-history-section",
-    "profile-section": "profile-section",
-    "transaction-history": "transaction-history-section",
-    "dashboard-messages": "dashboard-messages",
-    "hash-sessions-table": "hash-sessions-table",
-    "top-miners-table": "top-miners-table",
-    "my-rank-table": "my-rank-table"
+    // ✅ Added these for PIN reset flow
+    "verify-pin-otp": "verify-pin-otp-section",
+    "reset-pin": "reset-pin-section"
   };
 
   // Loop and toggle visibility
