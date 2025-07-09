@@ -279,104 +279,136 @@ header h1 {
   </div>
 
   <!-- DASHBOARD PAGE -->
-  <div id="dashboard-page" style="display: none;">
-    <div id="overlay" onclick="toggleSidebar()"></div>
+<div id="dashboard-page" style="display: none;">
+  <div id="overlay" onclick="toggleSidebar()"></div>
 
-    <header>
-      <h1>Adchain Miner</h1>
-      <button class="menu-btn" onclick="toggleSidebar()">☰</button>
-    </header>
+  <header>
+    <h1>Adchain Miner</h1>
+    <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+  </header>
 
-    <div class="sidebar" id="sidebar">
-      <h3>Settings</h3>
-      <ul>
-        <li onclick="alert('👤 View Profile')">👤 View Profile</li>
-        <li onclick="alert('🔒 Change Password')">🔒 Change Password</li>
-        <li onclick="alert('🔁 Reset PIN')">🔁 Reset PIN</li>
-        <li onclick="alert('💳 Withdrawal History')">💳 Withdrawal History</li>
-        <li onclick="alert('📈 Transaction History')">📈 Transaction History</li>
-        <li onclick="logout()">🚪 Logout</li>
-        <li onclick="toggleSidebar()">❌ Close Menu</li>
-      </ul>
-    </div>
-
-    <div class="container">
-
-  <!-- 👋 Personalized Welcome -->
-  <h2 id="welcome-name">Welcome!</h2>
-<img id="country-flag" src="" alt="" style="margin-top: 5px; display: none;" />
-  <!-- Live Mining -->
-  <div class="mining-counter">
-    <h2>Mining in Progress...</h2>
-    <p id="btc-counter">0.00000000 BTC</p>
+  <div class="sidebar" id="sidebar">
+    <h3>Settings</h3>
+    <ul>
+      <li onclick="viewUserProfile()">👤 View Profile</li>
+      <li onclick="showChangePasswordForm()">🔒 Change Password</li>
+      <li onclick="showResetPinForm()">🔁 Reset PIN</li>
+      <li onclick="showWithdrawalHistory()">💳 Withdrawal History</li>
+      <li onclick="showTransactionHistory()">📈 Transaction History</li>
+      <li onclick="logout()">🚪 Logout</li>
+      <li onclick="toggleSidebar()">❌ Close Menu</li>
+    </ul>
   </div>
 
-      <!-- Stats -->
-      <div class="stats">
-        <div class="card"><h2>Total Hashrate</h2><p id="total-hashrate">0.00 Th/s</p></div>
-        <div class="card"><h2>Total Mined</h2><p id="total-mined">0.0000 BTC</p></div>
-        <div class="card"><h2>Total Withdrawn</h2><p id="total-withdrawn">0.0000 BTC</p></div>
-        <div class="card"><h2>Active Sessions</h2><p id="active-sessions">0</p></div>
-      </div>
+  <div class="container">
+    <h2 id="welcome-name">Welcome!</h2>
+    <img id="country-flag" src="" alt="Flag" style="margin-top: 5px; display: none;" />
 
-      <!-- Action Buttons -->
-      <div class="actions">
-        <button onclick="watchAd()">▶️ Watch Ad</button>
-        <button onclick="withdrawNow()">⬇️ Withdraw</button>
-      </div>
+    <div class="mining-counter">
+      <h2>Mining in Progress...</h2>
+      <p id="btc-counter">0.00000000 BTC</p>
+    </div>
 
-      <!-- Next Withdrawal Date -->
-      <div class="logs">
-        <h3>💸 Next Withdrawal Date</h3>
-        <div id="withdrawal-date-message" style="color: #444; font-size: 15px;">
-          <p>Next auto-withdrawal will be processed on <strong id="next-withdrawal-date">July 10, 2025</strong>.</p>
-        </div>
-      </div><!-- Announcements -->
-      <div class="logs">
-        <h3>📢 Messages & Announcements</h3>
-        <div id="dashboard-messages" style="text-align: left; color: #444; font-size: 15px;">
-          <p>✅ Watch ads daily to boost your hash rate rewards!</p>
-          <p>⚠️ Withdrawals are processed every 24 hours. Make sure your wallet is active.</p>
-        </div>
-      </div>
+    <div class="stats">
+      <div class="card"><h2>Total Hashrate</h2><p id="total-hashrate">0.00 Th/s</p></div>
+      <div class="card"><h2>Total Mined</h2><p id="total-mined">0.0000 BTC</p></div>
+      <div class="card"><h2>Total Withdrawn</h2><p id="total-withdrawn">0.0000 BTC</p></div>
+      <div class="card"><h2>Active Sessions</h2><p id="active-sessions">0</p></div>
+    </div>
 
-      <!-- Hashrate Sessions -->
-      <div class="logs">
-        <h3>Recent Hash Sessions</h3>
-        <table id="hash-sessions-table">
-          <thead>
-            <tr><th>Session ID</th><th>Date</th><th>Power</th><th>Duration</th></tr>
-          </thead>
-          <tbody>
-            <!-- Injected by JS -->
-          </tbody>
-        </table>
-      </div>
+    <div class="actions">
+      <button onclick="watchAd()">▶️ Watch Ad</button>
+      <button onclick="withdrawNow()">⬇️ Withdraw</button>
+    </div>
 
-      <!-- Leaderboard -->
-      <div class="logs">
-        <h3>📈 Leaderboard</h3>
-        <h4 style="color: #f7931a;">🏆 Top Miners</h4>
-        <table id="top-miners-table">
-          <thead>
-            <tr><th>Rank</th><th>User</th><th>BTC (30d)</th><th>Hashrate</th></tr>
-          </thead>
-          <tbody>
-            <!-- Injected by JS -->
-          </tbody>
-        </table>
-
-        <h4 style="margin-top: 30px; color: #f7931a;">📊 My Rank</h4>
-        <table id="my-rank-table">
-          <thead>
-            <tr><th>Rank</th><th>User</th><th>BTC (30d)</th><th>Hashrate</th></tr>
-          </thead>
-          <tbody>
-            <tr><td id="my-rank">--</td><td>You</td><td id="my-btc">--</td><td id="my-hashrate">--</td></tr>
-          </tbody>
-        </table>
+    <div class="logs">
+      <h3>💸 Next Withdrawal Date</h3>
+      <div id="withdrawal-date-message">
+        <p>Next auto-withdrawal will be processed on <strong id="next-withdrawal-date">July 10, 2025</strong>.</p>
       </div>
     </div>
+
+    <div class="logs">
+      <h3>📢 Messages & Announcements</h3>
+      <div id="dashboard-messages">
+        <p>✅ Watch ads daily to boost your hash rate rewards!</p>
+        <p>⚠️ Withdrawals are processed every 24 hours. Make sure your wallet is active.</p>
+      </div>
+    </div>
+
+    <div class="logs">
+      <h3>Recent Hash Sessions</h3>
+      <table id="hash-sessions-table">
+        <thead>
+          <tr><th>Session ID</th><th>Date</th><th>Power</th><th>Duration</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="logs">
+      <h3>📈 Leaderboard</h3>
+      <h4 style="color: #f7931a;">🏆 Top Miners</h4>
+      <table id="top-miners-table">
+        <thead>
+          <tr><th>Rank</th><th>User</th><th>BTC (30d)</th><th>Hashrate</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <h4 style="margin-top: 30px; color: #f7931a;">📊 My Rank</h4>
+      <table id="my-rank-table">
+        <thead>
+          <tr><th>Rank</th><th>User</th><th>BTC (30d)</th><th>Hashrate</th></tr>
+        </thead>
+        <tbody>
+          <tr><td id="my-rank">--</td><td>You</td><td id="my-btc">--</td><td id="my-hashrate">--</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Hidden Sections (Forms) -->
+    <div id="user-profile-section" class="form-section" style="display: none;">
+      <h3>👤 User Profile</h3>
+      <p><strong>Name:</strong> <span id="profile-name">Loading...</span></p>
+      <p><strong>Email:</strong> <span id="profile-email">Loading...</span></p>
+      <p><strong>Country:</strong> <span id="profile-country">Loading...</span></p>
+      <p><strong>Joined:</strong> <span id="profile-join-date">Loading...</span></p>
+    </div>
+
+    <div id="user-password-section" class="form-section" style="display: none;">
+      <h3>🔒 Change Password</h3>
+      <input type="text" id="curr-pass" name="curr-pass" placeholder="Current" />
+      <input type="text" id="new-pass" name="new-pass" placeholder="New" />
+      <input type="text" id="confirm-pass" name="confirm-pass" placeholder="Confirm" />
+      <button onclick="updatePassword()">Update</button>
+    </div>
+
+    <div id="user-pin-section" class="form-section" style="display: none;">
+      <h3>🔁 Reset PIN</h3>
+      <input type="text" id="pin-current" name="pin-current" placeholder="Old PIN" />
+      <input type="text" id="pin-new" name="pin-new" placeholder="New PIN" />
+      <input type="text" id="pin-confirm" name="pin-confirm" placeholder="Confirm PIN" />
+      <button onclick="resetUserPin()">Reset</button>
+    </div>
+
+    <div id="withdraw-history-section" class="form-section" style="display: none;">
+      <h3>💳 Withdrawal History</h3>
+      <table>
+        <thead><tr><th>Amount</th><th>Wallet</th><th>Status</th><th>Date</th></tr></thead>
+        <tbody id="dash-withdrawal-body"><tr><td colspan="4">Loading...</td></tr></tbody>
+      </table>
+    </div>
+
+    <div id="user-transaction-section" class="form-section" style="display: none;">
+      <h3>📈 Transaction History</h3>
+      <table>
+        <thead><tr><th>Date</th><th>Type</th><th>Amount</th><th>Status</th></tr></thead>
+        <tbody><tr><td colspan="4">No transactions found.</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+  </div>
 
     <footer>
       <div>&copy; 2025 Adchain Miner. All rights reserved.</div>
