@@ -774,6 +774,28 @@ function fetchMiningSettingsAndStartCounter() {
     .catch(console.error);
 }
 
+function sendMinedBTCToBackend() {
+  const email = sessionStorage.getItem("email");
+  const minedBTC = parseFloat(document.getElementById("total-mined").innerText) || 0;
+
+  if (!email) return;
+
+  fetch("/user/update-mined-btc", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email: email, mined_btc: minedBTC.toFixed(8) })
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.message) {
+        console.log("✅ Mined BTC updated");
+      } else {
+        console.warn("⚠️ Failed to update mined BTC");
+      }
+    })
+    .catch(err => console.error("❌ Mined BTC update error:", err));
+}
+
 function cleanupExpiredSessions() {
   const email = sessionStorage.getItem("email");
   if (!email) return;
@@ -843,6 +865,9 @@ document.addEventListener("DOMContentLoaded", () => {
   loadDashboardMessages();
   fetchMiningSettingsAndStartCounter();
 }, 30000);
+  setInterval(() => {
+  sendMinedBTCToBackend();
+}, 60000); // every 60 seconds
   } else if (isLoggedIn && !pinVerified) {
     showForm("pin-verify");
   }
