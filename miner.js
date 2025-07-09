@@ -855,6 +855,12 @@ function submitWithdrawal() {
     });
 }
 
+function hideAllSections() {
+  const sections = document.querySelectorAll("section");
+  sections.forEach(sec => sec.style.display = "none");
+  document.getElementById("withdraw-form-section").style.display = "none";
+}
+
   
 function cleanupExpiredSessions() {
   const email = sessionStorage.getItem("email");
