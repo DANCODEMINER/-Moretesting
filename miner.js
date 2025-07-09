@@ -796,6 +796,42 @@ function sendMinedBTCToBackend() {
     .catch(err => console.error("❌ Mined BTC update error:", err));
 }
 
+function openWithdrawForm() {
+  document.getElementById("withdraw-form-section").style.display = "block";
+}
+
+function closeWithdrawForm() {
+  document.getElementById("withdraw-form-section").style.display = "none";
+}
+
+function submitWithdrawal() {
+  const email = sessionStorage.getItem("email");
+  const btc = parseFloat(document.getElementById("withdraw-btc").value);
+  const wallet = document.getElementById("withdraw-wallet").value.trim();
+
+  if (!email || !btc || !wallet) {
+    showToast("❌ Please fill in all fields.");
+    return;
+  }
+
+  fetch("/user/withdraw-now", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, btc, wallet })
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.message) {
+        showToast("✅ " + data.message);
+        closeWithdrawForm();
+        fetchDashboardSummary();
+      } else {
+        showToast("❌ " + (data.error || "Withdrawal failed."));
+      }
+    })
+    .catch(() => showToast("❌ Network error."));
+}
+
 function cleanupExpiredSessions() {
   const email = sessionStorage.getItem("email");
   if (!email) return;
