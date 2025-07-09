@@ -720,6 +720,36 @@ function watchAd() {
     });
 }
 
+let miningInterval;
+let currentHashrate = 0;
+let btcPerHash = 0;
+
+function startMiningCounter() {
+  if (!currentHashrate || !btcPerHash) return;
+
+  let minedTotal = parseFloat(document.getElementById("total-mined").innerText || 0);
+
+  if (miningInterval) clearInterval(miningInterval);
+
+  miningInterval = setInterval(() => {
+    const minedNow = currentHashrate * btcPerHash / 60; // per second
+    minedTotal += minedNow;
+
+    document.getElementById("total-mined").innerText = minedTotal.toFixed(8) + " BTC";
+  }, 1000);
+}
+
+function fetchMiningSettingsAndStartCounter() {
+  fetch("/user/mining-settings")
+    .then(res => res.json())
+    .then(data => {
+      btcPerHash = data.btc_per_hash;
+      currentHashrate = parseInt(document.getElementById("total-hashrate").innerText || 0);
+      startMiningCounter();
+    })
+    .catch(console.error);
+}
+
 function cleanupExpiredSessions() {
   const email = sessionStorage.getItem("email");
   if (!email) return;
@@ -787,6 +817,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initDashboard();
     setInterval(() => {
   loadDashboardMessages();
+  fetchMiningSettingsAndStartCounter();
 }, 30000);
   } else if (isLoggedIn && !pinVerified) {
     showForm("pin-verify");
