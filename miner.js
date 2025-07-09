@@ -985,6 +985,66 @@ function submitWithdrawal() {
     });
 }
 
+function updatePassword() {
+  const email = sessionStorage.getItem("email");
+  const current = document.getElementById("current-password").value.trim();
+  const newPass = document.getElementById("new-password").value.trim();
+  const confirm = document.getElementById("confirm-password").value.trim();
+
+  if (!email || !current || !newPass || newPass !== confirm) {
+    showToast("❌ Please fill all fields correctly.");
+    return;
+  }
+
+  fetch("/user/change-password", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, current, new_password: newPass })
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        showToast("✅ Password updated successfully.");
+        document.getElementById("current-password").value = "";
+        document.getElementById("new-password").value = "";
+        document.getElementById("confirm-password").value = "";
+      } else {
+        showToast("❌ " + (data.error || "Update failed."));
+      }
+    })
+    .catch(() => showToast("❌ Server error during password update."));
+}
+
+function resetPin() {
+  const email = sessionStorage.getItem("email");
+  const current = document.getElementById("current-pin").value.trim();
+  const newPin = document.getElementById("new-pin").value.trim();
+  const confirm = document.getElementById("confirm-pin").value.trim();
+
+  if (!email || !current || !newPin || newPin !== confirm) {
+    showToast("❌ Please fill all fields correctly.");
+    return;
+  }
+
+  fetch("/user/reset-pin", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, current_pin: current, new_pin: newPin })
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        showToast("✅ PIN reset successful.");
+        document.getElementById("current-pin").value = "";
+        document.getElementById("new-pin").value = "";
+        document.getElementById("confirm-pin").value = "";
+      } else {
+        showToast("❌ " + (data.error || "PIN reset failed."));
+      }
+    })
+    .catch(() => showToast("❌ Server error during PIN reset."));
+}
+
 function initDashboard() {
   fetchDashboardSummary();          // Load all stats & counters
   loadWithdrawalHistory();          // Load withdrawal records
