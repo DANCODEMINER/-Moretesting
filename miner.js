@@ -1064,6 +1064,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const passwordInput = document.getElementById("signup-password");
   const passwordCount = document.getElementById("password-count");
+
   if (passwordInput && passwordCount) {
     passwordInput.addEventListener("input", function () {
       const len = this.value.length;
