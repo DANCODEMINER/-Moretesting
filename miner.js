@@ -1053,6 +1053,10 @@ function showDashboard() {
   document.addEventListener("DOMContentLoaded", () => {
     const isLoggedIn = sessionStorage.getItem("isLoggedIn") === "true";
     const pinVerified = sessionStorage.getItem("pinVerified") === "true";
+    const menuToggle = document.getElementById("menu-toggle");
+    if (menuToggle) {
+    menuToggle.addEventListener("click", toggleMenu);
+   }
 
     if(isLoggedIn && pinVerified) {
       showDashboard();
