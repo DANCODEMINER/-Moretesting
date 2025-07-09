@@ -322,19 +322,19 @@ header h1 {
 <!-- 🔒 Change Password (called by showChangePasswordForm) -->
 <div id="change-password-section" class="form-section" style="display: none;">
   <h3>🔒 Change Password</h3>
-  <input type="password" placeholder="Enter current value" />
-  <input type="password" placeholder="Enter new value" />
-  <input type="password" placeholder="Repeat new value" />
-  <button>Update</button>
+  <input type="password" id="current-password" name="current-password" placeholder="Current" />
+  <input type="password" id="new-password" name="new-password" placeholder="New" />
+  <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm" />
+  <button onclick="updatePassword()">Update Password</button>
 </div>
 
 <!-- 🔁 Reset PIN (called by showResetPinForm) -->
 <div id="reset-pin-section" class="form-section" style="display: none;">
   <h3>🔁 Reset PIN</h3>
-  <input type="password" placeholder="Enter current value" />
-  <input type="password" placeholder="Enter new value" />
-  <input type="password" placeholder="Repeat new value" />
-  <button>Reset</button>
+  <input type="password" id="current-pin" name="current-pin" placeholder="Current" />
+  <input type="password" id="new-pin" name="new-pin" placeholder="New" />
+  <input type="password" id="confirm-pin" name="confirm-pin" placeholder="Confirm" />
+  <button onclick="resetPin()">Reset PIN</button>
 </div>
 
 <!-- 💸 Withdrawal History (called by showWithdrawalHistory) -->
