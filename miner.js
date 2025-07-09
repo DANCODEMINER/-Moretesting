@@ -1032,4 +1032,4 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("mousemove", resetInactivityTimer);
   document.addEventListener("keydown", resetInactivityTimer);
   document.addEventListener("click", resetInactivityTimer);
-});
+  });
