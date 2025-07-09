@@ -1008,6 +1008,9 @@ function logout() {
   window.location.href = "index.html";
 }
 
+function showDashboard() {
+  showForm("dashboard");
+
 function initDashboard() {
   showDashboard();
   fetchDashboardSummary();
