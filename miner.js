@@ -1129,4 +1129,38 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("mousemove", resetInactivityTimer);
   document.addEventListener("keydown", resetInactivityTimer);
   document.addEventListener("click", resetInactivityTimer);
-}); // ✅ DON'T MISS THIS!
+});// ✅ DON'T MISS THIS!
+
+// Expose functions globally for HTML onclick and other inline triggers
+window.fetchBTCCounter = fetchBTCCounter;
+window.fetchTotalHashrate = fetchTotalHashrate;
+window.fetchTotalMined = fetchTotalMined;
+window.fetchTotalWithdrawn = fetchTotalWithdrawn;
+window.fetchActiveSessions = fetchActiveSessions;
+window.fetchNextWithdrawalDate = fetchNextWithdrawalDate;
+window.loadDashboardMessages = loadDashboardMessages;
+window.fetchMyRank = fetchMyRank;
+window.fetchMyBTC = fetchMyBTC;
+window.fetchMyHashrate = fetchMyHashrate;
+
+window.watchAd = watchAd;
+window.submitWithdrawal = submitWithdrawal;
+window.loadWithdrawalHistory = loadWithdrawalHistory;
+
+window.viewUserProfile = viewUserProfile;
+window.showChangePasswordForm = showChangePasswordForm;
+window.showResetPinForm = showResetPinForm;
+window.showWithdrawalHistory = showWithdrawalHistory;
+window.showTransactionHistory = showTransactionHistory;
+
+window.logout = logout;
+window.login = login;
+window.toggleSidebar = toggleSidebar;
+window.openWithdrawForm = openWithdrawForm;
+window.closeWithdrawForm = closeWithdrawForm;
+
+// Optional if you have these:
+window.fetchDashboardSummary = fetchDashboardSummary;
+window.startMiningCounter = startMiningCounter;
+window.startMiningSessionCountdown = startMiningSessionCountdown;
+window.stopMiningSession = stopMiningSession;
