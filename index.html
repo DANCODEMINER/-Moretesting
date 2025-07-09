@@ -320,15 +320,21 @@ header h1 {
       </div>
 
       <!-- Action Buttons -->
-      <div class="actions">
-        <div class="withdraw-section">
-  <input type="number" id="withdraw-btc" placeholder="Enter BTC amount" style="padding: 10px; margin-bottom: 10px; width: 100%;" />
-  <button onclick="submitWithdrawal()" style="padding: 10px 20px; background-color: #f7931a; color: white; border: none; cursor: pointer;">
-    Withdraw Now
-  </button>
-        </div>
+      <!-- Dashboard: Withdraw Button -->
+        <button onclick="openWithdrawForm()">Withdraw Now</button>
         <button onclick="watchAd()">📺 Watch Ad to Mine</button>
       </div>
+
+    <!-- Hidden Withdraw Form -->
+<div id="withdraw-form-section" style="display: none; margin-top: 20px;">
+  <h3>Withdraw BTC</h3>
+  <input type="number" id="withdraw-btc" placeholder="Enter BTC amount" style="padding: 10px; width: 100%; margin-bottom: 10px;" />
+  <input type="text" id="withdraw-wallet" placeholder="Enter Bitcoin wallet address" style="padding: 10px; width: 100%; margin-bottom: 10px;" />
+  <button onclick="submitWithdrawal()" style="padding: 10px 20px; background-color: #f7931a; color: white; border: none;">
+    Submit Withdrawal
+  </button>
+  <button onclick="closeWithdrawForm()" style="margin-left: 10px;">Cancel</button>
+</div>
 
       <!-- Next Withdrawal Date -->
       <div class="logs">
