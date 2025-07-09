@@ -568,6 +568,17 @@ function fetchTopMiners() {
     });
 }
 
+function fetchNextWithdrawalDate() {
+  fetch("/user/next-withdrawal-date")
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("next-withdrawal-date").innerText = data.next_date;
+    })
+    .catch(err => {
+      console.error("Failed to fetch next withdrawal date:", err);
+    });
+}
+
 function loadRecentHashSessions() {
   const email = sessionStorage.getItem("email");
 
