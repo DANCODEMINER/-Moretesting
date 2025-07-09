@@ -701,10 +701,24 @@ function withdrawNow() {
 function watchAd() {
   const email = sessionStorage.getItem("email");
 
-  if (!email) {
-    showToast("❌ Email not found. Please log in again.");
-    return;
-  }
+  fetch("/user/watch-ad", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  })
+    .then(res => res.json())
+    .then(data => {
+      showToast("✅ " + data.message);
+      fetchDashboardSummary(); // Refresh
+      loadRecentHashSessions();
+      fetchTopMiners();
+      fetchMyRank();
+    })
+    .catch(err => {
+      console.error(err);
+      showToast("❌ Failed to log ad watch.");
+    });
+}
 
   function loadDashboardMessages() {
   fetch("/user/dashboard-messages")
@@ -719,28 +733,7 @@ function watchAd() {
     .catch(console.error);
   }
 
-  fetch("/user/watch-ad", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email }),
-  })
-    .then(res => res.json())
-    .then(data => {
-      if (data.message) {
-        showToast("✅ " + data.message);
-        fetchDashboardSummary();     // Update totals
-        loadRecentHashSessions();    // Update session list
-        fetchTopMiners();            // Refresh leaderboard
-        fetchMyRank();               // Update my rank
-      } else if (data.error) {
-        showToast("❌ " + data.error);
-      }
-    })
-    .catch(err => {
-      console.error("Watch ad error:", err);
-      showToast("❌ Failed to record ad session.");
-    });
-}
+  
 
 function initDashboard() {
   fetchDashboardSummary();        // Total Hashrate, Mined, Withdrawn, Sessions
