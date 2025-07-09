@@ -1007,8 +1007,17 @@ function logout() {
   window.location.href = "index.html";
 }
 
-function showDashboard() {
-  showForm("dashboard");
+function initDashboard() {
+  showDashboard(); // Show the dashboard page
+  fetchDashboardSummary(); // Load BTC stats
+  fetchNextWithdrawalDate(); // Load next withdrawal date
+  fetchTopMiners(); // Load leaderboard
+  fetchMyRank(); // Load user's rank
+  loadRecentHashSessions(); // Load recent mining sessions
+  loadWithdrawalHistory(); // Load withdrawal history
+  loadDashboardMessages(); // Load dashboard announcements/messages
+  fetchMiningSettingsAndStartCounter(); // Start live BTC counter
+}
 
   const name = sessionStorage.getItem("name");
   const countryCode = sessionStorage.getItem("country"); // ISO 2-letter code
@@ -1044,6 +1053,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (isLoggedIn && pinVerified) {
     showDashboard();
+    initDashboard();
   } else if (isLoggedIn && !pinVerified) {
     showForm("pin-verify");
   }
