@@ -719,8 +719,6 @@ function fetchMyHashrate() {
     .catch(() => console.error("Failed to fetch my hashrate"));
 }
 
-==watch ads start session==
-
   function watchAd() {
   const email = sessionStorage.getItem("email");
   if (!email) return;
