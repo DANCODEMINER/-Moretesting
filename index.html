@@ -1,0 +1,393 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adchain Miner - Auth & Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="miner.css" />
+  <style>
+    /* Responsive Menu & Sidebar Styling */
+    .menu-btn {
+      z-index: 30;
+    }.menu {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  top: 60px;
+  right: 1rem;
+  width: 180px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  z-index: 25;
+}
+
+.menu.show {
+  display: flex;
+}
+
+.menu a {
+  padding: 10px;
+  color: #444;
+  font-weight: bold;
+  border-bottom: 1px solid #eee;
+}
+
+.menu a:last-child {
+  border-bottom: none;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: -260px;
+  width: 250px;
+  height: 100%;
+  background-color: #fff;
+  box-shadow: -2px 0 6px rgba(0, 0, 0, 0.2);
+  transition: right 0.3s ease;
+  z-index: 50;
+  padding: 20px;
+}
+
+.sidebar.active {
+  right: 0;
+}
+
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 40;
+  display: none;
+}
+
+#overlay.show {
+  display: block;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #333;
+  color: #fff;
+  padding: 10px 20px;
+}
+
+header h1 {
+  font-size: 1.4rem;
+}
+
+.container {
+  padding: 1rem;
+}
+
+  </style>
+</head>
+<body>
+  <div id="login-page">
+    <div class="navbar">
+      <div class="menu-btn" onclick="toggleMenu()">☰</div>
+      <div class="logo">Adchain Miner</div>
+    </div>
+    <div id="menu" class="menu">
+      <a href="#" onclick="showForm('login')">🚪 Login</a>
+      <a href="#" onclick="showForm('register')">👤 Register</a>
+      <a href="#" onclick="showForm('forgot-password')">🔒 Forgot Password</a>
+    </div><div class="form-container">
+  <!-- LOGIN FORM -->
+  <section id="login-section">
+    <form id="login-form" onsubmit="event.preventDefault(); loginUser();">
+      <h2>Login to Dashboard</h2>
+      <input type="email" id="login-email" placeholder="Email" required />
+      <input type="password" id="login-password" placeholder="Password" required />
+      <button class="btn" type="submit">LOG IN</button>
+      <div class="form-links">
+        <a href="#" onclick="showForm('register')">Create Account</a>
+        <a href="#" onclick="showForm('forgot-password')">Forgot Password?</a>
+      </div>
+    </form>
+  </section>
+
+  <!-- LOGIN PIN VERIFY FORM -->
+  <section id="login-pin-section">
+  <form id="pin-verify-form" style="display: none;" onsubmit="event.preventDefault(); verifyLoginPin();">
+    <h2>Verify PIN</h2>
+    <p id="pin-message" style="color: green; text-align: center; margin-bottom: 10px;"></p>
+    
+    <div class="pin-row" style="display: flex; justify-content: center; gap: 10px;">
+      <input class="pin-input" id="pinverify1" maxlength="1" required />
+      <input class="pin-input" id="pinverify2" maxlength="1" required />
+      <input class="pin-input" id="pinverify3" maxlength="1" required />
+      <input class="pin-input" id="pinverify4" maxlength="1" required />
+    </div>
+
+    <!-- ✅ Reset PIN link now correctly triggers sendResetPin() -->
+    <div style="text-align: center; margin: 10px 0;">
+      <a href="#" onclick="sendResetPin()" style="color: #007bff;">Reset PIN</a>
+    </div>
+
+    <button class="btn" type="submit" style="margin-top: 10px;">LOGIN</button>
+
+    <div style="text-align: center; margin-top: 15px;">
+      <div style="text-align: center; margin-top: 15px;">
+  <button type="button" class="logout-btn" style="padding: 8px 20px; background-color: red; color: white; border: none; border-radius: 4px; cursor: pointer;">
+    Logout
+  </button>
+      </div>
+    </div>
+  </form>
+  </section>
+
+  <section id="verify-pin-otp-section" style="display: none;">
+  <form id="verify-pin-otp-form" onsubmit="event.preventDefault(); verifyPinOtp();">
+    <h2>Verify OTP to Reset PIN</h2>
+    <input type="text" id="pin-otp" placeholder="Enter OTP" required />
+    <button class="btn" type="submit">Verify OTP</button>
+    <div class="form-links">
+      <a href="#" onclick="showForm('pin-verify')">Back</a>
+    </div>
+  </form>
+  </section>
+
+  <section id="reset-pin-section" style="display: none;">
+  <form id="reset-pin-form" onsubmit="event.preventDefault(); setNewPin();">
+    <h2>Set New PIN</h2>
+
+    <div class="pin-row" style="display: flex; justify-content: center; gap: 10px;">
+      <input type="text" maxlength="1" class="pin-input" id="resetpin1" required />
+      <input type="text" maxlength="1" class="pin-input" id="resetpin2" required />
+      <input type="text" maxlength="1" class="pin-input" id="resetpin3" required />
+      <input type="text" maxlength="1" class="pin-input" id="resetpin4" required />
+    </div>
+
+    <button class="btn" type="submit" style="margin-top: 15px;">Set PIN</button>
+  </form>
+  </section>
+  
+      <!-- REGISTER FORM -->
+  <section id="register-section">
+  <form id="register-form" style="display: none;" onsubmit="event.preventDefault(); signupUser();">
+    <h2>Create Account</h2>
+    <p id="signup-message" style="color: green; text-align: center; margin-bottom: 10px;"></p>
+
+    <input type="text" id="signup-firstname" placeholder="First Name" required />
+    <input type="text" id="signup-lastname" placeholder="Last Name" required />
+
+    <!-- Country dropdown -->
+    <select id="signup-country" required>
+      <option value="">🌍 Select Country</option>
+      <option value="US">🇺🇸 United States</option>
+      <option value="GB">🇬🇧 United Kingdom</option>
+      <option value="CA">🇨🇦 Canada</option>
+      <option value="DE">🇩🇪 Germany</option>
+      <option value="FR">🇫🇷 France</option>
+      <option value="IN">🇮🇳 India</option>
+      <option value="BR">🇧🇷 Brazil</option>
+      <option value="PH">🇵🇭 Philippines</option>
+      <option value="BD">🇧🇩 Bangladesh</option>
+      <option value="PK">🇵🇰 Pakistan</option>
+      <!-- Add more countries as needed -->
+    </select>
+
+    <input type="email" id="signup-email" placeholder="Email" required />
+    <input type="password" id="signup-password" placeholder="Password" required />
+    <small id="password-count" style="color: gray;">0/12 characters</small>
+
+    <button class="btn" type="submit">SIGN UP</button>
+
+    <div class="form-links">
+      <a href="#" onclick="showForm('login')">Back to Login</a>
+    </div>
+  </form>
+  </section>
+
+      <!-- OTP FORM -->
+      <section id="otp-section">
+        <form id="otp-form" onsubmit="event.preventDefault(); verifyOtp();" style="display: none;">
+          <h2>Verify OTP</h2>
+          <p id="otp-message" style="color: green; text-align: center;"></p>
+          <input type="email" id="otp-email" style="display:none;" />
+          <input type="text" id="otp-code" placeholder="Enter OTP" required />
+          <button class="btn" type="submit">VERIFY</button>
+          <div class="form-links">
+            <a href="#" onclick="showForm('login')">Back to Login</a>
+          </div>
+        </form>
+      </section>
+
+      <!-- CREATE PIN FORM -->
+      <section id="pin-section">
+        <form id="pin-form" style="display: none;">
+          <h2 style="text-align: center;">Create PIN</h2>
+          <div class="pin-row">
+            <input type="password" id="pin1" maxlength="1" class="pin-input" />
+            <input type="password" id="pin2" maxlength="1" class="pin-input" />
+            <input type="password" id="pin3" maxlength="1" class="pin-input" />
+            <input type="password" id="pin4" maxlength="1" class="pin-input" />
+          </div>
+          <p id="pin-message" style="color: red; text-align: center;"></p>
+          <div style="text-align: center; margin-top: 20px;">
+            <button id="create-account-btn" type="button" onclick="setUserPin()">Create Account</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- 1. Forgot Password - Step 1 -->
+<section id="forgot-password-section" style="display: none;">
+  <form id="forgot-password-form" onsubmit="event.preventDefault(); sendForgotOtp();">
+    <h2>Forgot Password</h2>
+    <input type="email" id="forgot-pass-email" placeholder="Enter your email" required />
+    <button class="btn" type="submit">SEND OTP</button>
+    <div class="form-links">
+      <a href="#" onclick="showForm('login')">Back to Login</a>
+    </div>
+  </form>
+</section>
+
+<!-- 2. Forgot Password - Step 2 -->
+<section id="verify-forgot-otp-section" style="display: none;">
+  <form id="verify-forgot-otp-form" onsubmit="event.preventDefault(); verifyForgotOtp();">
+    <h2>Verify OTP</h2>
+    <p id="forgot-otp-message" style="text-align: center;"></p>
+    <input type="text" id="forgot-pass-otp" placeholder="Enter OTP" required />
+    <button class="btn" type="submit">VERIFY</button>
+    <div class="form-links">
+      <a href="#" onclick="showForm('login')">Back to Login</a>
+    </div>
+  </form>
+</section>
+
+<!-- 3. Forgot Password - Step 3 -->
+<section id="reset-password-section" style="display: none;">
+  <form id="reset-password-form" onsubmit="event.preventDefault(); submitNewPassword();">
+    <h2>Set New Password</h2>
+    <input type="password" id="new-password" placeholder="New Password" required />
+    <input type="password" id="confirm-password" placeholder="Confirm Password" required />
+    <button class="btn" type="submit">RESET PASSWORD</button>
+    <div class="form-links">
+      <a href="#" onclick="showForm('login')">Back to Login</a>
+    </div>
+  </form>
+</section>
+    </div>
+  </div>
+
+  <!-- DASHBOARD PAGE -->
+  <div id="dashboard-page" style="display: none;">
+    <div id="overlay" onclick="toggleSidebar()"></div>
+
+    <header>
+      <h1>Adchain Miner</h1>
+      <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+    </header>
+
+    <div class="sidebar" id="sidebar">
+      <h3>Settings</h3>
+      <ul>
+        <li onclick="alert('👤 View Profile')">👤 View Profile</li>
+        <li onclick="alert('🔒 Change Password')">🔒 Change Password</li>
+        <li onclick="alert('🔁 Reset PIN')">🔁 Reset PIN</li>
+        <li onclick="alert('💳 Withdrawal History')">💳 Withdrawal History</li>
+        <li onclick="alert('📈 Transaction History')">📈 Transaction History</li>
+        <li onclick="logout()">🚪 Logout</li>
+        <li onclick="toggleSidebar()">❌ Close Menu</li>
+      </ul>
+    </div>
+
+    <div class="container">
+
+  <!-- 👋 Personalized Welcome -->
+  <h2 id="welcome-name">Welcome!</h2>
+<img id="country-flag" src="" alt="" style="margin-top: 5px; display: none;" />
+  <!-- Live Mining -->
+  <div class="mining-counter">
+    <h2>Mining in Progress...</h2>
+    <p id="btc-counter">0.00000000 BTC</p>
+  </div>
+
+      <!-- Stats -->
+      <div class="stats">
+        <div class="card"><h2>Total Hashrate</h2><p id="total-hashrate">0.00 Th/s</p></div>
+        <div class="card"><h2>Total Mined</h2><p id="total-mined">0.0000 BTC</p></div>
+        <div class="card"><h2>Total Withdrawn</h2><p id="total-withdrawn">0.0000 BTC</p></div>
+        <div class="card"><h2>Active Sessions</h2><p id="active-sessions">0</p></div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="actions">
+        <button onclick="watchAd()">▶️ Watch Ad</button>
+        <button onclick="withdrawNow()">⬇️ Withdraw</button>
+      </div>
+
+      <!-- Next Withdrawal Date -->
+      <div class="logs">
+        <h3>💸 Next Withdrawal Date</h3>
+        <div id="withdrawal-date-message" style="color: #444; font-size: 15px;">
+          <p>Next auto-withdrawal will be processed on <strong id="next-withdrawal-date">July 10, 2025</strong>.</p>
+        </div>
+      </div><!-- Announcements -->
+      <div class="logs">
+        <h3>📢 Messages & Announcements</h3>
+        <div id="dashboard-messages" style="text-align: left; color: #444; font-size: 15px;">
+          <p>✅ Watch ads daily to boost your hash rate rewards!</p>
+          <p>⚠️ Withdrawals are processed every 24 hours. Make sure your wallet is active.</p>
+        </div>
+      </div>
+
+      <!-- Hashrate Sessions -->
+      <div class="logs">
+        <h3>Recent Hash Sessions</h3>
+        <table id="hash-sessions-table">
+          <thead>
+            <tr><th>Session ID</th><th>Date</th><th>Power</th><th>Duration</th></tr>
+          </thead>
+          <tbody>
+            <!-- Injected by JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Leaderboard -->
+      <div class="logs">
+        <h3>📈 Leaderboard</h3>
+        <h4 style="color: #f7931a;">🏆 Top Miners</h4>
+        <table id="top-miners-table">
+          <thead>
+            <tr><th>Rank</th><th>User</th><th>BTC (30d)</th><th>Hashrate</th></tr>
+          </thead>
+          <tbody>
+            <!-- Injected by JS -->
+          </tbody>
+        </table>
+
+        <h4 style="margin-top: 30px; color: #f7931a;">📊 My Rank</h4>
+        <table id="my-rank-table">
+          <thead>
+            <tr><th>Rank</th><th>User</th><th>BTC (30d)</th><th>Hashrate</th></tr>
+          </thead>
+          <tbody>
+            <tr><td id="my-rank">--</td><td>You</td><td id="my-btc">--</td><td id="my-hashrate">--</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <footer>
+      <div>&copy; 2025 Adchain Miner. All rights reserved.</div>
+      <div class="logout-footer">
+  <button class="logout-btn">🚪 Logout</button>
+      </div>
+    </footer>
+  </div>
+  <div id="toast"></div>
+
+  <!-- Script to activate JS functionality -->
+  <script src="miner.js" defer></script>
+</body>
+</html>
