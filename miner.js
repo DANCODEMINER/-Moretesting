@@ -959,6 +959,41 @@ function submitWithdrawal() {
     });
 }
 
+function initDashboard() {
+  // Personalized Welcome
+  const name = sessionStorage.getItem("name");
+  const countryCode = sessionStorage.getItem("country");
+  const welcomeEl = document.getElementById("welcome-name");
+  const flagEl = document.getElementById("country-flag");
+
+  if (name && welcomeEl) {
+    welcomeEl.innerText = `Welcome, ${name}!`;
+  }
+
+  if (countryCode && flagEl) {
+    flagEl.src = `https://flagcdn.com/48x36/${countryCode.toLowerCase()}.png`;
+    flagEl.alt = countryCode.toUpperCase();
+    flagEl.style.display = "inline-block";
+  }
+
+  // Core Dashboard Data
+  fetchBTCCounter();                  // 1
+  fetchTotalHashrate();              // 2
+  fetchTotalMined();                 // 3
+  fetchTotalWithdrawn();            // 4
+  fetchActiveSessions();            // 5
+  fetchNextWithdrawalDate();        // 6
+  loadDashboardMessages();          // 7
+  fetchMyRank();                    // 8
+  fetchMyBTC();                     // 9
+  fetchMyHashrate();               // 10
+
+  // Additional Features
+  loadRecentHashSessions();         // Optional extra
+  loadWithdrawalHistory();          // Optional extra
+  fetchTopMiners();                 // Optional extra
+}
+
 function loadWithdrawalHistory() {
   const email = sessionStorage.getItem("email");
   if (!email) return;
@@ -1011,6 +1046,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (isLoggedIn && pinVerified) {
     showDashboard();
+    initDashboard();
   } else if (isLoggedIn && !pinVerified) {
     showForm("pin-verify");
   }
