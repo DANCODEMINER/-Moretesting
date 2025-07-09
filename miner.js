@@ -613,9 +613,6 @@ function showDashboard() {
   }
 }
 
-function withdrawNow() {
-  alert("🔄 Withdrawal logic to be added soon!");
-}
 
 let btcValue = 0.00000000;
 setInterval(() => {
