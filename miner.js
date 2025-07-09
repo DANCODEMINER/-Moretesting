@@ -740,6 +740,11 @@ function initDashboard() {
   loadDashboardMessages();        // Admin messages or system notices
 }
 
+// Refresh dashboard messages every 30 seconds
+setInterval(() => {
+  loadDashboardMessages();
+}, 30000); // 30,000 milliseconds = 30 seconds
+
 let btcValue = 0.00000000;
 setInterval(() => {
   const btcCounter = document.getElementById("btc-counter");
@@ -757,6 +762,9 @@ document.addEventListener("DOMContentLoaded", () => {
   if (isLoggedIn && pinVerified) {
     showDashboard();
     initDashboard();
+    setInterval(() => {
+  loadDashboardMessages();
+}, 30000);
   } else if (isLoggedIn && !pinVerified) {
     showForm("pin-verify");
   }
