@@ -993,9 +993,9 @@ function bindPinInputs() {
 }
 
 function checkPinLength() {
-  const pin = ["pin1","pin2","pin3","pin4"].map(id => document.getElementById(id).value).join("");
+  const pin = ["pin1", "pin2", "pin3", "pin4"].map(id => document.getElementById(id).value).join("");
   const btn = document.getElementById("create-account-btn");
-  if (btn) {
+  if(btn) {
     btn.disabled = pin.length !== 4;
     btn.style.opacity = pin.length === 4 ? "1" : "0.5";
     btn.style.cursor = pin.length === 4 ? "pointer" : "not-allowed";
@@ -1011,73 +1011,74 @@ function logout() {
 function showDashboard() {
   showForm("dashboard");
 
-function initDashboard() {
-  showDashboard();
-  fetchDashboardSummary();
-  fetchNextWithdrawalDate();
-  fetchTopMiners();
-  fetchMyRank();
-  loadRecentHashSessions();
-  loadWithdrawalHistory();
-  loadDashboardMessages();
-  fetchMiningSettingsAndStartCounter();
-
-  const name = sessionStorage.getItem("name");
-  const countryCode = sessionStorage.getItem("country");
-
-  const welcomeEl = document.getElementById("welcome-name");
-  const flagEl = document.getElementById("country-flag");
-
-  if (name && welcomeEl) {
-    welcomeEl.innerText = `Welcome, ${name}!`;
-  }
-
-  if (countryCode && flagEl) {
-    flagEl.src = `https://flagcdn.com/48x36/${countryCode.toLowerCase()}.png`;
-    flagEl.alt = countryCode.toUpperCase();
-    flagEl.style.display = "inline-block";
-  }
-} // ✅ this is the only correct closing brace
-
-
-let btcValue = 0.00000000;
-setInterval(() => {
-  const btcCounter = document.getElementById("btc-counter");
-  if (btcCounter) {
-    btcValue += 0.00000001;
-    btcCounter.innerText = btcValue.toFixed(8) + " BTC";
-  }
-}, 1000);
-
-// ========== DOMContentLoaded Setup ==========
-document.addEventListener("DOMContentLoaded", () => {
-  const isLoggedIn = sessionStorage.getItem("isLoggedIn") === "true";
-  const pinVerified = sessionStorage.getItem("pinVerified") === "true";
-
-  if (isLoggedIn && pinVerified) {
+  function initDashboard() {
     showDashboard();
-  } else if (isLoggedIn && !pinVerified) {
-    showForm("pin-verify");
-  }
+    fetchDashboardSummary();
+    fetchNextWithdrawalDate();
+    fetchTopMiners();
+    fetchMyRank();
+    loadRecentHashSessions();
+    loadWithdrawalHistory();
+    loadDashboardMessages();
+    fetchMiningSettingsAndStartCounter();
 
-  bindPinInputs();
+    const name = sessionStorage.getItem("name");
+    const countryCode = sessionStorage.getItem("country");
 
-  const passwordInput = document.getElementById("signup-password");
-  const passwordCount = document.getElementById("password-count");
+    const welcomeEl = document.getElementById("welcome-name");
+    const flagEl = document.getElementById("country-flag");
 
-  if (passwordInput && passwordCount) {
-    passwordInput.addEventListener("input", function () {
-      const len = this.value.length;
-      passwordCount.innerText = `${len}/12 characters`;
-    });
-  }
+    if(name && welcomeEl) {
+      welcomeEl.innerText = `Welcome, ${name}!`;
+    }
 
-  const logoutButtons = document.querySelectorAll(".logout-btn");
-  logoutButtons.forEach(button => button.addEventListener("click", logout));
+    if(countryCode && flagEl) {
+      flagEl.src = `https://flagcdn.com/48x36/${countryCode.toLowerCase()}.png`;
+      flagEl.alt = countryCode.toUpperCase();
+      flagEl.style.display = "inline-block";
+    }
+  } // ✅ this is the only correct closing brace
 
-  // ✅ Inactivity timer logic here
-  resetInactivityTimer();
-  document.addEventListener("mousemove", resetInactivityTimer);
-  document.addEventListener("keydown", resetInactivityTimer);
-  document.addEventListener("click", resetInactivityTimer);
-});
+
+  let btcValue = 0.00000000;
+  setInterval(() => {
+    const btcCounter = document.getElementById("btc-counter");
+    if(btcCounter) {
+      btcValue += 0.00000001;
+      btcCounter.innerText = btcValue.toFixed(8) + " BTC";
+    }
+  }, 1000);
+
+  // ========== DOMContentLoaded Setup ==========
+  document.addEventListener("DOMContentLoaded", () => {
+    const isLoggedIn = sessionStorage.getItem("isLoggedIn") === "true";
+    const pinVerified = sessionStorage.getItem("pinVerified") === "true";
+
+    if(isLoggedIn && pinVerified) {
+      showDashboard();
+    } else if(isLoggedIn && !pinVerified) {
+      showForm("pin-verify");
+    }
+
+    bindPinInputs();
+
+    const passwordInput = document.getElementById("signup-password");
+    const passwordCount = document.getElementById("password-count");
+
+    if(passwordInput && passwordCount) {
+      passwordInput.addEventListener("input", function () {
+        const len = this.value.length;
+        passwordCount.innerText = `${len}/12 characters`;
+      });
+    }
+
+    const logoutButtons = document.querySelectorAll(".logout-btn");
+    logoutButtons.forEach(button => button.addEventListener("click", logout));
+
+    // ✅ Inactivity timer logic here
+    resetInactivityTimer();
+    document.addEventListener("mousemove", resetInactivityTimer);
+    document.addEventListener("keydown", resetInactivityTimer);
+    document.addEventListener("click", resetInactivityTimer);
+  });
+  
