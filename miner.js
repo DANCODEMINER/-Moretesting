@@ -820,10 +820,40 @@ function submitWithdrawal() {
   const btc = parseFloat(document.getElementById("withdraw-btc").value);
   const wallet = document.getElementById("withdraw-wallet").value.trim();
 
-  if (!email || !btc || !wallet) {
-    showToast("❌ Please fill in all fields.");
+  const totalMinedText = document.getElementById("total-mined").innerText || "0";
+  const totalMined = parseFloat(totalMinedText.replace(" BTC", "").trim());
+
+  if (!email || isNaN(btc) || !wallet) {
+    showToast("❌ Please fill in all fields correctly.");
     return;
   }
+
+  if (btc > totalMined) {
+    showToast("⚠️ Insufficient BTC balance.");
+    return;
+  }
+
+  // Proceed to send request to backend
+  fetch("/user/withdraw-now", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, btc, wallet })
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.error) {
+        showToast(`❌ ${data.error}`);
+      } else {
+        showToast(`✅ ${data.message}`);
+        document.getElementById("withdraw-btc").value = "";
+        document.getElementById("withdraw-wallet").value = "";
+        closeWithdrawForm();
+      }
+    })
+    .catch(() => {
+      showToast("❌ Server error during withdrawal.");
+    });
+}
 
   fetch("/user/withdraw-now", {
     method: "POST",
