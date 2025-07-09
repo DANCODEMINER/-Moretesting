@@ -24,23 +24,33 @@ function resetInactivityTimer() {
   }, 2 * 60 * 1000); // 2 minutes (adjust as needed)
 }
 
-function showForm(formType) {
-  // All possible form sections by ID
-  const formMap = {
-    login: "login-form",
-    register: "register-form",
-    forgot: "forgot-form",
-    "otp-form": "otp-form",
-    "pin-form": "pin-form",
-    "pin-verify": "pin-verify-form",
-    "forgot-password": "forgot-password-section",
-    "verify-forgot-otp": "verify-forgot-otp-section",
-    "reset-password": "reset-password-section",
+const formMap = {
+  // Login system
+  login: "login-form",
+  register: "register-form",
+  forgot: "forgot-form",
+  "otp-form": "otp-form",
+  "pin-form": "pin-form",
+  "pin-verify": "pin-verify-form",
+  "forgot-password": "forgot-password-section",
+  "verify-forgot-otp": "verify-forgot-otp-section",
+  "reset-password": "reset-password-section",
+  "verify-pin-otp": "verify-pin-otp-section",
+  "reset-pin": "reset-pin-section",
 
-    // ✅ Added these for PIN reset flow
-    "verify-pin-otp": "verify-pin-otp-section",
-    "reset-pin": "reset-pin-section"
-  };
+  // ✅ Dashboard related
+  dashboard: "dashboard-page",
+  "withdraw-form": "withdraw-form-section",
+  "withdrawal-history": "withdrawal-history-section",
+  "profile-section": "profile-section", // (if you later create a profile section)
+  "transaction-history": "transaction-history-section", // (for future)
+  "mining-counter": "btc-counter", // optional, usually handled separately
+  "next-withdrawal-date": "next-withdrawal-date", // optional, text-only
+  "dashboard-messages": "dashboard-messages",
+  "hash-sessions-table": "hash-sessions-table",
+  "top-miners-table": "top-miners-table",
+  "my-rank-table": "my-rank-table"
+};
 
   // Loop and toggle visibility
   for (const key in formMap) {
