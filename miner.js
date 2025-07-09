@@ -1003,6 +1003,7 @@ setInterval(() => {
 }, 1000);
 
 // ========== DOMContentLoaded Setup ==========
+// ✅ End of DOMContentLoaded and full script
 document.addEventListener("DOMContentLoaded", () => {
   const isLoggedIn = sessionStorage.getItem("isLoggedIn") === "true";
   const pinVerified = sessionStorage.getItem("pinVerified") === "true";
@@ -1017,6 +1018,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const passwordInput = document.getElementById("signup-password");
   const passwordCount = document.getElementById("password-count");
+
   if (passwordInput && passwordCount) {
     passwordInput.addEventListener("input", function () {
       const len = this.value.length;
@@ -1027,9 +1029,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const logoutButtons = document.querySelectorAll(".logout-btn");
   logoutButtons.forEach(button => button.addEventListener("click", logout));
 
-  // ✅ Inactivity timer logic here
+  // ✅ Inactivity timer setup
   resetInactivityTimer();
   document.addEventListener("mousemove", resetInactivityTimer);
   document.addEventListener("keydown", resetInactivityTimer);
   document.addEventListener("click", resetInactivityTimer);
-  });
+}); // ✅ DON'T MISS THIS!
