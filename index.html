@@ -278,8 +278,7 @@ header h1 {
     </div>
   </div>
 
-  <!-- DASHBOARD PAGE -->
-<div id="dashboard-page" style="display: none;">
+  <div id="dashboard-page" style="display: none;">
   <div id="overlay" onclick="toggleSidebar()"></div>
 
   <header>
@@ -290,7 +289,7 @@ header h1 {
   <div class="sidebar" id="sidebar">
     <h3>Settings</h3>
     <ul>
-      <li onclick="alert('👤 View Profile')">👤 View Profile</li>
+      <li onclick="viewUserProfile()">👤 View Profile</li>
       <li onclick="alert('🔒 Change Password')">🔒 Change Password</li>
       <li onclick="alert('🔁 Reset PIN')">🔁 Reset PIN</li>
       <li onclick="showWithdrawalHistory()">💸 Withdrawal History</li>
@@ -410,6 +409,20 @@ header h1 {
       </table>
     </div>
   </div>
+
+  <footer>
+    <div>&copy; 2025 Adchain Miner. All rights reserved.</div>
+    <div class="logout-footer">
+      <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+    </div>
+  </footer>
+</div>
+
+<!-- Toast Container -->
+<div id="toast"></div>
+
+<!-- Miner JS Logic -->
+<script src="miner.js" defer></script>
 
   <footer>
     <div>&copy; 2025 Adchain Miner. All rights reserved.</div>
