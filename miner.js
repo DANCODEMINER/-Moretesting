@@ -617,27 +617,29 @@ function fetchLeaderboard() {
     .then(res => res.json())
     .then(data => {
       // Top Miners Table
-      const topTable = document.querySelector("#top-miners-table tbody");
-      topTable.innerHTML = "";
-      data.top_miners.forEach(miner => {
-        topTable.innerHTML += `
-          <tr>
+      const minersBody = document.querySelector("#top-miners-table tbody");
+      minersBody.innerHTML = "";
+      if (data.top_miners.length === 0) {
+        minersBody.innerHTML = "<tr><td colspan='4'>No miners found.</td></tr>";
+      } else {
+        data.top_miners.forEach(miner => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
             <td>${miner.rank}</td>
-            <td>${miner.username}</td>
+            <td>${miner.email}</td>
             <td>${miner.btc.toFixed(4)} BTC</td>
-            <td>${miner.country}</td>
-          </tr>
-        `;
-      });
+            <td>${miner.hashrate.toFixed(2)} Th/s</td>
+          `;
+          minersBody.appendChild(row);
+        });
+      }
 
       // My Rank Table
-      document.getElementById("my-rank").innerText = data.my_rank || "--";
-      document.getElementById("my-btc").innerText = (data.my_btc || 0).toFixed(4) + " BTC";
-      document.getElementById("my-hashrate").innerText = "--"; // optional if you track it
+      document.getElementById("my-rank").innerText = data.my_rank;
+      document.getElementById("my-btc").innerText = data.my_btc.toFixed(4);
+      document.getElementById("my-hashrate").innerText = data.my_hashrate.toFixed(2) + " Th/s";
     });
 }
-
-window.fetchLeaderboard = fetchLeaderboard;
 
 function loadWelcomeInfo() {
   const email = sessionStorage.getItem("email");
