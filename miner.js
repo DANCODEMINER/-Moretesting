@@ -773,6 +773,7 @@ function loadActiveHashrates() {
 startMining(userEmail);
 loadWithdrawHistory();
 loadMessages();
+loadActiveHashrates();
 
 // ========== DOMContentLoaded Setup ==========
 document.addEventListener("DOMContentLoaded", () => {
