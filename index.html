@@ -278,7 +278,7 @@ header h1 {
     </div>
   </div>
 
-  <div id="dashboard-page" style="display: none; height: 100vh; overflow-y: auto;">
+  <div id="dashboard-page" style="display: none;">
   <div id="overlay" onclick="toggleSidebar()"></div>
 
   <header>
@@ -292,19 +292,19 @@ header h1 {
       <li onclick="viewUserProfile()">👤 View Profile</li>
       <li onclick="showChangePasswordForm()">🔒 Change Password</li>
       <li onclick="showResetPinForm()">🔁 Reset PIN</li>
-      <li onclick="showWithdrawalHistory()">💸 Withdrawal History</li>
+      <li onclick="showWithdrawalHistory()">💳 Withdrawal History</li>
       <li onclick="showTransactionHistory()">📈 Transaction History</li>
       <li onclick="logout()">🚪 Logout</li>
       <li onclick="toggleSidebar()">❌ Close Menu</li>
     </ul>
   </div>
 
-  <div class="container" id="dashboard-main-content">
-    <!-- Personalized Welcome -->
+  <!-- Main Dashboard Container -->
+  <div class="container">
     <h2 id="welcome-name">Welcome!</h2>
     <img id="country-flag" src="" alt="" style="margin-top: 5px; display: none;" />
 
-    <!-- Live Mining -->
+    <!-- Mining Counter -->
     <div class="mining-counter">
       <h2>Mining in Progress...</h2>
       <p id="btc-counter">0.00000000 BTC</p>
@@ -318,69 +318,19 @@ header h1 {
       <div class="card"><h2>Active Sessions</h2><p id="active-sessions">0</p></div>
     </div>
 
-    <!-- Action Buttons -->
+    <!-- Buttons -->
     <div class="actions" style="margin-top: 20px;">
       <button onclick="openWithdrawForm()">Withdraw Now</button>
       <button onclick="watchAd()">📺 Watch Ad to Mine</button>
     </div>
 
-    <!-- Withdraw Form -->
-    <div id="withdraw-form-section" style="display: none; margin-top: 20px;">
-      <h3>Withdraw BTC</h3>
-      <input type="number" id="withdraw-btc" placeholder="Enter BTC amount" style="padding: 10px; width: 100%; margin-bottom: 10px;" />
-      <input type="text" id="withdraw-wallet" placeholder="Enter Bitcoin wallet address" style="padding: 10px; width: 100%; margin-bottom: 10px;" />
-      <button onclick="submitWithdrawal()" style="padding: 10px 20px; background-color: #f7931a; color: white; border: none;">Submit Withdrawal</button>
-      <button onclick="closeWithdrawForm()" style="margin-left: 10px;">Cancel</button>
-    </div>
-
-    <!-- Forms from Sidebar -->
-    <div id="profile-section" class="form-section" style="display: none;">
-      <h3>👤 User Profile</h3>
-      <p><strong>Name:</strong> <span id="profile-name">Loading...</span></p>
-      <p><strong>Email:</strong> <span id="profile-email">Loading...</span></p>
-      <p><strong>Country:</strong> <span id="profile-country">Loading...</span></p>
-      <p><strong>Join Date:</strong> <span id="profile-join-date">Loading...</span></p>
-    </div>
-
-    <div id="change-password-section" class="form-section" style="display: none;">
-      <h3>🔒 Change Password</h3>
-      <input type="text" id="current-password" name="current-password" placeholder="Current Password" />
-      <input type="text" id="new-password" name="new-password" placeholder="New Password" />
-      <input type="text" id="confirm-password" name="confirm-password" placeholder="Confirm Password" />
-      <button>Update Password</button>
-    </div>
-
-    <div id="reset-pin-form" class="form-section" style="display: none;">
-      <h3>🔁 Reset PIN</h3>
-      <input type="text" id="current-pin" name="current-pin" placeholder="Current PIN" />
-      <input type="text" id="new-pin" name="new-pin" placeholder="New PIN" />
-      <input type="text" id="confirm-pin" name="confirm-pin" placeholder="Confirm PIN" />
-      <button>Reset PIN</button>
-    </div>
-
-    <div id="withdrawal-history-section" class="form-section" style="display: none;">
-      <h4>📤 Withdrawal History</h4>
-      <table>
-        <thead><tr><th>Amount</th><th>Wallet</th><th>Status</th><th>Date</th></tr></thead>
-        <tbody id="withdrawal-history-body"><tr><td colspan="4">Loading...</td></tr></tbody>
-      </table>
-    </div>
-
-    <div id="transaction-history-section" class="form-section" style="display: none;">
-      <h3>📈 Transaction History</h3>
-      <table>
-        <thead><tr><th>Date</th><th>Type</th><th>Amount</th><th>Status</th></tr></thead>
-        <tbody><tr><td colspan="4">No transactions found.</td></tr></tbody>
-      </table>
-    </div>
-
-    <!-- Next Withdrawal Date -->
+    <!-- BTC Next Withdrawal Date -->
     <div class="logs">
       <h4 style="margin-top: 30px; color: #f7931a;">💸 Next Withdrawal Date</h4>
       <p id="next-withdrawal-date">--</p>
     </div>
 
-    <!-- Messages and Announcements -->
+    <!-- Messages -->
     <div class="logs">
       <h4 style="margin-top: 30px;">📢 Messages & Announcements</h4>
       <div id="dashboard-messages" style="margin-top: 10px;"></div>
@@ -391,12 +341,7 @@ header h1 {
       <h4 style="margin-top: 30px;">📅 Recent Hash Sessions</h4>
       <table id="hash-sessions-table">
         <thead>
-          <tr>
-            <th>ID</th>
-            <th>Date</th>
-            <th>Power</th>
-            <th>Duration</th>
-          </tr>
+          <tr><th>ID</th><th>Date</th><th>Power</th><th>Duration</th></tr>
         </thead>
         <tbody></tbody>
       </table>
@@ -408,50 +353,37 @@ header h1 {
 
       <h4 style="color: #f7931a;">🏆 Top Miners</h4>
       <table id="top-miners-table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>User</th>
-            <th>Total BTC</th>
-            <th>Hashrate</th>
-          </tr>
-        </thead>
+        <thead><tr><th>#</th><th>User</th><th>Total BTC</th><th>Hashrate</th></tr></thead>
         <tbody></tbody>
       </table>
 
       <h4 style="margin-top: 30px; color: #f7931a;">📊 My Rank</h4>
       <table id="my-rank-table">
-        <thead>
-          <tr><th>Rank</th><th>User</th><th>BTC (30d)</th><th>Hashrate</th></tr>
-        </thead>
+        <thead><tr><th>Rank</th><th>User</th><th>BTC (30d)</th><th>Hashrate</th></tr></thead>
         <tbody>
           <tr><td id="my-rank">--</td><td>You</td><td id="my-btc">--</td><td id="my-hashrate">--</td></tr>
         </tbody>
       </table>
     </div>
   </div>
-  </div>
-  
 
-    <footer>
-      <div>&copy; 2025 Adchain Miner. All rights reserved.</div>
-      <!-- Logout Button (Bottom Centered) -->
-<div id="dashboard-logout" style="display: flex; justify-content: center; margin: 40px 0;">
-  <button onclick="logout()" style="
-    padding: 12px 24px;
-    background-color: #f44336;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-weight: bold;
-    font-size: 16px;
-    cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  ">🚪 Logout</button>
-</div>
-    </footer>
+  <!-- 🧾 FORMS SECTION -->
+  <div id="form-container" style="margin: 20px;">
+    <!-- All form sections will be shown here -->
+    <!-- You already pasted forms like:
+      - #profile-section
+      - #change-password-section
+      - #reset-pin-section
+      - #withdrawal-history-section
+      - #transaction-history-section
+    -->
   </div>
-  <div id="toast"></div>
+
+  <!-- Logout Button at Bottom Center -->
+  <div style="text-align: center; margin-top: 40px;">
+    <button onclick="logout()" style="padding: 10px 20px; font-size: 16px;">🚪 Logout</button>
+  </div>
+  </div>
 
   <!-- Script to activate JS functionality -->
   <script src="miner.js" defer></script>
