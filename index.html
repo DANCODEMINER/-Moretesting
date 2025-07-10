@@ -278,56 +278,68 @@ header h1 {
     </div>
   </div>
 
-  <!-- DASHBOARD PAGE -->
-  <div id="dashboard-page" style="display: none;">
-    <header>
-      <h1>Adchain Miner</h1>
-    </header>
-<section id="dashboard-section" style="display:none;">
-  <div class="card">
-    <h2>Live BTC Balance</h2>
-    <div id="btc-counter">0.00000000</div>
-  </div>
+<!-- DASHBOARD PAGE -->
+<div id="dashboard-page" style="display: none;">
+  <header>
+    <h1>Adchain Miner</h1>
+  </header>
 
-  <div class="card">
-    <h2>Total BTC Earned</h2>
-    <div id="total-earned">0.00000000</div>
-  </div>
+  <!-- DASHBOARD SECTION -->
+  <section id="dashboard-section">
+    <!-- Live BTC Balance -->
+    <div class="card">
+      <h2>Live BTC Balance</h2>
+      <div id="btc-counter">0.00000000</div>
+    </div>
 
-  <div class="card">
-    <h2>Current Hashrate</h2>
-    <div id="hashrate">0 H/s</div>
-  </div>
+    <!-- Total BTC Earned -->
+    <div class="card">
+      <h2>Total BTC Earned</h2>
+      <div id="total-earned">0.00000000</div>
+    </div>
 
-  <div class="card">
-    <h2>Withdraw BTC</h2>
-    <input id="withdraw-amount" type="number" placeholder="Amount in BTC" />
-    <input id="withdraw-wallet" type="text" placeholder="BTC Wallet Address" />
-    <button class="btn" onclick="submitWithdraw()">Withdraw</button>
-    <div id="withdraw-msg"></div>
-  </div>
+    <!-- Current Hashrate -->
+    <div class="card">
+      <h2>Current Hashrate</h2>
+      <div id="hashrate">0 H/s</div>
+    </div>
 
-  <div class="card">
-    <h2>Withdraw History</h2>
-    <ul id="withdraw-history"></ul>
-  </div>
+    <!-- Withdraw BTC -->
+    <div class="card">
+      <h2>Withdraw BTC</h2>
+      <input id="withdraw-amount" type="number" placeholder="Amount in BTC" />
+      <input id="withdraw-wallet" type="text" placeholder="BTC Wallet Address" />
+      <button class="btn" onclick="submitWithdraw()">Withdraw</button>
+      <div id="withdraw-msg"></div>
+    </div>
 
-  <div class="card" id="messages">
-    <h2>Announcements</h2>
-    <ul id="admin-messages"></ul>
-  </div>
-</section>
+    <!-- Withdraw History -->
+    <div class="card">
+      <h2>Withdraw History</h2>
+      <ul id="withdraw-history"></ul>
+    </div>
 
-    <footer>
-      <div>&copy; 2025 Adchain Miner. All rights reserved.</div>
-      <div class="logout-footer">
-  <button class="logout-btn">🚪 Logout</button>
-      </div>
-    </footer>
-  </div>
-  <div id="toast"></div>
+    <!-- Announcements -->
+    <div class="card" id="messages">
+      <h2>Announcements</h2>
+      <ul id="admin-messages"></ul>
+    </div>
+  </section>
 
-  <!-- Script to activate JS functionality -->
-  <script src="miner.js" defer></script>
-</body>
+  <!-- FOOTER -->
+  <footer>
+    <div>&copy; 2025 Adchain Miner. All rights reserved.</div>
+    <div class="logout-footer">
+      <button class="logout-btn">🚪 Logout</button>
+    </div>
+  </footer>
+</div>
+
+<!-- TOAST NOTIFICATION -->
+<div id="toast"></div>
+
+<!-- DASHBOARD SCRIPT -->
+<script src="miner.js" defer></script>
+
+  </body>
 </html>
