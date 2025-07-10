@@ -731,6 +731,44 @@ function watchAd() {
   }, 10000);
 }
 
+function loadActiveHashrates() {
+  const email = localStorage.getItem("email");
+  fetch(`/user/hashrates?email=${encodeURIComponent(email)}`)
+    .then(res => res.json())
+    .then(data => {
+      const list = document.getElementById("active-hashrates");
+      list.innerHTML = "";
+
+      data.forEach((item, index) => {
+        const li = document.createElement("li");
+        const expires = new Date(item.expires_at);
+        const id = `hashrate-timer-${index}`;
+
+        li.innerHTML = `<b>${item.hashrate} H/s</b> - <span id="${id}">Calculating...</span>`;
+        list.appendChild(li);
+
+        // Start live countdown
+        const updateCountdown = () => {
+          const now = new Date();
+          const remaining = Math.max(0, expires - now);
+          const hours = Math.floor(remaining / 3600000);
+          const minutes = Math.floor((remaining % 3600000) / 60000);
+          const seconds = Math.floor((remaining % 60000) / 1000);
+
+          document.getElementById(id).innerText =
+            `${hours}h ${minutes}m ${seconds}s`;
+
+          if (remaining <= 0) {
+            document.getElementById(id).innerText = "Expired";
+          }
+        };
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+      });
+    });
+}
+
 // INIT
 startMining(userEmail);
 loadWithdrawHistory();
