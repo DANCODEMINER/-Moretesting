@@ -613,6 +613,47 @@ function showDashboard() {
   }
 }
 
+function watchAd() {
+  const email = sessionStorage.getItem("email");
+  if (!email) {
+    showToast("Session expired. Please log in.");
+    return;
+  }
+
+  fetch('/mine', {
+    method: 'POST',
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.error) {
+      showToast("⚠️ " + data.error);
+      return;
+    }
+
+    animateMining(data.btc_earned, () => {
+      document.getElementById("btc-counter").innerText = data.total_mined.toFixed(8) + " BTC";
+      document.getElementById("total-mined").innerText = data.total_mined.toFixed(4) + " BTC";
+      document.getElementById("total-hashrate").innerText = data.hashrate.toFixed(2) + " Th/s";
+      document.getElementById("active-sessions").innerText = parseInt(document.getElementById("active-sessions").innerText) + 1;
+    });
+  });
+}
+
+function animateMining(targetBTC, callback) {
+  let counter = 0;
+  const step = targetBTC / 50;
+  const interval = setInterval(() => {
+    counter += step;
+    document.getElementById("btc-counter").innerText = counter.toFixed(8) + " BTC";
+    if (counter >= targetBTC) {
+      clearInterval(interval);
+      callback();
+    }
+  }, 50);
+}
+
 function fetchBTCCounter() {
   const email = sessionStorage.getItem("email");
   if (!email) return;
