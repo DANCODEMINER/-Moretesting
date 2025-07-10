@@ -613,18 +613,61 @@ function showDashboard() {
   }
 }
 
-function withdrawNow() {
-  alert("🔄 Withdrawal logic to be added soon!");
+let miningInterval = null;
+let miningFactor = 0.00000001; // same as backend
+
+function startMining(email) {
+  fetch(`/user/dashboard?email=${encodeURIComponent(email)}`)
+    .then(res => res.json())
+    .then(data => {
+      const hashrate = data.hashrate;
+      const lastMined = new Date(data.last_mined);
+      let balance = data.btc_balance;
+
+      if (hashrate <= 0) {
+        document.getElementById("btc-counter").innerText = balance.toFixed(8);
+        return;
+      }
+
+      // Start counter
+      const startTime = Date.now();
+      const lastMinedTime = lastMined.getTime();
+
+      if (miningInterval) clearInterval(miningInterval);
+
+      miningInterval = setInterval(() => {
+        const now = Date.now();
+        const secondsElapsed = (now - lastMinedTime) / 1000;
+        const mined = hashrate * secondsElapsed * miningFactor;
+        const currentBTC = balance + mined;
+
+        document.getElementById("btc-counter").innerText = currentBTC.toFixed(8);
+      }, 1000);
+
+      // Optional: Sync to backend every 30 seconds
+      setInterval(() => {
+        syncMinedBTC(email);
+      }, 30000);
+    })
+    .catch(err => {
+      console.error("Error starting miner:", err);
+    });
 }
 
-let btcValue = 0.00000000;
-setInterval(() => {
-  const btcCounter = document.getElementById("btc-counter");
-  if (btcCounter) {
-    btcValue += 0.00000001;
-    btcCounter.innerText = btcValue.toFixed(8) + " BTC";
-  }
-}, 1000);
+function syncMinedBTC(email) {
+  fetch("/user/mine-sync", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email })
+  })
+  .then(res => res.json())
+  .then(data => {
+    console.log("Synced:", data);
+  })
+  .catch(err => {
+    console.error("Sync error:", err);
+  });
+}
 
 // ========== DOMContentLoaded Setup ==========
 document.addEventListener("DOMContentLoaded", () => {
