@@ -613,8 +613,9 @@ function showDashboard() {
   }
 }
 
+const userEmail = sessionStorage.getItem("email");
+let miningFactor = 0.00000001;
 let miningInterval = null;
-let miningFactor = 0.00000001; // same as backend
 
 function startMining(email) {
   fetch(`/user/dashboard?email=${encodeURIComponent(email)}`)
@@ -624,12 +625,14 @@ function startMining(email) {
       const lastMined = new Date(data.last_mined);
       let balance = data.btc_balance;
 
+      document.getElementById("total-earned").innerText = data.total_earned.toFixed(8);
+      document.getElementById("hashrate").innerText = hashrate + " H/s";
+
       if (hashrate <= 0) {
         document.getElementById("btc-counter").innerText = balance.toFixed(8);
         return;
       }
 
-      // Start counter
       const startTime = Date.now();
       const lastMinedTime = lastMined.getTime();
 
@@ -640,17 +643,10 @@ function startMining(email) {
         const secondsElapsed = (now - lastMinedTime) / 1000;
         const mined = hashrate * secondsElapsed * miningFactor;
         const currentBTC = balance + mined;
-
         document.getElementById("btc-counter").innerText = currentBTC.toFixed(8);
       }, 1000);
 
-      // Optional: Sync to backend every 30 seconds
-      setInterval(() => {
-        syncMinedBTC(email);
-      }, 30000);
-    })
-    .catch(err => {
-      console.error("Error starting miner:", err);
+      setInterval(() => syncMinedBTC(email), 30000);
     });
 }
 
@@ -659,15 +655,62 @@ function syncMinedBTC(email) {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email })
+  }).then(res => res.json());
+}
+
+function submitWithdraw() {
+  const amount = parseFloat(document.getElementById("withdraw-amount").value);
+  const wallet = document.getElementById("withdraw-wallet").value.trim();
+
+  if (!amount || !wallet) {
+    document.getElementById("withdraw-msg").innerText = "❌ Fill all fields";
+    return;
+  }
+
+  fetch("/user/withdraw", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email: userEmail, amount, wallet })
   })
   .then(res => res.json())
   .then(data => {
-    console.log("Synced:", data);
-  })
-  .catch(err => {
-    console.error("Sync error:", err);
+    document.getElementById("withdraw-msg").innerText = data.message || data.error;
+    loadWithdrawHistory();
   });
 }
+
+function loadWithdrawHistory() {
+  fetch(`/user/withdrawals?email=${encodeURIComponent(userEmail)}`)
+    .then(res => res.json())
+    .then(data => {
+      const list = document.getElementById("withdraw-history");
+      list.innerHTML = "";
+      data.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = `${item.amount} BTC to ${item.wallet} [${item.status}]`;
+        list.appendChild(li);
+      });
+    });
+}
+
+function loadMessages() {
+  fetch("/user/messages")
+    .then(res => res.json())
+    .then(data => {
+      const ul = document.getElementById("admin-messages");
+      ul.innerHTML = "";
+      data.forEach(msg => {
+        const li = document.createElement("li");
+        li.innerHTML = `<b>${msg.title}</b>: ${msg.content}`;
+        ul.appendChild(li);
+      });
+    });
+}
+
+// INIT
+startMining(userEmail);
+loadWithdrawHistory();
+loadMessages();
 
 // ========== DOMContentLoaded Setup ==========
 document.addEventListener("DOMContentLoaded", () => {
