@@ -545,6 +545,179 @@ function setNewPin() {
     });
 }
 
+function fetchDashboardStats() {
+  const email = sessionStorage.getItem("email");
+  if (!email) return;
+
+  fetch("/dashboard-stats", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.error) {
+        showToast("⚠️ " + data.error);
+        return;
+      }
+
+      document.getElementById("btc-counter").innerText = data.total_mined.toFixed(8) + " BTC";
+      document.getElementById("total-mined").innerText = data.total_mined.toFixed(4) + " BTC";
+      document.getElementById("total-hashrate").innerText = data.total_hashrate.toFixed(2) + " Th/s";
+      document.getElementById("active-sessions").innerText = data.active_sessions;
+    });
+}
+
+window.fetchDashboardStats = fetchDashboardStats;
+
+function fetchHashSessions() {
+  const email = sessionStorage.getItem("email");
+  if (!email) return;
+
+  fetch("/hash-sessions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email })
+  })
+    .then(res => res.json())
+    .then(sessions => {
+      const tableBody = document.querySelector("#hash-sessions-table tbody");
+      tableBody.innerHTML = "";
+
+      if (!Array.isArray(sessions) || sessions.length === 0) {
+        tableBody.innerHTML = "<tr><td colspan='4'>No sessions found.</td></tr>";
+        return;
+      }
+
+      sessions.forEach(s => {
+        const row = `
+          <tr>
+            <td>${s.id}</td>
+            <td>${s.date}</td>
+            <td>${s.power}</td>
+            <td>${s.duration}</td>
+          </tr>
+        `;
+        tableBody.innerHTML += row;
+      });
+    });
+}
+
+window.fetchHashSessions = fetchHashSessions;
+
+function fetchLeaderboard() {
+  const email = sessionStorage.getItem("email");
+  if (!email) return;
+
+  fetch("/leaderboard", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email })
+  })
+    .then(res => res.json())
+    .then(data => {
+      // Top Miners Table
+      const topTable = document.querySelector("#top-miners-table tbody");
+      topTable.innerHTML = "";
+      data.top_miners.forEach(miner => {
+        topTable.innerHTML += `
+          <tr>
+            <td>${miner.rank}</td>
+            <td>${miner.username}</td>
+            <td>${miner.btc.toFixed(4)} BTC</td>
+            <td>${miner.country}</td>
+          </tr>
+        `;
+      });
+
+      // My Rank Table
+      document.getElementById("my-rank").innerText = data.my_rank || "--";
+      document.getElementById("my-btc").innerText = (data.my_btc || 0).toFixed(4) + " BTC";
+      document.getElementById("my-hashrate").innerText = "--"; // optional if you track it
+    });
+}
+
+window.fetchLeaderboard = fetchLeaderboard;
+
+function loadWelcomeInfo() {
+  const email = sessionStorage.getItem("email");
+  if (!email) return;
+
+  fetch("/user-info", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email })
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.error) return;
+
+      // Show name and flag
+      document.getElementById("welcome-name").innerText = "Welcome, " + data.first_name + "!";
+      const flagImg = document.getElementById("country-flag");
+      flagImg.src = data.flag_url;
+      flagImg.style.display = "inline-block";
+    });
+}
+
+window.loadWelcomeInfo = loadWelcomeInfo;
+
+function fetchHashSessions() {
+  const email = sessionStorage.getItem("email");
+  if (!email) return;
+
+  fetch("/hash-sessions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email })
+  })
+    .then(res => res.json())
+    .then(data => {
+      const tbody = document.querySelector("#hash-sessions-table tbody");
+      tbody.innerHTML = ""; // clear previous entries
+
+      if (!data.length) {
+        tbody.innerHTML = "<tr><td colspan='4'>No sessions found.</td></tr>";
+        return;
+      }
+
+      data.forEach(session => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${session.id}</td>
+          <td>${session.date}</td>
+          <td>${session.hashrate} Th/s</td>
+          <td>${session.duration}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    });
+}
+
+window.fetchHashSessions = fetchHashSessions;
+
+function viewUserProfile() {
+  const email = sessionStorage.getItem("email");
+  if (!email) return showToast("Session expired.");
+
+  showDashboardForm("profile-section");
+
+  fetch("/profile", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email })
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.error) return showToast("❌ " + data.error);
+
+      document.getElementById("profile-name").innerText = data.name;
+      document.getElementById("profile-email").innerText = data.email;
+      document.getElementById("profile-country").innerText = data.country;
+      document.getElementById("profile-join-date").innerText = data.join_date;
+    });
+}
+
 function showForm(sectionId) {
   // Hide dashboard and sidebar
   document.getElementById('dashboard-content').style.display = 'none';
