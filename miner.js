@@ -545,6 +545,50 @@ function setNewPin() {
     });
 }
 
+function showForm(sectionId) {
+  // Hide dashboard and sidebar
+  document.getElementById('dashboard-content').style.display = 'none';
+  document.getElementById('sidebar').style.display = 'none';
+  document.getElementById('dashboard-header').style.display = 'none';
+
+  // Hide all forms first
+  const forms = document.querySelectorAll('.form-section');
+  forms.forEach(f => f.style.display = 'none');
+
+  // Show selected form
+  document.getElementById(sectionId).style.display = 'block';
+}
+
+function closeForm() {
+  // Hide all forms
+  document.querySelectorAll('.form-section').forEach(f => f.style.display = 'none');
+
+  // Show dashboard again
+  document.getElementById('dashboard-content').style.display = 'block';
+  document.getElementById('sidebar').style.display = 'block';
+  document.getElementById('dashboard-header').style.display = 'flex';
+}
+
+// Hook your sidebar items:
+function viewUserProfile() {
+  showForm("profile-section");
+}
+function showChangePasswordForm() {
+  showForm("change-password-section");
+}
+function showResetPinForm() {
+  showForm("reset-pin-section");
+}
+function showWithdrawalHistory() {
+  showForm("withdrawal-history-dashboard");
+  if (typeof loadWithdrawalHistory === 'function') {
+    loadWithdrawalHistory();
+  }
+}
+function showTransactionHistory() {
+  showForm("transaction-history-section");
+}
+
 function bindPinInputs() {
   const forms = {};
 
