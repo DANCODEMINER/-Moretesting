@@ -875,42 +875,49 @@ function fetchDashboardSummary() {
   fetchMyHashrate();
 }
 
-function showDashboardForm(id) {
-  document.querySelectorAll('.form-section').forEach(div => div.style.display = 'none');
-  document.getElementById(id).style.display = 'block';
-}
-window.showDashboardForm = showDashboardForm;
+function showForm(sectionId) {
+  // Hide dashboard and sidebar
+  document.getElementById('dashboard-content').style.display = 'none';
+  document.getElementById('sidebar').style.display = 'none';
+  document.getElementById('dashboard-header').style.display = 'none';
 
+  // Hide all forms first
+  const forms = document.querySelectorAll('.form-section');
+  forms.forEach(f => f.style.display = 'none');
+
+  // Show selected form
+  document.getElementById(sectionId).style.display = 'block';
+}
+
+function closeForm() {
+  // Hide all forms
+  document.querySelectorAll('.form-section').forEach(f => f.style.display = 'none');
+
+  // Show dashboard again
+  document.getElementById('dashboard-content').style.display = 'block';
+  document.getElementById('sidebar').style.display = 'block';
+  document.getElementById('dashboard-header').style.display = 'flex';
+}
+
+// Hook your sidebar items:
 function viewUserProfile() {
-  showDashboardForm("profile-section");
-  // You can add AJAX call here to load data if needed
+  showForm("profile-section");
 }
-
 function showChangePasswordForm() {
-  showDashboardForm("change-password-section");
+  showForm("change-password-section");
 }
-
 function showResetPinForm() {
-  showDashboardForm("reset-pin-section");
+  showForm("reset-pin-section");
 }
-
 function showWithdrawalHistory() {
-  showDashboardForm("withdrawal-history-dashboard");
-  loadWithdrawalHistory(); // if function exists
-}
-
-function showTransactionHistory() {
-  showDashboardForm("transaction-history-section");
-  // Call transaction loading function here if any
-}
-
-function watchAd() {
-  const email = sessionStorage.getItem("email");
-
-  if (!email) {
-    showToast("❌ Session expired. Please log in.");
-    return;
+  showForm("withdrawal-history-dashboard");
+  if (typeof loadWithdrawalHistory === 'function') {
+    loadWithdrawalHistory();
   }
+}
+function showTransactionHistory() {
+  showForm("transaction-history-section");
+}
 
   fetch("/user/watch-ad", {
     method: "POST",
