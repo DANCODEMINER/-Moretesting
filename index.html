@@ -278,169 +278,88 @@ header h1 {
     </div>
   </div>
 
-<!-- DASHBOARD PAGE -->
-<div id="dashboard-page" style="display: none; font-family: 'Segoe UI', sans-serif; background: #121212; color: white; padding: 20px; min-height: 100vh;">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adchain Miner - Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css" />
+</head>
+<body>
 
-  <!-- HEADER -->
-  <header style="text-align: center; margin-bottom: 20px;">
-    <h1 style="color: gold;">Adchain Miner</h1>
-  </header>
+  <div id="dashboard-page" style="display: none;">
+    <header>
+      <h1>Adchain Miner</h1>
+    </header>
 
-  <!-- DASHBOARD SECTION -->
-  <section id="dashboard-section">
+    <div class="container">
 
-    <!-- Live BTC Balance -->
-    <div class="card">
-      <h2>Live BTC Balance</h2>
-      <div id="btc-counter" class="value">0.00000000</div>
+      <!-- Live BTC Balance -->
+      <div class="card">
+        <h2>Live BTC Balance</h2>
+        <div id="btc-counter" class="value">0.00000000</div>
+      </div>
+
+      <!-- Total BTC Earned -->
+      <div class="card">
+        <h2>Total BTC Earned</h2>
+        <div id="total-earned" class="value">0.00000000</div>
+      </div>
+
+      <!-- Current Hashrate -->
+      <div class="card">
+        <h2>Current Hashrate</h2>
+        <div id="hashrate" class="value">0 H/s</div>
+      </div>
+
+      <!-- Earn Hashrate -->
+      <div class="card">
+        <h2>Earn Hashrate</h2>
+        <p>Watch an ad to gain mining power</p>
+        <button class="btn" onclick="watchAd()">🎥 Watch Ad</button>
+        <div id="ad-status" class="status-text"></div>
+      </div>
+
+      <!-- Withdraw BTC -->
+      <div class="card">
+        <h2>Withdraw BTC</h2>
+        <input id="withdraw-amount" type="number" placeholder="Amount in BTC" class="input-field" />
+        <input id="withdraw-wallet" type="text" placeholder="BTC Wallet Address" class="input-field" />
+        <button class="btn" onclick="submitWithdraw()">Withdraw</button>
+        <div id="withdraw-msg" class="status-text"></div>
+      </div>
+
+      <!-- Withdraw History -->
+      <div class="card">
+        <h2>Withdraw History</h2>
+        <ul id="withdraw-history" class="history-list"></ul>
+      </div>
+
+      <!-- Active Hashrates -->
+      <div class="card">
+        <h2>Active Hashrates</h2>
+        <ul id="active-hashrates" class="hashrate-list"></ul>
+      </div>
+
+      <!-- Announcements -->
+      <div class="card" id="messages">
+        <h2>Announcements</h2>
+        <ul id="admin-messages" class="message-list"></ul>
+      </div>
+
     </div>
 
-    <!-- Total BTC Earned -->
-    <div class="card">
-      <h2>Total BTC Earned</h2>
-      <div id="total-earned" class="value">0.00000000</div>
-    </div>
+    <footer>
+      <div>&copy; 2025 Adchain Miner. All rights reserved.</div>
+      <div class="logout-footer">
+        <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+      </div>
+    </footer>
+  </div>
 
-    <!-- Current Hashrate -->
-    <div class="card">
-      <h2>Current Hashrate</h2>
-      <div id="hashrate" class="value">0 H/s</div>
-    </div>
+  <div id="toast"></div>
+  <script src="miner.js"></script>
 
-    <!-- Earn Hashrate by Watching Ad -->
-    <div class="card">
-      <h2>Earn Hashrate</h2>
-      <p>Watch an ad to gain mining power</p>
-      <button class="btn" onclick="watchAd()">🎥 Watch Ad</button>
-      <div id="ad-status" class="status-text"></div>
-    </div>
-
-    <!-- Withdraw BTC -->
-    <div class="card">
-      <h2>Withdraw BTC</h2>
-      <input id="withdraw-amount" type="number" placeholder="Amount in BTC" class="input-field" />
-      <input id="withdraw-wallet" type="text" placeholder="BTC Wallet Address" class="input-field" />
-      <button class="btn" onclick="submitWithdraw()">Withdraw</button>
-      <div id="withdraw-msg" class="status-text"></div>
-    </div>
-
-    <!-- Withdraw History -->
-    <div class="card">
-      <h2>Withdraw History</h2>
-      <ul id="withdraw-history" class="history-list"></ul>
-    </div>
-
-    <!-- Active Hashrates -->
-    <div class="card">
-      <h2>Active Hashrates</h2>
-      <ul id="active-hashrates" class="hashrate-list"></ul>
-    </div>
-
-    <!-- Announcements -->
-    <div class="card" id="messages">
-      <h2>Announcements</h2>
-      <ul id="admin-messages" class="message-list"></ul>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer style="margin-top: 30px; text-align: center; font-size: 14px;">
-    <div>&copy; 2025 Adchain Miner. All rights reserved.</div>
-    <div class="logout-footer" style="margin-top: 10px;">
-      <button class="logout-btn">🚪 Logout</button>
-    </div>
-  </footer>
-</div>
-
-<!-- TOAST NOTIFICATION -->
-<div id="toast"></div>
-
-<!-- DASHBOARD STYLES -->
-<style>
-  .card {
-    background: #1e1e1e;
-    padding: 20px;
-    border-radius: 12px;
-    margin: 15px 0;
-    box-shadow: 0 0 12px #0005;
-  }
-
-  .value {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #00ffcc;
-    margin-top: 5px;
-  }
-
-  .btn {
-    background: gold;
-    color: black;
-    padding: 10px 20px;
-    margin-top: 10px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-  }
-
-  .btn:hover {
-    background: #ffd700cc;
-  }
-
-  .input-field {
-    width: 100%;
-    padding: 10px;
-    margin-top: 8px;
-    margin-bottom: 10px;
-    border-radius: 6px;
-    border: 1px solid #444;
-    background: #2a2a2a;
-    color: white;
-  }
-
-  .logout-btn {
-    background: crimson;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-
-  .status-text {
-    margin-top: 10px;
-    color: #f0f0f0;
-  }
-
-  .history-list,
-  .hashrate-list,
-  .message-list {
-    list-style: none;
-    padding-left: 0;
-  }
-
-  .history-list li,
-  .hashrate-list li,
-  .message-list li {
-    padding: 8px 0;
-    border-bottom: 1px solid #333;
-  }
-
-  #toast {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #222;
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 6px;
-    display: none;
-    z-index: 1000;
-  }
-</style>
-
-<!-- SCRIPT -->
-<script src="miner.js" defer></script>
-  </body>
+</body>
 </html>
