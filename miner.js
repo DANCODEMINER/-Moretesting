@@ -618,7 +618,7 @@ let miningFactor = 0.00000001;
 let miningInterval = null;
 
 function startMining(email) {
-  fetch(`/user/dashboard?email=${encodeURIComponent(email)}`)
+  fetch(`https://danoski-backend.onrender.com/user/dashboard?email=${encodeURIComponent(email)}`)
     .then(res => res.json())
     .then(data => {
       const hashrate = data.hashrate;
@@ -633,9 +633,7 @@ function startMining(email) {
         return;
       }
 
-      const startTime = Date.now();
       const lastMinedTime = lastMined.getTime();
-
       if (miningInterval) clearInterval(miningInterval);
 
       miningInterval = setInterval(() => {
@@ -651,7 +649,7 @@ function startMining(email) {
 }
 
 function syncMinedBTC(email) {
-  fetch("/user/mine-sync", {
+  fetch("https://danoski-backend.onrender.com/user/mine-sync", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email })
@@ -661,13 +659,14 @@ function syncMinedBTC(email) {
 function submitWithdraw() {
   const amount = parseFloat(document.getElementById("withdraw-amount").value);
   const wallet = document.getElementById("withdraw-wallet").value.trim();
+  const userEmail = sessionStorage.getItem("email");
 
   if (!amount || !wallet) {
     document.getElementById("withdraw-msg").innerText = "❌ Fill all fields";
     return;
   }
 
-  fetch("/user/withdraw", {
+  fetch("https://danoski-backend.onrender.com/user/withdraw", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email: userEmail, amount, wallet })
@@ -680,7 +679,9 @@ function submitWithdraw() {
 }
 
 function loadWithdrawHistory() {
-  fetch(`/user/withdrawals?email=${encodeURIComponent(userEmail)}`)
+  const userEmail = sessionStorage.getItem("email");
+
+  fetch(`https://danoski-backend.onrender.com/user/withdrawals?email=${encodeURIComponent(userEmail)}`)
     .then(res => res.json())
     .then(data => {
       const list = document.getElementById("withdraw-history");
@@ -694,7 +695,7 @@ function loadWithdrawHistory() {
 }
 
 function loadMessages() {
-  fetch("/user/messages")
+  fetch("https://danoski-backend.onrender.com/user/messages")
     .then(res => res.json())
     .then(data => {
       const ul = document.getElementById("admin-messages");
@@ -708,14 +709,14 @@ function loadMessages() {
 }
 
 function watchAd() {
-  const email = localStorage.getItem("email");
+  const email = sessionStorage.getItem("email");
   if (!email) return;
 
   document.getElementById("ad-status").innerText = "📺 Watching ad...";
 
   // Simulate 10-second ad
   setTimeout(() => {
-    fetch("/user/claim-hashrate", {
+    fetch("https://danoski-backend.onrender.com/user/claim-hashrate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email })
@@ -732,8 +733,9 @@ function watchAd() {
 }
 
 function loadActiveHashrates() {
-  const email = localStorage.getItem("email");
-  fetch(`/user/hashrates?email=${encodeURIComponent(email)}`)
+  const email = sessionStorage.getItem("email");
+
+  fetch(`https://danoski-backend.onrender.com/user/hashrates?email=${encodeURIComponent(email)}`)
     .then(res => res.json())
     .then(data => {
       const list = document.getElementById("active-hashrates");
