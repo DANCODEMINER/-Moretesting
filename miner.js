@@ -205,7 +205,7 @@ function verifyLoginPin() {
     return;
   }
 
-  const email = sessionStorage.getItem("loginEmail");
+  const email = sessionStorage.getItem("loginEmail"); // ✅ Get login email
 
   fetch("https://danoski-backend.onrender.com/user/verify-login-pin", {
     method: "POST",
@@ -224,8 +224,12 @@ function verifyLoginPin() {
 
       if (res.ok) {
         showToast("✅ PIN verified. Welcome back!", "#4caf50");
+
+        // ✅ Save email correctly for dashboard use
+        sessionStorage.setItem("email", email); // 🔥 This is the key fix
         sessionStorage.setItem("pinVerified", "true");
-        showDashboard();
+
+        showDashboard(); // Show the dashboard now that PIN is verified
       } else {
         showToast("❌ Incorrect PIN. Please try again.", "#e74c3c");
       }
