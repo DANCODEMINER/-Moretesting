@@ -617,16 +617,14 @@ function fetchBTCCounter() {
   const email = sessionStorage.getItem("email");
   if (!email) return;
 
-  fetch("/user/btc-counter", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email })
-  })
+  fetch(`/btc-counter?email=${encodeURIComponent(email)}`)
     .then(res => res.json())
     .then(data => {
-      document.getElementById("btc-counter").innerText = data.counter + " BTC";
+      document.getElementById("btc-counter").textContent = data.btc + " BTC";
     })
-    .catch(() => console.error("Failed to fetch BTC counter"));
+    .catch(err => {
+      console.error("Failed to fetch BTC counter:", err);
+    });
 }
 
 function fetchTotalHashrate() {
