@@ -707,6 +707,30 @@ function loadMessages() {
     });
 }
 
+function watchAd() {
+  const email = localStorage.getItem("email");
+  if (!email) return;
+
+  document.getElementById("ad-status").innerText = "📺 Watching ad...";
+
+  // Simulate 10-second ad
+  setTimeout(() => {
+    fetch("/user/claim-hashrate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email })
+    })
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("ad-status").innerText = data.message || data.error;
+      startMining(email); // Refresh hashrate and counter
+    })
+    .catch(() => {
+      document.getElementById("ad-status").innerText = "❌ Failed to claim hashrate.";
+    });
+  }, 10000);
+}
+
 // INIT
 startMining(userEmail);
 loadWithdrawHistory();
