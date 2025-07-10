@@ -613,19 +613,6 @@ function showDashboard() {
   }
 }
 
-function withdrawNow() {
-  alert("🔄 Withdrawal logic to be added soon!");
-}
-
-let btcValue = 0.00000000;
-setInterval(() => {
-  const btcCounter = document.getElementById("btc-counter");
-  if (btcCounter) {
-    btcValue += 0.00000001;
-    btcCounter.innerText = btcValue.toFixed(8) + " BTC";
-  }
-}, 1000);
-
 // ========== DOMContentLoaded Setup ==========
 document.addEventListener("DOMContentLoaded", () => {
   const isLoggedIn = sessionStorage.getItem("isLoggedIn") === "true";
