@@ -654,6 +654,31 @@ function animateMining(targetBTC, callback) {
   }, 50);
 }
 
+function fetchDashboardStats() {
+  const email = sessionStorage.getItem("email");
+  if (!email) return;
+
+  fetch("/dashboard-stats", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.error) {
+        showToast("⚠️ " + data.error);
+        return;
+      }
+
+      document.getElementById("btc-counter").innerText = data.total_mined.toFixed(8) + " BTC";
+      document.getElementById("total-mined").innerText = data.total_mined.toFixed(4) + " BTC";
+      document.getElementById("total-hashrate").innerText = data.total_hashrate.toFixed(2) + " Th/s";
+      document.getElementById("active-sessions").innerText = data.active_sessions;
+    });
+}
+
+window.fetchDashboardStats = fetchDashboardStats;
+
 function fetchBTCCounter() {
   const email = sessionStorage.getItem("email");
   if (!email) return;
