@@ -283,22 +283,40 @@ header h1 {
     <header>
       <h1>Adchain Miner</h1>
     </header>
+<section id="dashboard-section" style="display:none;">
+  <div class="card">
+    <h2>Live BTC Balance</h2>
+    <div id="btc-counter">0.00000000</div>
+  </div>
 
-    
+  <div class="card">
+    <h2>Total BTC Earned</h2>
+    <div id="total-earned">0.00000000</div>
+  </div>
 
-    <div class="container">
+  <div class="card">
+    <h2>Current Hashrate</h2>
+    <div id="hashrate">0 H/s</div>
+  </div>
 
-  <!-- 👋 Personalized Welcome -->
-  <div>
-  <h2>Your BTC Balance</h2>
-  <div id="btc-counter">0.00000000</div>
-</div>
+  <div class="card">
+    <h2>Withdraw BTC</h2>
+    <input id="withdraw-amount" type="number" placeholder="Amount in BTC" />
+    <input id="withdraw-wallet" type="text" placeholder="BTC Wallet Address" />
+    <button class="btn" onclick="submitWithdraw()">Withdraw</button>
+    <div id="withdraw-msg"></div>
+  </div>
 
-<script>
-  const userEmail = localStorage.getItem("email"); // or however you store it
-  startMining(userEmail);
-</script>
-    </div>
+  <div class="card">
+    <h2>Withdraw History</h2>
+    <ul id="withdraw-history"></ul>
+  </div>
+
+  <div class="card" id="messages">
+    <h2>Announcements</h2>
+    <ul id="admin-messages"></ul>
+  </div>
+</section>
 
     <footer>
       <div>&copy; 2025 Adchain Miner. All rights reserved.</div>
