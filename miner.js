@@ -657,6 +657,18 @@ function showDashboard() {
   }
 }
 
+function initDashboard() {
+  fetchBTCCounter();
+  fetchTotalHashrate();
+  fetchTotalMined();
+  fetchTotalWithdrawn();
+  fetchActiveSessions();
+  fetchNextWithdrawalDate();
+  loadDashboardMessages();
+  fetchTopMiners();
+  fetchMyRank();
+}
+
 // ========== DOMContentLoaded Setup ==========
 document.addEventListener("DOMContentLoaded", () => {
   const isLoggedIn = sessionStorage.getItem("isLoggedIn") === "true";
@@ -664,6 +676,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (isLoggedIn && pinVerified) {
     showDashboard();
+    initDashboard():
   } else if (isLoggedIn && !pinVerified) {
     showForm("pin-verify");
   }
