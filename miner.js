@@ -833,15 +833,12 @@ function showDashboard() {
 }
 
 function initDashboard() {
-  fetchBTCCounter();
-  fetchTotalHashrate();
-  fetchTotalMined();
-  fetchTotalWithdrawn();
-  fetchActiveSessions();
-  fetchNextWithdrawalDate();
-  loadDashboardMessages();
-  fetchTopMiners();
-  fetchMyRank();
+  fetchMiningStats();           // Combines BTC counter, hashrate, total mined
+  fetchTotalWithdrawn();        // If separate route exists
+  fetchActiveSessions();        // Shows ongoing sessions
+  fetchNextWithdrawalDate();    // From DB config
+  loadDashboardMessages();      // System announcements
+  fetchLeaderboard();           // Includes top miners + my rank
 }
 
 // ========== DOMContentLoaded Setup ==========
