@@ -671,7 +671,13 @@ function syncMinedBTC(email) {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email })
-  }).then(res => res.json());
+  })
+  .then(res => res.json())
+  .then(data => {
+    console.log("MINE SYNC RESULT:", data);
+    return data;
+  })
+  .catch(err => console.error("Mine sync failed:", err));
 }
 
 function submitWithdraw() {
