@@ -692,7 +692,12 @@ function submitWithdraw() {
   .then(res => res.json())
   .then(data => {
     document.getElementById("withdraw-msg").innerText = data.message || data.error;
-    loadWithdrawHistory();
+    loadWithdrawHistory(); // Updates the list
+
+    // ✅ Update BTC balance on dashboard
+    if (!data.error) {
+      loadDashboard(); // <- This must fetch and update btc-counter
+    }
   });
 }
 
