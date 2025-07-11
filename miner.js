@@ -619,15 +619,16 @@ function showDashboard() {
 
 const userEmail = sessionStorage.getItem("email");
 let miningFactor = 0.00000001;
-let miningInterval = null;
+let miningInterval;
+let dashboardSyncInterval;
 
 function startMining(email) {
   fetch(`https://danoski-backend.onrender.com/user/dashboard?email=${encodeURIComponent(email)}`)
     .then(res => res.json())
     .then(data => {
-      const hashrate = data.hashrate;
-      const lastMined = new Date(data.last_mined);
+      let hashrate = data.hashrate;
       let balance = data.btc_balance;
+      let lastMined = new Date(data.last_mined).getTime();
 
       document.getElementById("total-earned").innerText = data.total_earned.toFixed(8);
       document.getElementById("hashrate").innerText = hashrate + " H/s";
@@ -637,18 +638,31 @@ function startMining(email) {
         return;
       }
 
-      const lastMinedTime = lastMined.getTime();
       if (miningInterval) clearInterval(miningInterval);
-
       miningInterval = setInterval(() => {
         const now = Date.now();
-        const secondsElapsed = (now - lastMinedTime) / 1000;
+        const secondsElapsed = (now - lastMined) / 1000;
         const mined = hashrate * secondsElapsed * miningFactor;
         const currentBTC = balance + mined;
         document.getElementById("btc-counter").innerText = currentBTC.toFixed(8);
       }, 1000);
 
-      setInterval(() => syncMinedBTC(email), 30000);
+      // 🟢 Background sync every 30s + refresh UI
+      if (dashboardSyncInterval) clearInterval(dashboardSyncInterval);
+      dashboardSyncInterval = setInterval(() => {
+        syncMinedBTC(email).then(() => {
+          // Refresh UI values after syncing
+          fetch(`https://danoski-backend.onrender.com/user/dashboard?email=${encodeURIComponent(email)}`)
+            .then(res => res.json())
+            .then(updated => {
+              balance = updated.btc_balance;
+              hashrate = updated.hashrate;
+              lastMined = new Date(updated.last_mined).getTime();
+              document.getElementById("total-earned").innerText = updated.total_earned.toFixed(8);
+              document.getElementById("hashrate").innerText = hashrate + " H/s";
+            });
+        });
+      }, 30000);
     });
 }
 
