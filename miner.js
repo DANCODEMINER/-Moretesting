@@ -667,25 +667,11 @@ function startMining(email) {
 }
 
 function syncMinedBTC(email) {
-  fetch("https://danoski-backend.onrender.com/user/mine-sync", {
+  return fetch("https://danoski-backend.onrender.com/user/mine-sync", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email })
-  })
-    .then(res => res.json())
-    .then(data => {
-      if (data.new_balance !== undefined) {
-        document.getElementById("btc-counter").textContent = parseFloat(data.new_balance).toFixed(8);
-      }
-      if (data.mined_btc !== undefined) {
-        // Optional: display mined BTC somewhere
-        console.log("Mined BTC:", data.mined_btc);
-      }
-
-      // You can optionally fetch total earned again:
-      fetchDashboard(email);
-    })
-    .catch(err => console.error("Sync failed:", err));
+  }).then(res => res.json());
 }
 
 function submitWithdraw() {
