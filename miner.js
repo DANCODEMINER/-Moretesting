@@ -729,13 +729,24 @@ function loadMessages() {
     .then(data => {
       const ul = document.getElementById("admin-messages");
       ul.innerHTML = "";
-      data.forEach(msg => {
+
+      if (data.title && data.content) {
         const li = document.createElement("li");
-        li.innerHTML = `<b>${msg.title}</b>: ${msg.content}`;
+        li.innerHTML = `<b>${data.title}</b>: ${data.content}`;
         ul.appendChild(li);
-      });
+      } else {
+        const li = document.createElement("li");
+        li.textContent = "No announcement available.";
+        ul.appendChild(li);
+      }
+    })
+    .catch(err => {
+      console.error("Failed to load message", err);
     });
 }
+
+// Make sure it runs when page is ready
+window.addEventListener("DOMContentLoaded", loadMessages);
 
 function watchAd() {
   const email = sessionStorage.getItem("email");
