@@ -192,10 +192,10 @@ function loginUser() {
       })
     )
     .catch(err => {
-      console.error("Login error:", err);
-      showToast("⚠️ Network error. Please check your connection and try again.", "#f39c12");
-    });
-}
+  console.error("⚠️ Full fetch error on login:", err);
+  alert("Network Error:\n" + err.message); // TEMPORARY: show real error
+  showToast("⚠️ Network error. Please check your connection and try again.", "#f39c12");
+});
 
 function verifyLoginPin() {
   const pin = ["pinverify1", "pinverify2", "pinverify3", "pinverify4"]
