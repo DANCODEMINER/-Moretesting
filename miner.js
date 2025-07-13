@@ -604,6 +604,18 @@ function logout() {
   window.location.href = "index.html";
 }
 
+function initDashboard() {
+  const email = sessionStorage.getItem("loginEmail");
+  if (!email) return;
+
+  syncMinedBTC(email);
+  loadDashboard();
+  loadWithdrawHistory();
+  loadMessages();
+  loadActiveHashrates();
+  startMining(email);
+}
+
 function showDashboard() {
   showForm("dashboard");
 
@@ -814,6 +826,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (isLoggedIn && pinVerified) {
     showDashboard();
+    initDashboard();
   } else if (isLoggedIn && !pinVerified) {
     showForm("pin-verify");
   }
