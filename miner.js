@@ -718,14 +718,30 @@ function loadWithdrawHistory() {
   fetch(`https://danoski-backend.onrender.com/user/withdrawals?email=${encodeURIComponent(userEmail)}`)
     .then(res => res.json())
     .then(data => {
-      const list = document.getElementById("withdraw-history");
+      const list = document.getElementById("withdraw-history-list"); // UPDATED ID
+      if (!list) return;
+
       list.innerHTML = "";
+
+      if (data.length === 0) {
+        const li = document.createElement("li");
+        li.textContent = "No withdrawals yet.";
+        list.appendChild(li);
+        return;
+      }
+
       data.forEach(item => {
         const li = document.createElement("li");
         li.textContent = `${item.amount} BTC to ${item.wallet} [${item.status}]`;
         list.appendChild(li);
       });
     });
+}
+
+function showWithdrawHistoryPage() {
+  document.getElementById("dashboard-page").style.display = "none";
+  document.getElementById("withdraw-history-page").style.display = "block";
+  loadWithdrawHistory();
 }
 
 function loadMessages() {
