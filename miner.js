@@ -20,7 +20,7 @@ function resetInactivityTimer() {
     // 🔒 What happens when user is inactive for too long
     sessionStorage.clear(); // or remove specific keys
     showToast("⏳ You were logged out due to inactivity.", "#e67e22");
-    showForm("login"); // redirect to login
+    showForm("pin-verify"); // redirect to login
   }, 2 * 60 * 1000); // 2 minutes (adjust as needed)
 }
 
