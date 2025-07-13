@@ -24,49 +24,49 @@ function resetInactivityTimer() {
   }, 2 * 60 * 1000); // 2 minutes (adjust as needed)
 }
 
-function showForm(formType) {
-  // All possible form sections by ID
-  const formMap = {
-    login: "login-form",
-    register: "register-form",
-    forgot: "forgot-form",
-    "otp-form": "otp-form",
-    "pin-form": "pin-form",
-    "pin-verify": "pin-verify-form",
-    "forgot-password": "forgot-password-section",
-    "verify-forgot-otp": "verify-forgot-otp-section",
-    "reset-password": "reset-password-section",
+function signupUser() {
+  const firstName = document.getElementById("signup-firstname").value.trim();
+  const lastName = document.getElementById("signup-lastname").value.trim();
+  const country = document.getElementById("signup-country").value;
+  const email = document.getElementById("signup-email").value.trim();
+  const password = document.getElementById("signup-password").value.trim();
 
-    // ✅ Added these for PIN reset flow
-    "verify-pin-otp": "verify-pin-otp-section",
-    "reset-pin": "reset-pin-section"
-  };
-
-  // Loop and toggle visibility
-  for (const key in formMap) {
-    const el = document.getElementById(formMap[key]);
-    if (el) el.style.display = formType === key ? "block" : "none";
+  if (!firstName || !lastName || !country || !email || !password) {
+    showToast("⚠️ Please fill in all fields.", "#e74c3c");
+    return;
   }
 
-  // Handle dashboard and login-page toggle
-  const dashboard = document.getElementById("dashboard-page");
-  const loginPage = document.getElementById("login-page");
+  const fullName = `${firstName} ${lastName}`;
 
-  if (formType === "dashboard") {
-    if (dashboard) dashboard.style.display = "block";
-    if (loginPage) loginPage.style.display = "none";
-  } else {
-    if (dashboard) dashboard.style.display = "none";
-    if (loginPage) loginPage.style.display = "block";
-  }
+  // Save signup details temporarily in sessionStorage
+  sessionStorage.setItem("name", fullName);
+  sessionStorage.setItem("country", country);
+  sessionStorage.setItem("email", email);
+  sessionStorage.setItem("password", password);
 
-  // ✅ Clear pin-verify inputs when showing pin-verify form
-  if (formType === "pin-verify") {
-    ["pinverify1", "pinverify2", "pinverify3", "pinverify4"].forEach(id => {
-      const input = document.getElementById(id);
-      if (input) input.value = "";
+  // Send OTP to email
+  fetch("https://danoski-backend.onrender.com/user/send-otp", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email })
+  })
+    .then(res => res.json().then(data => ({ ok: res.ok, data })))
+    .then(({ ok, data }) => {
+      console.log("OTP response:", data); // ✅ Helpful debug
+
+      if (ok && typeof data === "object" && !data.error) {
+        showToast("✅ OTP sent to your email. Please verify.", "#4caf50");
+        document.getElementById("otp-email").value = email;
+        showForm("otp-form");
+      } else {
+        const message = data?.error || "Failed to send OTP.";
+        showToast("❌ " + message, "#e74c3c");
+      }
+    })
+    .catch(() => {
+      showToast("⚠️ Could not connect to server.", "#f39c12");
     });
-  }
+}
 
   // ✅ Re-bind pin inputs after showing new form
   bindPinInputs();
