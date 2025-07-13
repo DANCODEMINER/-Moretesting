@@ -826,7 +826,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (isLoggedIn && pinVerified) {
     showDashboard();
-    initDashboard();
   } else if (isLoggedIn && !pinVerified) {
     showForm("pin-verify");
   }
