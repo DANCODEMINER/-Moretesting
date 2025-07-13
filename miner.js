@@ -67,48 +67,6 @@ function signupUser() {
       showToast("⚠️ Could not connect to server.", "#f39c12");
     });
 }
-
-  // ✅ Re-bind pin inputs after showing new form
-  bindPinInputs();
-
-function signupUser() {
-  const firstName = document.getElementById("signup-firstname").value.trim();
-  const lastName = document.getElementById("signup-lastname").value.trim();
-  const country = document.getElementById("signup-country").value;
-  const email = document.getElementById("signup-email").value.trim();
-  const password = document.getElementById("signup-password").value.trim();
-
-  if (!firstName || !lastName || !country || !email || !password) {
-    showToast("⚠️ Please fill in all fields.", "#e74c3c");
-    return;
-  }
-
-  const fullName = `${firstName} ${lastName}`;
-
-  // Save signup details temporarily in sessionStorage
-  sessionStorage.setItem("name", fullName);
-  sessionStorage.setItem("country", country);
-  sessionStorage.setItem("email", email);
-  sessionStorage.setItem("password", password);
-
-  // Send OTP to email
-  fetch("https://danoski-backend.onrender.com/user/send-otp", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email })
-  })
-    .then(({ ok, data }) => {
-  console.log("OTP response:", data); // ✅ Helpful debug
-
-  if (ok && typeof data === "object" && !data.error) {
-    showToast("✅ OTP sent to your email. Please verify.", "#4caf50");
-    document.getElementById("otp-email").value = email;
-    showForm("otp-form");
-  } else {
-    const message = data?.error || "Failed to send OTP.";
-    showToast("❌ " + message, "#e74c3c");
-  }
-})
   
 function showToast(message, background = "#4caf50") {
   const toast = document.getElementById("toast");
