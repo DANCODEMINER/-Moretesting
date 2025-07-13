@@ -236,11 +236,7 @@ function verifyLoginPin() {
         sessionStorage.setItem("pinVerified", "true");
 
         showDashboard();
-        syncMinedBTC(email);
-        loadDashboard();
-        loadWithdrawHistory();
-        loadMessages();
-        loadActiveHashrates();
+        
       } else {
         showToast("❌ Incorrect PIN. Please try again.", "#e74c3c");
       }
