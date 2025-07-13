@@ -168,27 +168,29 @@ function loginUser() {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password })
   })
-    .then(async res => {
-      let data;
-      try {
-        data = await res.json();
-      } catch (err) {
-        console.error("❌ Invalid JSON from server.");
-        showToast("⚠️ Unexpected server response. Please try again.", "#e67e22");
-        return;
-      }
+    .then(res =>
+      res.text().then(text => {
+        let data;
+        try {
+          data = text ? JSON.parse(text) : {};
+        } catch (err) {
+          console.error("❌ Failed to parse login response:", text);
+          showToast("⚠️ Unexpected server response. Please try again.", "#e67e22");
+          return;
+        }
 
-      if (res.ok) {
-        sessionStorage.setItem("isLoggedIn", "true");
-        sessionStorage.setItem("loginEmail", email);
-        showToast("✅ Login successful! Please enter your PIN to continue.", "#4caf50");
-        showForm("pin-verify");
-        document.getElementById("pin-message").innerText = "Please enter your 4-digit PIN to continue.";
-        focusFirstPinVerifyInput();
-      } else {
-        showToast("❌ Invalid email or password.", "#e74c3c");
-      }
-    })
+        if (res.ok) {
+          sessionStorage.setItem("isLoggedIn", "true");
+          sessionStorage.setItem("loginEmail", email);
+          showToast("✅ Login successful! Please enter your PIN to continue.", "#4caf50");
+          showForm("pin-verify");
+          document.getElementById("pin-message").innerText = "Please enter your 4-digit PIN to continue.";
+          focusFirstPinVerifyInput();
+        } else {
+          showToast("❌ Invalid email or password.", "#e74c3c");
+        }
+      })
+    )
     .catch(err => {
       console.error("Login error:", err);
       showToast("⚠️ Network error. Please check your connection and try again.", "#f39c12");
