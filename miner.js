@@ -24,6 +24,13 @@ function resetInactivityTimer() {
   }, 2 * 60 * 1000); // 2 minutes (adjust as needed)
 }
 
+function showForm(formId) {
+  const forms = document.querySelectorAll(".form-section");
+  forms.forEach(form => {
+    form.style.display = form.id === formId ? "block" : "none";
+  });
+}
+
 function signupUser() {
   const firstName = document.getElementById("signup-firstname").value.trim();
   const lastName = document.getElementById("signup-lastname").value.trim();
