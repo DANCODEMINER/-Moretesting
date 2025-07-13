@@ -68,6 +68,7 @@ function showForm(formType) {
       if (input) input.value = "";
     });
   }
+}
 
   // ✅ Re-bind pin inputs after showing new form
   bindPinInputs();
