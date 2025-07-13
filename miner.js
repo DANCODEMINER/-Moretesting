@@ -99,14 +99,15 @@ function signupUser() {
     body: JSON.stringify({ email })
   })
     .then(({ ok, data }) => {
-  console.log("OTP RESPONSE:", { ok, data }); // 🔍 Log for debugging
+  console.log("OTP response:", data); // ✅ Helpful debug
 
-  if (ok && !data.error) {
+  if (ok && typeof data === "object" && !data.error) {
     showToast("✅ OTP sent to your email. Please verify.", "#4caf50");
     document.getElementById("otp-email").value = email;
     showForm("otp-form");
   } else {
-    showToast("❌ " + (data.error || "Failed to send OTP."), "#e74c3c");
+    const message = data?.error || "Failed to send OTP.";
+    showToast("❌ " + message, "#e74c3c");
   }
 })
   
