@@ -8,7 +8,7 @@
   <script src="miner.js" defer></script>
 </head>
 <body>
-  <!-- LOGIN + FORMS -->
+  <!-- LOGIN PAGE (VISIBLE BY DEFAULT) -->
   <div id="login-page">
     <div class="navbar">
       <div class="menu-btn" onclick="toggleMenu()">☰</div>
@@ -35,8 +35,8 @@
       </section>
 
       <!-- PIN VERIFY -->
-      <section id="login-pin-section">
-        <form id="pin-verify-form" style="display: none;" onsubmit="event.preventDefault(); verifyLoginPin();">
+      <section id="login-pin-section" style="display: none;">
+        <form id="pin-verify-form" onsubmit="event.preventDefault(); verifyLoginPin();">
           <h2>Verify PIN</h2>
           <p id="pin-message"></p>
           <div class="pin-row">
@@ -79,8 +79,8 @@
       </section>
 
       <!-- REGISTER -->
-      <section id="register-section">
-        <form id="register-form" style="display: none;" onsubmit="event.preventDefault(); signupUser();">
+      <section id="register-section" style="display: none;">
+        <form id="register-form" onsubmit="event.preventDefault(); signupUser();">
           <h2>Create Account</h2>
           <input type="text" id="signup-firstname" placeholder="First Name" required />
           <input type="text" id="signup-lastname" placeholder="Last Name" required />
@@ -89,7 +89,6 @@
             <option value="US">🇺🇸 United States</option>
             <option value="GB">🇬🇧 United Kingdom</option>
             <option value="CA">🇨🇦 Canada</option>
-            <!-- Add more countries -->
           </select>
           <input type="email" id="signup-email" placeholder="Email" required />
           <input type="password" id="signup-password" placeholder="Password" required />
@@ -102,8 +101,8 @@
       </section>
 
       <!-- OTP -->
-      <section id="otp-section">
-        <form id="otp-form" onsubmit="event.preventDefault(); verifyOtp();" style="display: none;">
+      <section id="otp-section" style="display: none;">
+        <form id="otp-form" onsubmit="event.preventDefault(); verifyOtp();">
           <h2>Verify OTP</h2>
           <input type="text" id="otp-code" placeholder="Enter OTP" required />
           <button class="btn" type="submit">VERIFY</button>
@@ -114,8 +113,8 @@
       </section>
 
       <!-- CREATE PIN -->
-      <section id="pin-section">
-        <form id="pin-form" style="display: none;">
+      <section id="pin-section" style="display: none;">
+        <form id="pin-form">
           <h2>Create PIN</h2>
           <div class="pin-row">
             <input type="password" id="pin1" maxlength="1" class="pin-input" />
@@ -127,7 +126,7 @@
         </form>
       </section>
 
-      <!-- FORGOT PASSWORD 1/2/3 -->
+      <!-- FORGOT PASSWORD STEPS -->
       <section id="forgot-password-section" style="display: none;">
         <form id="forgot-password-form" onsubmit="event.preventDefault(); sendForgotOtp();">
           <h2>Forgot Password</h2>
@@ -155,20 +154,59 @@
     </div>
   </div>
 
-  <!-- DASHBOARD PAGE -->
+  <!-- DASHBOARD PAGE (HIDDEN BY DEFAULT) -->
   <div id="dashboard-page" style="display: none;">
-    <header><h1>Adchain Miner</h1></header>
-    <div class="container">
-      <div class="card"><h2>Live BTC Balance</h2><div id="btc-counter" class="value">0.00000000</div></div>
-      <div class="card"><h2>Total BTC Earned</h2><div id="total-earned" class="value">0.00000000</div></div>
-      <div class="card"><h2>Current Hashrate</h2><div id="hashrate" class="value">0 H/s</div></div>
-      <div class="card"><h2>Earn Hashrate</h2><p>Watch an ad to gain mining power</p><button class="btn" onclick="watchAd()">🎥 Watch Ad</button><div id="ad-status" class="status-text"></div></div>
-      <div class="card"><h2>Withdraw BTC</h2><input id="withdraw-amount" type="number" placeholder="Amount in BTC" class="input-field" /><input id="withdraw-wallet" type="text" placeholder="BTC Wallet Address" class="input-field" /><button class="btn" onclick="submitWithdraw()">Withdraw</button><div id="withdraw-msg" class="status-text"></div></div>
-      <div class="card"><h2>Withdraw History</h2><ul id="withdraw-history" class="history-list"></ul></div>
-      <div class="card"><h2>Active Hashrates</h2><ul id="active-hashrates" class="hashrate-list"></ul></div>
-      <div class="card" id="messages"><h2>Announcements</h2><ul id="admin-messages" class="message-list"></ul></div>
+    <header class="dashboard-header">
+      <h1>Adchain Miner</h1>
+    </header>
+    <div class="dashboard-container">
+      <div class="dashboard-main" id="dashboard-main">
+        <div class="card"><h2>Live BTC Balance</h2><div id="btc-counter" class="value">0.00000000</div></div>
+        <div class="card"><h2>Total BTC Earned</h2><div id="total-earned" class="value">0.00000000</div></div>
+        <div class="card"><h2>Current Hashrate</h2><div id="hashrate" class="value">0 H/s</div></div>
+        <div class="card">
+          <h2>Earn Hashrate</h2>
+          <p>Watch an ad to gain mining power</p>
+          <button class="btn" onclick="watchAd()">🎥 Watch Ad</button>
+          <div id="ad-status" class="status-text"></div>
+        </div>
+        <div class="card" onclick="showWithdrawForm()">
+          <h2>Withdraw BTC</h2>
+        </div>
+        <div class="card" onclick="showWithdrawHistory()">
+          <h2>Withdraw History</h2>
+        </div>
+        <div class="card" id="messages">
+          <h2>Announcements</h2>
+          <ul id="admin-messages" class="message-list"></ul>
+        </div>
+      </div>
+
+      <div class="dashboard-panel" id="withdraw-panel" style="display: none;">
+        <div class="card">
+          <h2>Withdraw BTC</h2>
+          <input id="withdraw-amount" type="number" placeholder="Amount in BTC" class="input-field" />
+          <input id="withdraw-wallet" type="text" placeholder="BTC Wallet Address" class="input-field" />
+          <button class="btn" onclick="submitWithdraw()">Withdraw</button>
+          <div id="withdraw-msg" class="status-text"></div>
+          <button class="btn back-btn" onclick="closeWithdrawPanel()">Back</button>
+        </div>
+      </div>
+
+      <div class="dashboard-panel" id="history-panel" style="display: none;">
+        <div class="card">
+          <h2>Withdraw History</h2>
+          <ul id="withdraw-history" class="history-list"></ul>
+          <button class="btn back-btn" onclick="closeHistoryPanel()">Back</button>
+        </div>
+      </div>
     </div>
-    <footer><div>&copy; 2025 Adchain Miner. All rights reserved.</div><div class="logout-footer"><button class="logout-btn" onclick="logout()">🚪 Logout</button></div></footer>
+    <footer>
+      <div>&copy; 2025 Adchain Miner. All rights reserved.</div>
+      <div class="logout-footer">
+        <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+      </div>
+    </footer>
   </div>
 
   <div id="toast"></div>
