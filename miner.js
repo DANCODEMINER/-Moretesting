@@ -72,6 +72,11 @@ function showForm(formType) {
   bindPinInputs();
 }
 
+function focusFirstPinVerifyInput() {
+  const firstInput = document.getElementById("pinverify1");
+  if (firstInput) firstInput.focus();
+}
+
 function signupUser() {
   const firstName = document.getElementById("signup-firstname").value.trim();
   const lastName = document.getElementById("signup-lastname").value.trim();
