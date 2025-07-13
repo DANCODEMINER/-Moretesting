@@ -811,13 +811,6 @@ function loadActiveHashrates() {
     });
 }
 
-// INIT
-startMining(userEmail);
-loadWithdrawHistory();
-loadMessages();
-loadActiveHashrates();
-syncMinedBTC(userEmail);
-
 // ========== DOMContentLoaded Setup ==========
 document.addEventListener("DOMContentLoaded", () => {
   const isLoggedIn = sessionStorage.getItem("isLoggedIn") === "true";
