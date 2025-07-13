@@ -98,21 +98,18 @@ function signupUser() {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email })
   })
-    .then(res => res.json().then(data => ({ ok: res.ok, data })))
     .then(({ ok, data }) => {
-      if (ok) {
-        showToast("✅ OTP sent to your email. Please verify.", "#4caf50");
-        document.getElementById("otp-email").value = email;
-        showForm("otp-form");
-      } else {
-        showToast("❌ " + (data.error || "Failed to send OTP."), "#e74c3c");
-      }
-    })
-    .catch(() => {
-      showToast("⚠️ Could not connect to server.", "#f39c12");
-    });
-}
+  console.log("OTP RESPONSE:", { ok, data }); // 🔍 Log for debugging
 
+  if (ok && !data.error) {
+    showToast("✅ OTP sent to your email. Please verify.", "#4caf50");
+    document.getElementById("otp-email").value = email;
+    showForm("otp-form");
+  } else {
+    showToast("❌ " + (data.error || "Failed to send OTP."), "#e74c3c");
+  }
+})
+  
 function showToast(message, background = "#4caf50") {
   const toast = document.getElementById("toast");
   toast.innerText = message;
