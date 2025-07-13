@@ -604,18 +604,6 @@ function logout() {
   window.location.href = "index.html";
 }
 
-function initDashboard() {
-  const email = sessionStorage.getItem("loginEmail");
-  if (!email) return;
-
-  syncMinedBTC(email);
-  loadDashboard();
-  loadWithdrawHistory();
-  loadMessages();
-  loadActiveHashrates();
-  startMining(email);
-}
-
 function showDashboard() {
   showForm("dashboard");
 
