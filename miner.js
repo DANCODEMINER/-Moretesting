@@ -597,6 +597,11 @@ function logout() {
   window.location.href = "index.html";
 }
 
+function focusFirstPinVerifyInput() {
+  const input = document.getElementById("pinverify1");
+  if (input) input.focus();
+}
+
 function showDashboard() {
   showForm("dashboard");
 
