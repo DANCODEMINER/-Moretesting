@@ -749,6 +749,8 @@ function loadMessages() {
   fetch("https://danoski-backend.onrender.com/user/messages")
     .then(res => res.json())
     .then(data => {
+      console.log("📢 Announcement fetched:", data);  // ✅ Log it
+
       const ul = document.getElementById("admin-messages");
       ul.innerHTML = "";
 
@@ -763,7 +765,7 @@ function loadMessages() {
       }
     })
     .catch(err => {
-      console.error("Failed to load message", err);
+      console.error("❌ Failed to load message:", err);
     });
 }
 
