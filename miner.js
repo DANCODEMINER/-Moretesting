@@ -40,7 +40,7 @@ function showForm(formType) {
     // ✅ Added these for PIN reset flow
     "verify-pin-otp": "verify-pin-otp-section",
     "reset-pin": "reset-pin-section",
-    "withdraw-history": "withdraw-history-page"
+    "withdraw-history": "withdraw-history-page",
   };
 
   // Loop and toggle visibility
@@ -68,7 +68,6 @@ function showForm(formType) {
       if (input) input.value = "";
     });
   }
-}
 
   // ✅ Re-bind pin inputs after showing new form
   bindPinInputs();
