@@ -56,17 +56,18 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  height: 100%;
   width: 100%;
-  background: rgba(0, 0, 0, 0.4);
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4); /* Dark semi-transparent */
   display: none;
   z-index: 1000;
+  pointer-events: none; /* Prevent mouse events unless shown */
 }
 
 .menu-overlay.show {
   display: block;
+  pointer-events: auto; /* Enable closing when active */
 }
-
 /* ========== FORM CONTAINER ========== */
 .form-container {
   max-width: 400px;
