@@ -844,7 +844,26 @@ loadMessages();
 loadActiveHashrates();
 syncMinedBTC(userEmail);
 
-// ========== DOMContentLoaded Setup ==========
+// ===== TOGGLE MENU FUNCTIONS =====
+function toggleMenu() {
+  const menu = document.getElementById("menu");
+  const overlay = document.getElementById("menu-overlay");
+  if (menu && overlay) {
+    menu.classList.toggle("show");
+    overlay.classList.toggle("show");
+  }
+}
+
+function closeMenu() {
+  const menu = document.getElementById("menu");
+  const overlay = document.getElementById("menu-overlay");
+  if (menu && overlay) {
+    menu.classList.remove("show");
+    overlay.classList.remove("show");
+  }
+}
+
+// ===== DOMContentLoaded SETUP =====
 document.addEventListener("DOMContentLoaded", () => {
   const isLoggedIn = sessionStorage.getItem("isLoggedIn") === "true";
   const pinVerified = sessionStorage.getItem("pinVerified") === "true";
@@ -866,7 +885,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ===== TOGGLE MENU SETUP (Login Page Only) =====
+  // TOGGLE MENU SETUP (Login Page Only)
   const menuBtn = document.querySelector(".menu-btn");
   const overlay = document.getElementById("menu-overlay");
 
