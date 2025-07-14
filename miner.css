@@ -17,22 +17,41 @@ body {
 .menu-btn {
   cursor: pointer;
   font-size: 24px;
+  color: #fff;
+  background: none;
+  border: none;
+  z-index: 1100;
 }
 .logo {
   font-size: 20px;
   font-weight: bold;
 }
 .menu {
+  position: fixed;
+  top: 0;
+  left: -250px;
+  width: 250px;
+  height: 100%;
   background-color: #333;
-  display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 2rem 1rem;
   gap: 20px;
-  padding: 0.8rem 0;
+  transition: left 0.3s ease;
+  z-index: 1000;
+}
+.menu.show {
+  left: 0;
 }
 .menu a {
+  display: block;
+  width: 100%;
+  padding: 12px 0;
+  text-align: left;
+  font-size: 16px;
   color: #fff;
+  border-bottom: 1px solid #444;
   text-decoration: none;
-  font-size: 14px;
 }
 
 /* ========== FORM CONTAINER ========== */
