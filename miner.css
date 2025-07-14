@@ -3,9 +3,10 @@ body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
   background-color: #f5f7fa;
+  overflow-x: hidden;
 }
 
-/* ========== NAVIGATION BAR ========== */
+/* ========== NAVIGATION ========== */
 .navbar {
   background-color: #222;
   color: #fff;
@@ -13,8 +14,6 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: relative;
-  z-index: 1002;
 }
 .menu-btn {
   cursor: pointer;
@@ -25,11 +24,11 @@ body {
   font-weight: bold;
 }
 
-/* ========== SIDEBAR MENU ========== */
+/* === Sidebar Slide-in Menu === */
 .menu {
   position: fixed;
   top: 0;
-  left: -250px;
+  left: -250px; /* hidden off-screen */
   width: 250px;
   height: 100%;
   background-color: #333;
@@ -51,13 +50,13 @@ body {
   border-bottom: 1px solid #444;
 }
 
-/* ========== MENU OVERLAY BACKGROUND ========== */
+/* === Overlay for Menu Background === */
 .menu-overlay {
   position: fixed;
   top: 0;
+  bottom: 0;
   left: 0;
-  height: 100%;
-  width: 100%;
+  right: 0;
   background: rgba(0, 0, 0, 0.4);
   z-index: 1000;
   display: none;
@@ -126,7 +125,7 @@ form select {
   border-radius: 8px;
 }
 
-/* ========== DASHBOARD STYLES ========== */
+/* ========== DASHBOARD LAYOUT ========== */
 #dashboard-page {
   padding: 1.5rem;
   background-color: #f0f2f5;
