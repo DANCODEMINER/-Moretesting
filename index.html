@@ -155,22 +155,61 @@
     </div>
   </div>
 
-  <!-- DASHBOARD PAGE -->
-  <div id="dashboard-page" style="display: none;">
-    <header><h1>Adchain Miner</h1></header>
-    <div class="container">
-      <div class="card"><h2>Live BTC Balance</h2><div id="btc-counter" class="value">0.00000000</div></div>
-      <div class="card"><h2>Total BTC Earned</h2><div id="total-earned" class="value">0.00000000</div></div>
-      <div class="card"><h2>Current Hashrate</h2><div id="hashrate" class="value">0 H/s</div></div>
-      <div class="card"><h2>Earn Hashrate</h2><p>Watch an ad to gain mining power</p><button class="btn" onclick="watchAd()">🎥 Watch Ad</button><div id="ad-status" class="status-text"></div></div>
-      <div class="card"><h2>Withdraw BTC</h2><input id="withdraw-amount" type="number" placeholder="Amount in BTC" class="input-field" /><input id="withdraw-wallet" type="text" placeholder="BTC Wallet Address" class="input-field" /><button class="btn" onclick="submitWithdraw()">Withdraw</button><div id="withdraw-msg" class="status-text"></div></div>
-      <div class="card"><h2>Withdraw History</h2><ul id="withdraw-history" class="history-list"></ul></div>
-      <div class="card"><h2>Active Hashrates</h2><ul id="active-hashrates" class="hashrate-list"></ul></div>
-      <div class="card" id="messages"><h2>Announcements</h2><ul id="admin-messages" class="message-list"></ul></div>
-    </div>
-    <footer><div>&copy; 2025 Adchain Miner. All rights reserved.</div><div class="logout-footer"><button class="logout-btn" onclick="logout()">🚪 Logout</button></div></footer>
-  </div>
+<div id="dashboard-page" style="display: none;">
+  <header><h1>Adchain Rewards</h1></header>
+  <div class="dashboard-grid">
 
+    <!-- Summary Section -->
+    <div class="card summary">
+      <h2>Balance</h2>
+      <div class="value-label">Live BTC</div>
+      <div id="btc-counter" class="value">0.00000000</div>
+
+      <div class="value-label">Total Earned</div>
+      <div id="total-earned" class="value">0.00000000</div>
+
+      <div class="value-label">Current Hashrate</div>
+      <div id="hashrate" class="value">0 H/s</div>
+    </div>
+
+    <!-- Actions Section -->
+    <div class="card action">
+      <h2>Earn More</h2>
+      <p>Watch an ad to earn more power.</p>
+      <button class="btn" onclick="watchAd()">🎥 Watch Ad</button>
+      <div id="ad-status" class="status-text"></div>
+    </div>
+
+    <div class="card action">
+      <h2>Withdraw</h2>
+      <input id="withdraw-amount" type="number" placeholder="Amount (BTC)" class="input-field" />
+      <input id="withdraw-wallet" type="text" placeholder="BTC Wallet" class="input-field" />
+      <button class="btn" onclick="submitWithdraw()">Withdraw</button>
+      <div id="withdraw-msg" class="status-text"></div>
+      <button class="btn ghost" onclick="showWithdrawHistoryPage()">📜 View Withdrawal History</button>
+    </div>
+
+    <!-- Active Hashrates -->
+    <div class="card">
+      <h2>Active Hashrates</h2>
+      <ul id="active-hashrates" class="hashrate-list"></ul>
+    </div>
+
+    <!-- Announcements -->
+    <div class="card" id="messages">
+      <h2>📢 Announcements</h2>
+      <ul id="admin-messages" class="message-list"></ul>
+    </div>
+  </div>
+  <div id="withdraw-history-page" style="display: none;"> ... </div>
+
+  <footer>
+    <div>&copy; 2025 Adchain Rewards. All rights reserved.</div>
+    <div class="logout-footer">
+      <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+    </div>
+  </footer>
+</div>
   <div id="toast"></div>
 </body>
 </html>
