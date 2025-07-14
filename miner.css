@@ -30,11 +30,16 @@ body {
   gap: 10px;
   padding: 1rem;
   position: absolute;
-  top: 60px; /* Adjust based on navbar height */
+  top: 60px;
   left: 0;
   width: 100%;
   z-index: 1000;
 }
+
+.menu.show {
+  display: flex;
+}
+
 .menu a {
   color: #fff;
   text-decoration: none;
@@ -184,9 +189,4 @@ footer {
   padding: 10px 16px;
   border-radius: 8px;
   cursor: pointer;
-}
-
-/* === Show menu when toggle is active === */
-.menu.show {
-  display: flex;
 }
