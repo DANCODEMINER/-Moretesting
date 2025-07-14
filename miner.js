@@ -866,6 +866,16 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // ===== TOGGLE MENU SETUP (Login Page Only) =====
+  const menuBtn = document.querySelector(".menu-btn");
+  const overlay = document.getElementById("menu-overlay");
+
+  if (menuBtn && overlay) {
+    menuBtn.addEventListener("click", toggleMenu);
+    overlay.addEventListener("click", closeMenu);
+  }
+});
+
   const logoutButtons = document.querySelectorAll(".logout-btn");
   logoutButtons.forEach(button => button.addEventListener("click", logout));
 
