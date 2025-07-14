@@ -13,19 +13,20 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: relative;
+  z-index: 1100;
 }
+
 .menu-btn {
   cursor: pointer;
   font-size: 24px;
   color: #fff;
   background: none;
   border: none;
-  z-index: 1100;
+  z-index: 1101;
+  position: relative;
 }
-.logo {
-  font-size: 20px;
-  font-weight: bold;
-}
+
 .menu {
   position: fixed;
   top: 0;
@@ -38,11 +39,13 @@ body {
   padding: 2rem 1rem;
   gap: 20px;
   transition: left 0.3s ease;
-  z-index: 1000;
+  z-index: 1000; /* Below navbar and menu button */
 }
+
 .menu.show {
   left: 0;
 }
+
 .menu a {
   display: block;
   width: 100%;
