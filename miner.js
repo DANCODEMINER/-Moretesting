@@ -11,14 +11,6 @@ function closeMenu() {
   document.getElementById("menu-overlay").classList.remove("show");
 }
 
-// === Toggle Sidebar for Dashboard ===
-function toggleSidebar() {
-  const sidebar = document.getElementById("sidebar");
-  const overlay = document.getElementById("overlay");
-  sidebar.classList.toggle("active");
-  overlay.classList.toggle("show");
-}
-
 let inactivityTimeout;
 
 function resetInactivityTimer() {
