@@ -6,6 +6,7 @@ body {
 }
 
 /* ========== NAVIGATION ========== */
+/* ========== NAVIGATION ========== */
 .navbar {
   background-color: #222;
   color: #fff;
@@ -14,32 +15,39 @@ body {
   align-items: center;
   justify-content: space-between;
   position: relative;
-  z-index: 1100;
+  z-index: 100;
 }
 
 .menu-btn {
-  cursor: pointer;
   font-size: 24px;
   color: #fff;
   background: none;
   border: none;
-  z-index: 1101;
+  cursor: pointer;
+  z-index: 102;
   position: relative;
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: bold;
 }
 
 .menu {
   position: fixed;
   top: 0;
-  left: -250px;
+  left: -260px; /* off screen */
   width: 250px;
-  height: 100%;
+  height: 100vh;
   background-color: #333;
+  display: flex;
   flex-direction: column;
   align-items: flex-start;
   padding: 2rem 1rem;
   gap: 20px;
-  transition: left 0.3s ease;
-  z-index: 1000; /* Below navbar and menu button */
+  transition: left 0.3s ease-in-out;
+  z-index: 101;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2); /* optional for depth */
 }
 
 .menu.show {
@@ -47,14 +55,13 @@ body {
 }
 
 .menu a {
-  display: block;
-  width: 100%;
-  padding: 12px 0;
-  text-align: left;
-  font-size: 16px;
   color: #fff;
-  border-bottom: 1px solid #444;
   text-decoration: none;
+  font-size: 16px;
+  padding: 12px 0;
+  width: 100%;
+  border-bottom: 1px solid #444;
+  text-align: left;
 }
 
 /* ========== FORM CONTAINER ========== */
