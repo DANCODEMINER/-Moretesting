@@ -8,9 +8,10 @@
   <script src="miner.js" defer></script>
 </head>
 <body>
+
   <!-- LOGIN + FORMS -->
   <div id="login-page">
-    
+
     <!-- Navbar -->
     <div class="navbar">
       <div class="menu-btn" onclick="toggleMenu()">☰</div>
@@ -18,15 +19,13 @@
     </div>
 
     <!-- Sidebar Menu -->
-    <div id="sidebar" class="sidebar" style="display: none;">
-      <div class="menu">
-        <a href="#" onclick="showForm('login')">🚪 Login</a>
-        <a href="#" onclick="showForm('register')">👤 Register</a>
-        <a href="#" onclick="showForm('forgot-password')">🔒 Forgot Password</a>
-      </div>
+    <div id="menu" class="menu" style="display: none;">
+      <a href="#" onclick="showForm('login')">🚪 Login</a>
+      <a href="#" onclick="showForm('register')">👤 Register</a>
+      <a href="#" onclick="showForm('forgot-password')">🔒 Forgot Password</a>
     </div>
 
-    <!-- Forms Container -->
+    <!-- All Auth Forms -->
     <div class="form-container">
 
       <!-- LOGIN FORM -->
@@ -44,8 +43,8 @@
       </section>
 
       <!-- PIN VERIFY -->
-      <section id="login-pin-section">
-        <form id="pin-verify-form" style="display: none;" onsubmit="event.preventDefault(); verifyLoginPin();">
+      <section id="login-pin-section" style="display: none;">
+        <form id="pin-verify-form" onsubmit="event.preventDefault(); verifyLoginPin();">
           <h2>Verify PIN</h2>
           <p id="pin-message"></p>
           <div class="pin-row">
@@ -88,8 +87,8 @@
       </section>
 
       <!-- REGISTER -->
-      <section id="register-section">
-        <form id="register-form" style="display: none;" onsubmit="event.preventDefault(); signupUser();">
+      <section id="register-section" style="display: none;">
+        <form id="register-form" onsubmit="event.preventDefault(); signupUser();">
           <h2>Create Account</h2>
           <input type="text" id="signup-firstname" placeholder="First Name" required />
           <input type="text" id="signup-lastname" placeholder="Last Name" required />
@@ -98,6 +97,7 @@
             <option value="US">🇺🇸 United States</option>
             <option value="GB">🇬🇧 United Kingdom</option>
             <option value="CA">🇨🇦 Canada</option>
+            <!-- More countries -->
           </select>
           <input type="email" id="signup-email" placeholder="Email" required />
           <input type="password" id="signup-password" placeholder="Password" required />
@@ -109,9 +109,9 @@
         </form>
       </section>
 
-      <!-- OTP -->
-      <section id="otp-section">
-        <form id="otp-form" onsubmit="event.preventDefault(); verifyOtp();" style="display: none;">
+      <!-- OTP FORM -->
+      <section id="otp-section" style="display: none;">
+        <form id="otp-form" onsubmit="event.preventDefault(); verifyOtp();">
           <h2>Verify OTP</h2>
           <input type="text" id="otp-code" placeholder="Enter OTP" required />
           <button class="btn" type="submit">VERIFY</button>
@@ -122,8 +122,8 @@
       </section>
 
       <!-- CREATE PIN -->
-      <section id="pin-section">
-        <form id="pin-form" style="display: none;">
+      <section id="pin-section" style="display: none;">
+        <form id="pin-form">
           <h2>Create PIN</h2>
           <div class="pin-row">
             <input type="password" id="pin1" maxlength="1" class="pin-input" />
@@ -135,7 +135,7 @@
         </form>
       </section>
 
-      <!-- FORGOT PASSWORD 1 -->
+      <!-- FORGOT PASSWORD STEP 1 -->
       <section id="forgot-password-section" style="display: none;">
         <form id="forgot-password-form" onsubmit="event.preventDefault(); sendForgotOtp();">
           <h2>Forgot Password</h2>
@@ -144,7 +144,7 @@
         </form>
       </section>
 
-      <!-- FORGOT PASSWORD 2 -->
+      <!-- FORGOT PASSWORD STEP 2 -->
       <section id="verify-forgot-otp-section" style="display: none;">
         <form id="verify-forgot-otp-form" onsubmit="event.preventDefault(); verifyForgotOtp();">
           <h2>Verify OTP</h2>
@@ -153,7 +153,7 @@
         </form>
       </section>
 
-      <!-- FORGOT PASSWORD 3 -->
+      <!-- FORGOT PASSWORD STEP 3 -->
       <section id="reset-password-section" style="display: none;">
         <form id="reset-password-form" onsubmit="event.preventDefault(); submitNewPassword();">
           <h2>Set New Password</h2>
@@ -163,8 +163,8 @@
         </form>
       </section>
 
-    </div>
-  </div>
+    </div> <!-- end of form-container -->
+  </div> <!-- end of login-page -->
 
 <!-- DASHBOARD PAGE -->
 <div id="dashboard-page" style="display: none;">
