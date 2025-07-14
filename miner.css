@@ -5,7 +5,7 @@ body {
   background-color: #f5f7fa;
 }
 
-/* ========== NAVIGATION ========== */
+/* ========== NAVIGATION BAR ========== */
 .navbar {
   background-color: #222;
   color: #fff;
@@ -13,6 +13,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: relative;
+  z-index: 1002;
 }
 .menu-btn {
   cursor: pointer;
@@ -22,11 +24,12 @@ body {
   font-size: 20px;
   font-weight: bold;
 }
-/* === Sidebar Slide-in Menu === */
+
+/* ========== SIDEBAR MENU ========== */
 .menu {
   position: fixed;
   top: 0;
-  left: -250px; /* hide off screen */
+  left: -250px;
   width: 250px;
   height: 100%;
   background-color: #333;
@@ -37,11 +40,9 @@ body {
   transition: left 0.3s ease;
   z-index: 1001;
 }
-
 .menu.show {
   left: 0;
 }
-
 .menu a {
   color: #fff;
   text-decoration: none;
@@ -50,7 +51,7 @@ body {
   border-bottom: 1px solid #444;
 }
 
-/* === Overlay for Menu Background === */
+/* ========== MENU OVERLAY BACKGROUND ========== */
 .menu-overlay {
   position: fixed;
   top: 0;
@@ -61,7 +62,6 @@ body {
   z-index: 1000;
   display: none;
 }
-
 .menu-overlay.show {
   display: block;
 }
@@ -126,7 +126,7 @@ form select {
   border-radius: 8px;
 }
 
-/* ========== DASHBOARD LAYOUT ========== */
+/* ========== DASHBOARD STYLES ========== */
 #dashboard-page {
   padding: 1.5rem;
   background-color: #f0f2f5;
