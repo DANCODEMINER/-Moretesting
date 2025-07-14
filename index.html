@@ -87,26 +87,26 @@
       </section>
 
       <!-- REGISTER -->
-      <section id="register-section" style="display: none;">
-        <form id="register-form" onsubmit="event.preventDefault(); signupUser();">
-          <h2>Create Account</h2>
-          <input type="text" id="signup-firstname" placeholder="First Name" required />
-          <input type="text" id="signup-lastname" placeholder="Last Name" required />
-          <select id="signup-country" required>
-            <option value="">🌍 Select Country</option>
-            <option value="US">🇺🇸 United States</option>
-            <option value="GB">🇬🇧 United Kingdom</option>
-            <option value="CA">🇨🇦 Canada</option>
-            <!-- More countries -->
-          </select>
-          <input type="email" id="signup-email" placeholder="Email" required />
-          <input type="password" id="signup-password" placeholder="Password" required />
-          <small id="password-count">0/12 characters</small>
-          <button class="btn" type="submit">SIGN UP</button>
-          <div class="form-links">
-            <a href="#" onclick="showForm('login')">Back to Login</a>
-          </div>
-        </form>
+      <section id="register-section">
+  <form id="register-form" style="display: none;" onsubmit="event.preventDefault(); signupUser();">
+    <h2>Create Account</h2>
+    <input type="text" id="signup-firstname" placeholder="First Name" required />
+    <input type="text" id="signup-lastname" placeholder="Last Name" required />
+    <select id="signup-country" required>
+      <option value="">🌍 Select Country</option>
+      <option value="US">🇺🇸 United States</option>
+      <option value="GB">🇬🇧 United Kingdom</option>
+      <option value="CA">🇨🇦 Canada</option>
+      <!-- Add more countries -->
+    </select>
+    <input type="email" id="signup-email" placeholder="Email" required />
+    <input type="password" id="signup-password" placeholder="Password" required />
+    <small id="password-count">0/12 characters</small>
+    <button class="btn" type="submit">SIGN UP</button>
+    <div class="form-links">
+      <a href="#" onclick="showForm('login')">Back to Login</a>
+    </div>
+  </form>
       </section>
 
       <!-- OTP FORM -->
