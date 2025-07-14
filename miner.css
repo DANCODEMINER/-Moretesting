@@ -22,17 +22,25 @@ body {
   font-size: 20px;
   font-weight: bold;
 }
+/* Updated menu styles for toggle sidebar */
 .menu {
   background-color: #333;
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  padding: 0.8rem 0;
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  padding: 1rem;
+  position: absolute;
+  top: 60px; /* Adjust based on navbar height */
+  left: 0;
+  width: 100%;
+  z-index: 1000;
 }
 .menu a {
   color: #fff;
   text-decoration: none;
   font-size: 14px;
+  padding: 8px 12px;
+  border-bottom: 1px solid #444;
 }
 
 /* ========== FORM CONTAINER ========== */
