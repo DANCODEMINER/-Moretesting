@@ -166,11 +166,13 @@
     </div>
   </div>
 
+<!-- DASHBOARD PAGE -->
 <div id="dashboard-page" style="display: none;">
   <header><h1>Adchain Rewards</h1></header>
-  <div class="dashboard-grid">
 
-    <!-- Summary Section -->
+  <!-- TOP: Summary Section (Live BTC First) -->
+  <div class="dashboard-row">
+    <!-- 🔹 Summary Card -->
     <div class="card summary">
       <h2>Balance</h2>
       <div class="value-label">Live BTC</div>
@@ -182,8 +184,11 @@
       <div class="value-label">Current Hashrate</div>
       <div id="hashrate" class="value">0 H/s</div>
     </div>
+  </div>
 
-    <!-- Actions Section -->
+  <!-- MIDDLE: Action Cards (Pair: Earn & Withdraw) -->
+  <div class="dashboard-row">
+    <!-- 🔹 Earn More Card -->
     <div class="card action">
       <h2>Earn More</h2>
       <p>Watch an ad to earn more power.</p>
@@ -191,6 +196,7 @@
       <div id="ad-status" class="status-text"></div>
     </div>
 
+    <!-- 🔹 Withdraw Card -->
     <div class="card action">
       <h2>Withdraw</h2>
       <input id="withdraw-amount" type="number" placeholder="Amount (BTC)" class="input-field" />
@@ -199,20 +205,24 @@
       <div id="withdraw-msg" class="status-text"></div>
       <button class="btn ghost" onclick="showWithdrawHistoryPage()">📜 View Withdrawal History</button>
     </div>
+  </div>
 
-    <!-- Active Hashrates -->
+  <!-- BOTTOM: Hashrates and Announcements (Pair) -->
+  <div class="dashboard-row">
+    <!-- 🔹 Active Hashrates Card -->
     <div class="card">
       <h2>Active Hashrates</h2>
       <ul id="active-hashrates" class="hashrate-list"></ul>
     </div>
 
-    <!-- Announcements -->
+    <!-- 🔹 Announcements Card -->
     <div class="card" id="messages">
       <h2>📢 Announcements</h2>
       <ul id="admin-messages" class="message-list"></ul>
     </div>
   </div>
 
+  <!-- Footer -->
   <footer>
     <div>&copy; 2025 Adchain Rewards. All rights reserved.</div>
     <div class="logout-footer">
@@ -221,13 +231,16 @@
   </footer>
 </div>
 
-  <div id="withdraw-history-page" style="display: none;">
+<!-- WITHDRAWAL HISTORY PAGE -->
+<div id="withdraw-history-page" style="display: none;">
   <div class="card">
     <h2>Withdrawal History</h2>
     <ul id="withdraw-history-list" class="history-list"></ul>
     <button class="btn" onclick="showForm('dashboard')">🔙 Back to Dashboard</button>
   </div>
-  </div>
-  <div id="toast"></div>
+</div>
+
+<!-- TOAST NOTIFICATION -->
+<div id="toast"></div>
 </body>
 </html>
