@@ -1,7 +1,14 @@
 // === Toggle Menu for Login Page ===
 function toggleMenu() {
   const menu = document.getElementById("menu");
+  const overlay = document.getElementById("menu-overlay");
   menu.classList.toggle("show");
+  overlay.classList.toggle("show");
+}
+
+function closeMenu() {
+  document.getElementById("menu").classList.remove("show");
+  document.getElementById("menu-overlay").classList.remove("show");
 }
 
 // === Toggle Sidebar for Dashboard ===
