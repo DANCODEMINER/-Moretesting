@@ -1,20 +1,14 @@
-// ====== TOGGLE MENU FUNCTIONS ======
+// === Toggle Menu for Login Page ===
 function toggleMenu() {
   const menu = document.getElementById("menu");
   const overlay = document.getElementById("menu-overlay");
-  if (menu && overlay) {
-    menu.classList.toggle("show");
-    overlay.classList.toggle("show");
-  }
+  menu.classList.toggle("show");
+  overlay.classList.toggle("show");
 }
 
 function closeMenu() {
-  const menu = document.getElementById("menu");
-  const overlay = document.getElementById("menu-overlay");
-  if (menu && overlay) {
-    menu.classList.remove("show");
-    overlay.classList.remove("show");
-  }
+  document.getElementById("menu").classList.remove("show");
+  document.getElementById("menu-overlay").classList.remove("show");
 }
 
 let inactivityTimeout;
