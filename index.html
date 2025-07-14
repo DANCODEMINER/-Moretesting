@@ -19,11 +19,14 @@
     </div>
 
     <!-- Sidebar Menu -->
-    <div id="menu" class="menu"> <!-- No inline style -->
+<div id="menu" class="menu">
   <a href="#" onclick="showForm('login')">🚪 Login</a>
   <a href="#" onclick="showForm('register')">👤 Register</a>
   <a href="#" onclick="showForm('forgot-password')">🔒 Forgot Password</a>
-    </div>
+</div>
+
+<!-- Backdrop overlay -->
+<div id="menu-overlay" onclick="closeMenu()" class="menu-overlay"></div>
 
     <!-- All Auth Forms -->
     <div class="form-container">
