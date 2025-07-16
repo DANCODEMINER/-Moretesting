@@ -831,12 +831,13 @@ function loadActiveHashrates() {
     });
 }
 
-// INIT
-startMining(userEmail);
-loadWithdrawHistory();
-loadMessages();
-loadActiveHashrates();
-syncMinedBTC(userEmail);
+function initDashboard() {
+  startMining(userEmail);
+  loadWithdrawHistory();
+  loadMessages();
+  loadActiveHashrates();
+  syncMinedBTC(userEmail);
+}
 
 // ========== DOMContentLoaded Setup ==========
 document.addEventListener("DOMContentLoaded", () => {
@@ -845,6 +846,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (isLoggedIn && pinVerified) {
     showDashboard();
+    initDashboard();
   } else if (isLoggedIn && !pinVerified) {
     showForm("pin-verify");
   }
