@@ -83,7 +83,7 @@ form select {
 
 /* ========== DASHBOARD LAYOUT ========== */
 #dashboard-page {
-  padding: 1.5rem;
+  padding: 0 1.5rem 1.5rem 1.5rem; /* top right bottom left */
   background-color: #f0f2f5;
 }
 header h1 {
